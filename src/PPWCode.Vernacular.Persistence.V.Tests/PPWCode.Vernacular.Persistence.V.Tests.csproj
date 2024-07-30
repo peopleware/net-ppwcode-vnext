@@ -20,4 +20,8 @@
         <PackageReference Include="NunitXml.TestLogger" Version="3.*" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PPWCode.Vernacular.Persistence.V\PPWCode.Vernacular.Persistence.V.csproj" />
+    </ItemGroup>
+
  </Project>

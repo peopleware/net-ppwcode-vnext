@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.Validation.IV"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.Validation.IV.Tests", "src\PPWCode.Util.Validation.IV.Tests\PPWCode.Util.Validation.IV.Tests.csproj", "{3F3A8C4B-6E84-44B9-81D4-5DFE027CFE78}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.EntityFrameworkCore.I", "src\PPWCode.Vernacular.EntityFrameworkCore.I\PPWCode.Vernacular.EntityFrameworkCore.I.csproj", "{D60058E5-D0C8-4011-9555-F564C3D0E31B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,5 +75,9 @@ Global
 		{3F3A8C4B-6E84-44B9-81D4-5DFE027CFE78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F3A8C4B-6E84-44B9-81D4-5DFE027CFE78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F3A8C4B-6E84-44B9-81D4-5DFE027CFE78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D60058E5-D0C8-4011-9555-F564C3D0E31B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D60058E5-D0C8-4011-9555-F564C3D0E31B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D60058E5-D0C8-4011-9555-F564C3D0E31B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D60058E5-D0C8-4011-9555-F564C3D0E31B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

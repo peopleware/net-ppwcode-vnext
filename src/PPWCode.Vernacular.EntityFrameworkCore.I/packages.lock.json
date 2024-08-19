@@ -5,11 +5,11 @@
       "Microsoft.EntityFrameworkCore": {
         "type": "Direct",
         "requested": "[8.0.*, )",
-        "resolved": "8.0.7",
-        "contentHash": "UOyPNAgyzw/E4hUCurqvZxi0WWVLQAGZuntFPzkTXtvJLTqRjKvokvhv+XazAUSODLsU1DZ67GjZ4mT9d82+0g==",
+        "resolved": "8.0.8",
+        "contentHash": "iK+jrJzkfbIxutB7or808BPmJtjUEi5O+eSM7cLDwsyde6+3iOujCSfWnrHrLxY3u+EQrJD+aD8DJ6ogPA2Rtw==",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore.Abstractions": "8.0.7",
-          "Microsoft.EntityFrameworkCore.Analyzers": "8.0.7",
+          "Microsoft.EntityFrameworkCore.Abstractions": "8.0.8",
+          "Microsoft.EntityFrameworkCore.Analyzers": "8.0.8",
           "Microsoft.Extensions.Caching.Memory": "8.0.0",
           "Microsoft.Extensions.Logging": "8.0.0"
         }
@@ -17,11 +17,11 @@
       "Microsoft.EntityFrameworkCore.Proxies": {
         "type": "Direct",
         "requested": "[8.0.*, )",
-        "resolved": "8.0.7",
-        "contentHash": "QXaz3KxardLcEc++7nNy35LGTuLxf/bIMV4+gLV+mbvfXMdC2p5yLuW+S0qcX6hNWqtDo7OHEbZ1Jcf2ezh9ZA==",
+        "resolved": "8.0.8",
+        "contentHash": "q4UneU7rhDgRdDwkta/VyKBNnAoKanKnuHQiVZ8xK1lD0VWg03q886XffrWu7qhzoViohPucGbqtRDOMrBD93Q==",
         "dependencies": {
           "Castle.Core": "5.1.1",
-          "Microsoft.EntityFrameworkCore": "8.0.7"
+          "Microsoft.EntityFrameworkCore": "8.0.8"
         }
       },
       "StyleCop.Analyzers": {
@@ -40,13 +40,13 @@
       },
       "Microsoft.EntityFrameworkCore.Abstractions": {
         "type": "Transitive",
-        "resolved": "8.0.7",
-        "contentHash": "DHX6nxcg4/tpWfTjAleKrXveDiNFY/OGOK6nm27GipUXNI2Uofev9cH5SYXmtGIgHWxlvfn754TXN4WnrixOwg=="
+        "resolved": "8.0.8",
+        "contentHash": "9mMQkZsfL1c2iifBD8MWRmwy59rvsVtR9NOezJj7+g1j4P7g49MJHd8k8faC/v7d5KuHkQ6KOQiSItvoRt9PXA=="
       },
       "Microsoft.EntityFrameworkCore.Analyzers": {
         "type": "Transitive",
-        "resolved": "8.0.7",
-        "contentHash": "nerD0vEOYJVhVapamRVH9DrUYbDNMJ5bPfWze4SibDDaDaekzgwQqBht97/tV+8pgdKoPAXmtiJsB+lDajwVrQ=="
+        "resolved": "8.0.8",
+        "contentHash": "OlAXMU+VQgLz5y5/SBkLvAa9VeiR3dlJqgIebEEH2M2NGA3evm68/Tv7SLWmSxwnEAtA3nmDEZF2pacK6eXh4Q=="
       },
       "Microsoft.Extensions.Caching.Abstractions": {
         "type": "Transitive",

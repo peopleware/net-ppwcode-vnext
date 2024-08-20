@@ -109,6 +109,18 @@ namespace PPWCode.Vernacular.Exceptions.V
         }
 
         /// <summary>
+        ///     Add all semantic exceptions given by, <paramref name="ces" />, to <see cref="Elements" />.
+        /// </summary>
+        /// <param name="ces">The exceptions that must be added.</param>
+        public void AddElements(IEnumerable<SemanticException> ces)
+        {
+            foreach (SemanticException ce in ces)
+            {
+                AddElement(ce);
+            }
+        }
+
+        /// <summary>
         ///     This contains an <see cref="Elements">element</see>
         ///     <see cref="SemanticException.Like" /> <paramref name="exception" />.
         /// </summary>

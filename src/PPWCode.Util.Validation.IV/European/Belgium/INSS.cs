@@ -100,7 +100,7 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
                     yyOffset = ValidBefore2000(CleanedVersion) ? 1900 : 2000;
                 }
 
-                yy = yy + yyOffset;
+                yy += yyOffset;
 
                 if (mm < 20)
                 {
@@ -128,7 +128,7 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
                                   : IV.Sex.FEMALE;
                 }
 
-                if (calcBirthDate && (mm > 0) && (dd > 0))
+                if (calcBirthDate && mm is > 0 and < 13 && dd is > 0 and < 32)
                 {
                     try
                     {
@@ -140,7 +140,7 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
                     }
                     catch
                     {
-                        // ignored
+                        birthdate = null;
                     }
                 }
             }

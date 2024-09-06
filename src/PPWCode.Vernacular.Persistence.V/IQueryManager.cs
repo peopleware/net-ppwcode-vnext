@@ -9,16 +9,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using PPWCode.Vernacular.Persistence.V;
+namespace PPWCode.Vernacular.Persistence.V;
 
-namespace PPWCode.Vernacular.EntityFrameworkCore.I;
-
-public interface IRepository<TModel, in TId>
-    where TModel : IPersistentObject<TId>, IIdentity<TId>
-    where TId : IEquatable<TId>
+/// <summary>
+///     An interface that represents a helper for the repositories.
+///     Interfaces based on this will always represent helper methods that transform
+///     an <see cref="T:System.Linq.IQueryable`1" /> by applying filters (or transformations).
+/// </summary>
+/// <typeparam name="TIdentity">The identity type</typeparam>
+public interface IQueryManager<in TIdentity>
+    where TIdentity : struct, IEquatable<TIdentity>
 {
-    Task<TModel?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
-    Task<List<TModel>> FindAllAsync(CancellationToken cancellationToken = default);
-    Task UpdateAsync(TModel model, CancellationToken cancellationToken = default);
-    void Delete(TModel model);
 }

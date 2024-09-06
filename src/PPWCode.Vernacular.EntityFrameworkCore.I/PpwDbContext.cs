@@ -29,11 +29,6 @@ public abstract class PpwDbContext : DbContext
 
     protected abstract PpwConventions? ConventionRequests { get; }
 
-    public DbSet<TModel> GetDbSet<TModel, TId>()
-        where TModel : class, IPersistentObject<TId>, IIdentity<TId>
-        where TId : IEquatable<TId>
-        => Set<TModel>();
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

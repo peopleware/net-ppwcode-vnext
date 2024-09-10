@@ -11,9 +11,9 @@ public abstract class Repository<TModel, TId> : IRepository<TModel, TId>
 {
     private readonly PpwDbContext _context;
 
-    protected Repository(PpwDbContext context)
+    protected Repository(PpwDbContext dbContext)
     {
-        _context = context ?? throw new ArgumentNullException(nameof(context));
+        _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
     /// <inheritdoc />

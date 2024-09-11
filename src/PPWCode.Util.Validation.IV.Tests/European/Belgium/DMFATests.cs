@@ -81,7 +81,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
             DMFA expected = new (identification);
 
             // Act
-            DMFA? actual = DeepCloneUsingBinaryFormatter(expected);
+            DMFA? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

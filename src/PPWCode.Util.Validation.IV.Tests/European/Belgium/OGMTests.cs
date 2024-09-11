@@ -73,7 +73,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
             OGM ogm = new (identification);
 
             // Act
-            OGM? actual = DeepCloneUsingBinaryFormatter(ogm);
+            OGM? actual = DeepClone(ogm);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

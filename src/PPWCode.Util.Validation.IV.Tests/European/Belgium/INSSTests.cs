@@ -116,7 +116,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
             INSS expected = new (identification);
 
             // Act
-            INSS? actual = DeepCloneUsingBinaryFormatter(expected);
+            INSS? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

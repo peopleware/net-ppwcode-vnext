@@ -128,7 +128,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.France
             NIR expected = new (identification);
 
             // Act
-            NIR? actual = DeepCloneUsingBinaryFormatter(expected);
+            NIR? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

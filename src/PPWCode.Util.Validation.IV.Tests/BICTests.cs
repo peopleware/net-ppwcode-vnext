@@ -134,7 +134,7 @@ namespace PPWCode.Util.Validation.IV.Tests
             BIC expected = new (identification);
 
             // Act
-            BIC? actual = DeepCloneUsingBinaryFormatter(expected);
+            BIC? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

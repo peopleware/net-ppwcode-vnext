@@ -128,7 +128,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Netherlands
             BSN expected = new (identification);
 
             // Act
-            BSN? actual = DeepCloneUsingBinaryFormatter(expected);
+            BSN? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

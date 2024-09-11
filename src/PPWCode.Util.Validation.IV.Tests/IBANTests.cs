@@ -217,7 +217,7 @@ namespace PPWCode.Util.Validation.IV.Tests
             IBAN expected = new (identification);
 
             // Act
-            IBAN? actual = DeepCloneUsingBinaryFormatter(expected);
+            IBAN? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

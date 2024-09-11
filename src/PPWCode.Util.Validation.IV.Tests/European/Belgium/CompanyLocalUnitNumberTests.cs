@@ -69,7 +69,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
             CompanyLocalUnitNumber expected = new (identification);
 
             // Act
-            CompanyLocalUnitNumber? actual = DeepCloneUsingBinaryFormatter(expected);
+            CompanyLocalUnitNumber? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

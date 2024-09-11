@@ -63,7 +63,7 @@ namespace PPWCode.Util.Validation.IV.Tests
         {
         }
 
-        protected virtual T? DeepCloneUsingBinaryFormatter<T>(T obj)
+        protected virtual T? DeepClone<T>(T obj)
             where T : class
             => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(obj, JsonSerializerOptions), JsonSerializerOptions);
     }

@@ -151,7 +151,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
             BBAN expected = new (identification);
 
             // Act
-            BBAN? actual = DeepCloneUsingBinaryFormatter(expected);
+            BBAN? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);

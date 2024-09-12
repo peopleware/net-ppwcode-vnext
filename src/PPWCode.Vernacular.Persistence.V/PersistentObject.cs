@@ -28,9 +28,9 @@ public abstract class PersistentObject<T>
     public virtual bool IsTransient
         => EqualityComparer<T?>.Default.Equals(Id, default);
 
-    public virtual T2? As<T2>()
-        where T2 : PersistentObject<T>
-        => this as T2;
+    public virtual TOther? As<TOther>()
+        where TOther : class, IPersistentObject<T>
+        => this as TOther;
 
     public virtual bool IsSame(IIdentity<T>? other)
         => IsSame(other as PersistentObject<T>);

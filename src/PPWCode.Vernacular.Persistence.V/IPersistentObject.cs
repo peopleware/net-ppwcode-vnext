@@ -18,4 +18,6 @@ public interface IPersistentObject<T>
       ICivilizedObject
     where T : IEquatable<T>
 {
+    TOther? As<TOther>()
+        where TOther : class, IPersistentObject<T>;
 }

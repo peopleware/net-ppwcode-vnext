@@ -15,7 +15,6 @@ using PPWCode.Vernacular.Exceptions.V;
 
 namespace PPWCode.Vernacular.Semantics.V.Exceptions
 {
-    [Serializable]
     public class ValidationViolationException : SemanticException
     {
         private const string MemberNameskey = "MemberNamesKey";

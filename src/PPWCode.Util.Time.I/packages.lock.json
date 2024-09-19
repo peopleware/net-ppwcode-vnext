@@ -7,6 +7,15 @@
         "requested": "[1.1.118, )",
         "resolved": "1.1.118",
         "contentHash": "Onx6ovGSqXSK07n/0eM3ZusiNdB6cIlJdabQhWGgJp3Vooy9AaLS/tigeybOJAobqbtggTamoWndz72JscZBvw=="
+      },
+      "ppwcode.vernacular.exceptions.v": {
+        "type": "Project"
+      },
+      "ppwcode.vernacular.semantics.v": {
+        "type": "Project",
+        "dependencies": {
+          "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )"
+        }
       }
     }
   }

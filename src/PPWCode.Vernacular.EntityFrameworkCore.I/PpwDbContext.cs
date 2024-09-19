@@ -33,6 +33,11 @@ public abstract class PpwDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
+        foreach (Assembly configurationAssembly in ConfigurationAssemblies)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(configurationAssembly);
+        }
+
         // Be sure that the types are correct for audit record stamping
         foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
         {
@@ -47,11 +52,6 @@ public abstract class PpwDbContext : DbContext
                 IMutableProperty? createdByProperty = entity.FindProperty(nameof(IUpdateAuditable.LastModifiedBy));
                 createdByProperty?.SetMaxLength(AuditColumnLength);
             }
-        }
-
-        foreach (Assembly configurationAssembly in ConfigurationAssemblies)
-        {
-            modelBuilder.ApplyConfigurationsFromAssembly(configurationAssembly);
         }
     }
 

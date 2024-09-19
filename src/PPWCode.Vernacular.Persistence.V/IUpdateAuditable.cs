@@ -13,7 +13,7 @@ namespace PPWCode.Vernacular.Persistence.V;
 
 public interface IUpdateAuditable
 {
-    DateTime? LastModifiedAt { get; set; }
+    DateTimeOffset? LastModifiedAt { get; set; }
 
     string? LastModifiedBy { get; set; }
 }

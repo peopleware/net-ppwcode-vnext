@@ -16,7 +16,7 @@ public abstract class InsertAuditablePersistentObject<T>
       IInsertAuditable
     where T : IEquatable<T>
 {
-    public virtual DateTime? CreatedAt { get; set; }
+    public virtual DateTimeOffset? CreatedAt { get; set; }
 
     public virtual string? CreatedBy { get; set; }
 }

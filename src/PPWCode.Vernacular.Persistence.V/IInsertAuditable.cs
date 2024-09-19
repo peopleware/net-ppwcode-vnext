@@ -13,7 +13,7 @@ namespace PPWCode.Vernacular.Persistence.V;
 
 public interface IInsertAuditable
 {
-    DateTime? CreatedAt { get; set; }
+    DateTimeOffset? CreatedAt { get; set; }
 
     string? CreatedBy { get; set; }
 }

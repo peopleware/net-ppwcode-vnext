@@ -16,7 +16,7 @@ public abstract class AuditablePersistentObject<T>
       IAuditable
     where T : IEquatable<T>
 {
-    public virtual DateTime? LastModifiedAt { get; set; }
+    public virtual DateTimeOffset? LastModifiedAt { get; set; }
 
     public virtual string? LastModifiedBy { get; set; }
 }

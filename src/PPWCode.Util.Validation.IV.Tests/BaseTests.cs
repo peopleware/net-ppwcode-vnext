@@ -17,6 +17,7 @@ using NUnit.Framework;
 namespace PPWCode.Util.Validation.IV.Tests
 {
     [TestFixture]
+    [Parallelizable(ParallelScope.Fixtures)]
     public abstract class BaseTests
     {
         [SetUp]

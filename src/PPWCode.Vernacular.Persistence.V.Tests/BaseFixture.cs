@@ -14,6 +14,7 @@ using NUnit.Framework;
 namespace PPWCode.Vernacular.Persistence.V.Tests;
 
 [TestFixture]
+[Parallelizable(ParallelScope.Fixtures)]
 public abstract class BaseFixture
 {
     [SetUp]

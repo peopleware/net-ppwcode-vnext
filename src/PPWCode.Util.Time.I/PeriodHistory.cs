@@ -14,10 +14,10 @@ using PPWCode.Vernacular.Exceptions.V;
 namespace PPWCode.Util.Time.I
 {
     /// <summary>
-    ///     This is a generic helper class to work with <see cref="IPeriod{TPeriod}" /> instances.
+    ///     This is a generic helper class to work with <see cref="IPeriod{T}" /> instances.
     ///     It represents a timeline consisting of multiple non-overlapping periods.
     /// </summary>
-    /// <typeparam name="TPeriod">a specific type that implements <see cref="IPeriod{TPeriod}" /> </typeparam>
+    /// <typeparam name="TPeriod">a specific type that implements <see cref="IPeriod{T}" /> </typeparam>
     /// <typeparam name="T">a specific type of period</typeparam>
     public abstract class PeriodHistory<TPeriod, T>
         where TPeriod : class, IPeriod<T>

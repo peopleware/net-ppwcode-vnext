@@ -15,16 +15,6 @@ public abstract class PeriodHistoryTests<TPeriod, T>
     where TPeriod : class, IPeriod<T>
     where T : struct, IComparable<T>, IEquatable<T>
 {
-    public class StringArray
-    {
-        public string?[] Strings { get; }
-
-        public StringArray(IEnumerable<string?> strings)
-        {
-            Strings = strings.ToArray();
-        }
-    }
-
     public static IEnumerable CreationCases
     {
         get

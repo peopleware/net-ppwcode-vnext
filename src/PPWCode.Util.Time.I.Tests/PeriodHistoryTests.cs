@@ -285,29 +285,6 @@ public abstract class PeriodHistoryTests<TPeriod, T>
         return periods.ToArray();
     }
 
-    protected IEnumerable<T> Months(PeriodHistory<TPeriod, T> periodHistory)
-    {
-        LinkedList<TPeriod> linkedPeriods = periodHistory.LinkedPeriods;
-        if (linkedPeriods.First is null)
-        {
-            yield break;
-        }
-
-        if ((linkedPeriods.First.Value.From == null)
-            || (linkedPeriods.First.Value.To == null))
-        {
-            throw new IllegalOperationException();
-        }
-
-        foreach (TPeriod period in linkedPeriods)
-        {
-            for (T walker = period.CoalesceFrom; walker.CompareTo(period.CoalesceTo) < 0; walker = AddMonths(walker, 1))
-            {
-                yield return walker;
-            }
-        }
-    }
-
     protected string? CreatePeriodHistoryAsString(PeriodHistory<TPeriod, T> periodHistory)
     {
         LinkedListNode<TPeriod>? firstNode = periodHistory.LinkedPeriods.First;

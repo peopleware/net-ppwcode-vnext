@@ -4,7 +4,7 @@ public class DateOnlyPeriodTests : PeriodTests<DateOnly>
 {
     /// <inheritdoc />
     protected override IPeriod<DateOnly> Create(DateOnly? from, DateOnly? to)
-        => new PeriodTest(from, to);
+        => new DateOnlyPeriod(from, to);
 
     /// <inheritdoc />
     protected override DateOnly? ConvertFromString(string? value)

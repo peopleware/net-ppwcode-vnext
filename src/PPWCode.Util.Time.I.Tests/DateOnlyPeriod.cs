@@ -2,9 +2,9 @@
 
 namespace PPWCode.Util.Time.I.Tests;
 
-public class PeriodTest : DateOnlyPeriod
+public class DateOnlyPeriod : I.DateOnlyPeriod
 {
-    public PeriodTest(DateOnly? from, DateOnly? to)
+    public DateOnlyPeriod(DateOnly? from, DateOnly? to)
         : base(from, to)
     {
     }
@@ -15,5 +15,5 @@ public class PeriodTest : DateOnlyPeriod
 
     /// <inheritdoc />
     protected override IPeriod<DateOnly> Create(DateOnly? from, DateOnly? to)
-        => new PeriodTest(from, to);
+        => new DateOnlyPeriod(from, to);
 }

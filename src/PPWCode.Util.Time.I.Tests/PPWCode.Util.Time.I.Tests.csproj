@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PPWCode.Util.Collection.I\PPWCode.Util.Collection.I.csproj" />
       <ProjectReference Include="..\PPWCode.Util.Time.I\PPWCode.Util.Time.I.csproj" />
     </ItemGroup>
 

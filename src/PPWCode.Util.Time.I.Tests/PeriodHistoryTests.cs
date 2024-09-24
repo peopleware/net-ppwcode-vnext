@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 using NUnit.Framework;
 
@@ -208,32 +207,6 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
     protected abstract PeriodHistory<TPeriod, T> CreatePeriodHistory(IEnumerable<TPeriod> periods);
 
-    protected string? CreatePeriodHistoryAsString(PeriodHistory<TPeriod, T> periodHistory)
-    {
-        LinkedListNode<TPeriod>? firstNode = periodHistory.LinkedPeriods.First;
-        LinkedListNode<TPeriod>? lastNode = periodHistory.LinkedPeriods.Last;
-
-        if (firstNode is null)
-        {
-            return null;
-        }
-
-        if (firstNode.Value.From is null || lastNode!.Value.To is null)
-        {
-            Assert.That(false, "Infinitive periods aren't supported");
-        }
-
-        T startDate = firstNode.Value.From!.Value;
-        T endDate = lastNode!.Value.To!.Value;
-        StringBuilder sb = new ();
-        for (T date = startDate; date.CompareTo(endDate) < 0; date = AddMonths(date, 1))
-        {
-            sb.Append(periodHistory.HasPeriodAt(date) ? "X" : "_");
-        }
-
-        return sb.ToString();
-    }
-
     [Test]
     public void test_get_period_at_with_no_periods()
     {
@@ -413,7 +386,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Act
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(allPeriods);
-        string? actualPeriodHistoryAsString = CreatePeriodHistoryAsString(periodHistory);
+        string? actualPeriodHistoryAsString = CreatePeriodsAsString(startDate, periodHistory.Periods);
 
         // Assert
         return actualPeriodHistoryAsString;

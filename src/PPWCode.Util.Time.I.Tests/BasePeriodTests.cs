@@ -1,4 +1,7 @@
+using System.Text;
 using System.Text.RegularExpressions;
+
+using NUnit.Framework;
 
 using PPWCode.Vernacular.Exceptions.V;
 
@@ -95,12 +98,46 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
 
                     break;
                 default:
-                    throw new InternalProgrammingError("Invalid state string!");
+                    throw new InternalProgrammingError("Invalid period string!");
             }
 
             currentDate = AddMonths(currentDate, 1);
         }
 
         return periods.ToArray();
+    }
+
+    protected string? CreatePeriodsAsString(T startDate, IEnumerable<TPeriod> periods)
+    {
+        LinkedList<TPeriod> linkedPeriods = new (periods.OrderBy(p => p.CoalesceFrom));
+        LinkedListNode<TPeriod>? firstNode = linkedPeriods.First;
+        LinkedListNode<TPeriod>? lastNode = linkedPeriods.Last;
+
+        if (firstNode is null)
+        {
+            return null;
+        }
+
+        if (firstNode.Value.From is null)
+        {
+            Assert.That(false, "Infinitive periods aren't supported");
+        }
+
+        // when we have a first node, we definitively have a last node
+        T? endDate = lastNode!.Value.To;
+        StringBuilder sb = new ();
+        for (T date = startDate; endDate is null || (date.CompareTo(endDate.Value) < 0); date = AddMonths(date, 1))
+        {
+            TPeriod? period = linkedPeriods.FirstOrDefault(p => p.Contains(date));
+            if (endDate is null && (lastNode.Value == period))
+            {
+                sb.Append('.');
+                break;
+            }
+
+            sb.Append(period is not null ? "X" : "_");
+        }
+
+        return sb.ToString();
     }
 }

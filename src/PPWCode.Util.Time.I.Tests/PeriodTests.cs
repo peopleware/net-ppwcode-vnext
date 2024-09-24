@@ -1,42 +1,12 @@
-﻿using System.Text.RegularExpressions;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace PPWCode.Util.Time.I.Tests;
 
 [TestFixture]
-public abstract class PeriodTests<TPeriod, T>
-    where TPeriod : IPeriod<T>
+public abstract class PeriodTests<TPeriod, T> : BasePeriodTests<TPeriod, T>
+    where TPeriod : class, IPeriod<T>
     where T : struct, IComparable<T>, IEquatable<T>
 {
-    // ReSharper disable once StaticMemberInGenericType
-    private static readonly Regex _regex = new (@"^\[\s*(?:(\d{4}-\d{1,2}-\d{1,2})|null)\s*,\s*(?:(\d{4}-\d{1,2}-\d{1,2})|null)\s*\[$");
-    protected abstract TPeriod Create(T? from, T? to);
-    protected abstract T? ConvertFromString(string? value);
-    protected abstract string? ConvertToString(T? value);
-
-    protected virtual TPeriod ConvertFromStringPeriod(string? value)
-    {
-        if (!string.IsNullOrWhiteSpace(value))
-        {
-            Match m = _regex.Match(value);
-            if (m.Success)
-            {
-                T? from = ConvertFromString(m.Groups[1].Value);
-                T? to = ConvertFromString(m.Groups[2].Value);
-                return Create(from, to);
-            }
-        }
-
-        throw new ArgumentException($"'{value}' is not a valid period string");
-    }
-
-    protected virtual string? ConvertToString(TPeriod? period)
-        => ConvertToString(period as IPeriod<T>);
-
-    protected virtual string? ConvertToString(IPeriod<T>? period)
-        => period is null ? null : $"[{ConvertToString(period.From)},{ConvertToString(period.To)}[";
-
     [TestCase("[null,null[", "2025-01-01", ExpectedResult = true)]
     [TestCase("[2024-09-10,null[", "2025-01-01", ExpectedResult = true)]
     [TestCase("[2024-09-10,null[", null, ExpectedResult = false)]

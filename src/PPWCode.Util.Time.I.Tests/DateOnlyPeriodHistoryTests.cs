@@ -11,7 +11,7 @@ public class DateOnlyPeriodHistoryTests : PeriodHistoryTests<DateOnlyPeriod, Dat
         => string.IsNullOrWhiteSpace(value) ? null : DateOnly.Parse(value);
 
     /// <inheritdoc />
-    protected override string? ConvertToString(DateOnly? value)
+    protected override string ConvertToString(DateOnly? value)
         => value is null ? "null" : $"{value.Value:yyyy-MM-dd}";
 
     /// <inheritdoc />

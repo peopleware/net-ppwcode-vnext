@@ -12,7 +12,7 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
     private static readonly Regex _regex = new (@"^\[\s*(?:(\d{4}-\d{1,2}-\d{1,2})|null)\s*,\s*(?:(\d{4}-\d{1,2}-\d{1,2})|null)\s*\[$");
     protected abstract TPeriod CreatePeriod(T? from, T? to);
     protected abstract T? ConvertFromString(string? value);
-    protected abstract string? ConvertToString(T? value);
+    protected abstract string ConvertToString(T? value);
 
     protected abstract T Create(int year, int month, int day);
     protected abstract T AddMonths(T date, int i);

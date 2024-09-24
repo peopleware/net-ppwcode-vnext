@@ -77,6 +77,9 @@
         "resolved": "1.6.0",
         "contentHash": "COC1aiAJjCoA5GBF+QKL2uLqEBew4JsCkQmoHKbN3TlOZKa2fKLz5CpiRQKDz0RsAOEGsVKqOD5bomsXq/4STQ=="
       },
+      "ppwcode.util.collection.i": {
+        "type": "Project"
+      },
       "ppwcode.util.time.i": {
         "type": "Project",
         "dependencies": {

@@ -110,5 +110,5 @@ public abstract class Repository<TModel, TId> : IRepository<TModel, TId>
 
     /// <inheritdoc cref="DbSet{TModel}.AsQueryable" />
     public virtual IQueryable<TModel> Queryable
-        => DbSet;
+        => DbSet.AsQueryable();
 }

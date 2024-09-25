@@ -5,6 +5,7 @@ using PPWCode.Vernacular.Persistence.V.Exceptions;
 
 namespace PPWCode.Vernacular.EntityFrameworkCore.I;
 
+/// <inheritdoc />
 public abstract class Repository<TModel, TId> : IRepository<TModel, TId>
     where TModel : class, IPersistentObject<TId>, IIdentity<TId>
     where TId : IEquatable<TId>
@@ -16,19 +17,19 @@ public abstract class Repository<TModel, TId> : IRepository<TModel, TId>
         _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IRepository{TModel,TId}.GetByIdAsync" />
     public virtual async Task<TModel?> GetByIdAsync(TId id, CancellationToken cancellationToken = default)
         => await DbSet
                .FindAsync([id], cancellationToken)
                .ConfigureAwait(false);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IRepository{TModel,TId}.FindAllAsync" />
     public virtual async Task<List<TModel>> FindAllAsync(CancellationToken cancellationToken = default)
         => await DbSet
                .ToListAsync(cancellationToken)
                .ConfigureAwait(false);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IRepository{TModel,TId}.UpdateAsync" />
     public virtual async Task UpdateAsync(TModel model, CancellationToken cancellationToken = default)
     {
         if (!model.IsTransient)
@@ -43,7 +44,7 @@ public abstract class Repository<TModel, TId> : IRepository<TModel, TId>
         DbSet.Update(model);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IRepository{TModel,TId}.Delete" />
     public virtual void Delete(TModel model)
         => DbSet.Remove(model);
 

@@ -9,9 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using PPWCode.Vernacular.Persistence.V;
-
-namespace PPWCode.Vernacular.EntityFrameworkCore.I;
+namespace PPWCode.Vernacular.Persistence.V;
 
 public interface IRepository<TModel, in TId>
     where TModel : IPersistentObject<TId>, IIdentity<TId>

@@ -52,6 +52,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.HIstoryE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.HIstoryEvent.I.Tests", "src\PPWCode.Vernacular.HIstoryEvent.I.Tests\PPWCode.Vernacular.HIstoryEvent.I.Tests.csproj", "{690DFCC8-5912-4138-9B0D-40C86DD0BCDB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.RequestContext.I", "src\PPWCode.Vernacular.RequestContext.I\PPWCode.Vernacular.RequestContext.I.csproj", "{DCC716A4-3A24-42F0-B692-8857F9D419B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.RequestContext.I.Tests", "src\PPWCode.Vernacular.RequestContext.I.Tests\PPWCode.Vernacular.RequestContext.I.Tests.csproj", "{17F200AB-0D31-4354-8C21-A7AC1C957018}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,5 +137,13 @@ Global
 		{690DFCC8-5912-4138-9B0D-40C86DD0BCDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{690DFCC8-5912-4138-9B0D-40C86DD0BCDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{690DFCC8-5912-4138-9B0D-40C86DD0BCDB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCC716A4-3A24-42F0-B692-8857F9D419B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCC716A4-3A24-42F0-B692-8857F9D419B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCC716A4-3A24-42F0-B692-8857F9D419B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCC716A4-3A24-42F0-B692-8857F9D419B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

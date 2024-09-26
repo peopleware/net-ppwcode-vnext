@@ -48,7 +48,7 @@ public abstract class Period<T>
 
         return
             (GetType() == other.GetType())
-            && From.Equals(other.From)
+            && Nullable.Equals(From, other.From)
             && Nullable.Equals(To, other.To);
     }
 

@@ -11,7 +11,8 @@
 
 namespace PPWCode.Util.Time.I;
 
-public interface ITimeProvider
+public interface ITimeProvider<out T>
+    where T : struct, IComparable<T>, IEquatable<T>
 {
-    DateTimeOffset Now { get; }
+    T Now { get; }
 }

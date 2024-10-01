@@ -11,7 +11,8 @@
 
 namespace PPWCode.Vernacular.EntityFrameworkCore.I;
 
-public abstract class InsertAuditablePersistentObject<T> : Persistence.V.InsertAuditablePersistentObject<T>
-    where T : IEquatable<T>
+public abstract class InsertAuditablePersistentObject<TModel, TTimestamp> : Persistence.V.InsertAuditablePersistentObject<TModel, TTimestamp>
+    where TModel : IEquatable<TModel>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
 }

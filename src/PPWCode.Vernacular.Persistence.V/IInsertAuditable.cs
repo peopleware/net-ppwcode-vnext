@@ -11,9 +11,10 @@
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public interface IInsertAuditable
+public interface IInsertAuditable<TTimestamp>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
-    DateTimeOffset? CreatedAt { get; set; }
+    TTimestamp? CreatedAt { get; set; }
 
     string? CreatedBy { get; set; }
 }

@@ -7,13 +7,14 @@ using PPWCode.Vernacular.Persistence.V.Exceptions;
 namespace PPWCode.Vernacular.EntityFrameworkCore.I;
 
 /// <inheritdoc />
-public abstract class Repository<TModel, TId> : IRepository<TModel, TId>
+public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, TId>
     where TModel : class, IPersistentObject<TId>, IIdentity<TId>
     where TId : IEquatable<TId>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
-    private readonly PpwDbContext _context;
+    private readonly PpwDbContext<TTimestamp> _context;
 
-    protected Repository(PpwDbContext dbContext)
+    protected Repository(PpwDbContext<TTimestamp> dbContext)
     {
         _context = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }

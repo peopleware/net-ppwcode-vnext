@@ -11,12 +11,13 @@
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public abstract class UpdateAuditablePersistentObject<T>
-    : PersistentObject<T>,
-      IUpdateAuditable
-    where T : IEquatable<T>
+public abstract class UpdateAuditablePersistentObject<TId, TTimestamp>
+    : PersistentObject<TId>,
+      IUpdateAuditable<TTimestamp>
+    where TId : IEquatable<TId>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
-    public virtual DateTimeOffset? LastModifiedAt { get; set; }
+    public virtual TTimestamp? LastModifiedAt { get; set; }
 
     public virtual string? LastModifiedBy { get; set; }
 }

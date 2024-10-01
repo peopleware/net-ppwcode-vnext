@@ -11,8 +11,9 @@
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public interface IAuditable
-    : IInsertAuditable,
-      IUpdateAuditable
+public interface IAuditable<TTimestamp>
+    : IInsertAuditable<TTimestamp>,
+      IUpdateAuditable<TTimestamp>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
 }

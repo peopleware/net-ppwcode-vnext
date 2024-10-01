@@ -11,12 +11,13 @@
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public abstract class InsertAuditablePersistentObject<T>
-    : PersistentObject<T>,
-      IInsertAuditable
-    where T : IEquatable<T>
+public abstract class InsertAuditablePersistentObject<TId, TTimestamp>
+    : PersistentObject<TId>,
+      IInsertAuditable<TTimestamp>
+    where TId : IEquatable<TId>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
-    public virtual DateTimeOffset? CreatedAt { get; set; }
+    public virtual TTimestamp? CreatedAt { get; set; }
 
     public virtual string? CreatedBy { get; set; }
 }

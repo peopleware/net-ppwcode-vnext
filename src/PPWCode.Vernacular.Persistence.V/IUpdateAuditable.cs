@@ -11,9 +11,10 @@
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public interface IUpdateAuditable
+public interface IUpdateAuditable<TTimestamp>
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
-    DateTimeOffset? LastModifiedAt { get; set; }
+    TTimestamp? LastModifiedAt { get; set; }
 
     string? LastModifiedBy { get; set; }
 }

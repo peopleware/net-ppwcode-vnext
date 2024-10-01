@@ -9,7 +9,8 @@ using PPWCode.Vernacular.Persistence.V;
 
 namespace PPWCode.Vernacular.EntityFrameworkCore.I;
 
-public abstract class PpwDbContext : DbContext
+public abstract class PpwDbContext<TTimestamp> : DbContext
+    where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>
 {
     protected PpwDbContext(DbContextOptions options)
         : base(options)
@@ -41,15 +42,15 @@ public abstract class PpwDbContext : DbContext
         // Be sure that the types are correct for audit record stamping
         foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
         {
-            if (entity.ClrType.GetInterface(nameof(IInsertAuditable)) is not null)
+            if (entity.ClrType.GetInterface(nameof(IInsertAuditable<TTimestamp>)) is not null)
             {
-                IMutableProperty? createdByProperty = entity.FindProperty(nameof(IInsertAuditable.CreatedBy));
+                IMutableProperty? createdByProperty = entity.FindProperty(nameof(IInsertAuditable<TTimestamp>.CreatedBy));
                 createdByProperty?.SetMaxLength(AuditColumnLength);
             }
 
-            if (entity.ClrType.GetInterface(nameof(IUpdateAuditable)) is not null)
+            if (entity.ClrType.GetInterface(nameof(IUpdateAuditable<TTimestamp>)) is not null)
             {
-                IMutableProperty? createdByProperty = entity.FindProperty(nameof(IUpdateAuditable.LastModifiedBy));
+                IMutableProperty? createdByProperty = entity.FindProperty(nameof(IUpdateAuditable<TTimestamp>.LastModifiedBy));
                 createdByProperty?.SetMaxLength(AuditColumnLength);
             }
         }

@@ -15,27 +15,27 @@ using PPWCode.Vernacular.Semantics.V;
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public abstract class PersistentObject<T>
+public abstract class PersistentObject<TId>
     : CivilizedObject,
-      IPersistentObject<T>,
-      IEquatable<PersistentObject<T>>
-    where T : IEquatable<T>
+      IPersistentObject<TId>,
+      IEquatable<PersistentObject<TId>>
+    where TId : IEquatable<TId>
 {
     private int? _oldHashCode;
 
-    public virtual T? Id { get; init; }
+    public virtual TId? Id { get; init; }
 
     public virtual bool IsTransient
-        => EqualityComparer<T?>.Default.Equals(Id, default);
+        => EqualityComparer<TId?>.Default.Equals(Id, default);
 
     public virtual TOther? As<TOther>()
-        where TOther : class, IPersistentObject<T>
+        where TOther : class, IPersistentObject<TId>
         => this as TOther;
 
-    public virtual bool IsSame(IIdentity<T>? other)
-        => IsSame(other as PersistentObject<T>);
+    public virtual bool IsSame(IIdentity<TId>? other)
+        => IsSame(other as PersistentObject<TId>);
 
-    public virtual bool IsSame(PersistentObject<T>? other)
+    public virtual bool IsSame(PersistentObject<TId>? other)
     {
         if (ReferenceEquals(null, other))
         {
@@ -52,7 +52,7 @@ public abstract class PersistentObject<T>
             return false;
         }
 
-        if (!EqualityComparer<T>.Default.Equals(Id, other.Id))
+        if (!EqualityComparer<TId>.Default.Equals(Id, other.Id))
         {
             return false;
         }
@@ -65,12 +65,12 @@ public abstract class PersistentObject<T>
     }
 
     /// <inheritdoc />
-    public bool Equals(PersistentObject<T>? other)
+    public bool Equals(PersistentObject<TId>? other)
         => IsSame(other);
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
-        => IsSame(obj as PersistentObject<T>);
+        => IsSame(obj as PersistentObject<TId>);
 
     /// <inheritdoc />
     [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode", Justification = "Reviewed")]
@@ -94,9 +94,9 @@ public abstract class PersistentObject<T>
         return Id is null ? 0 : Id.GetHashCode();
     }
 
-    public static bool operator ==(PersistentObject<T>? left, PersistentObject<T>? right)
+    public static bool operator ==(PersistentObject<TId>? left, PersistentObject<TId>? right)
         => Equals(left, right);
 
-    public static bool operator !=(PersistentObject<T>? left, PersistentObject<T>? right)
+    public static bool operator !=(PersistentObject<TId>? left, PersistentObject<TId>? right)
         => !Equals(left, right);
 }

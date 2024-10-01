@@ -13,11 +13,11 @@ using PPWCode.Vernacular.Semantics.V;
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public interface IPersistentObject<T>
-    : IIdentity<T>,
+public interface IPersistentObject<TId>
+    : IIdentity<TId>,
       ICivilizedObject
-    where T : IEquatable<T>
+    where TId : IEquatable<TId>
 {
     TOther? As<TOther>()
-        where TOther : class, IPersistentObject<T>;
+        where TOther : class, IPersistentObject<TId>;
 }

@@ -16,8 +16,10 @@ namespace PPWCode.Vernacular.Persistence.V;
 ///     Interfaces based on this will always represent helper methods that transform
 ///     an <see cref="T:System.Linq.IQueryable`1" /> by applying filters (or transformations).
 /// </summary>
-/// <typeparam name="TIdentity">The identity type</typeparam>
-public interface IQueryManager<in TIdentity>
-    where TIdentity : struct, IEquatable<TIdentity>
+/// <typeparam name="TModel">The type of the entity that is sed for interrogation</typeparam>
+/// <typeparam name="TId">The identity type</typeparam>
+public interface IQueryManager<TModel, in TId>
+    where TModel : IPersistentObject<TId>
+    where TId : struct, IEquatable<TId>
 {
 }

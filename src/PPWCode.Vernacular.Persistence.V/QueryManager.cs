@@ -11,7 +11,8 @@
 
 namespace PPWCode.Vernacular.Persistence.V;
 
-public abstract class QueryManager<TIdentity> : IQueryManager<TIdentity>
-    where TIdentity : struct, IEquatable<TIdentity>
+public abstract class QueryManager<TModel, TId> : IQueryManager<TModel, TId>
+    where TId : struct, IEquatable<TId>
+    where TModel : IPersistentObject<TId>
 {
 }

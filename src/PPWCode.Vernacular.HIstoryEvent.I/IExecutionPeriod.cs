@@ -2,8 +2,9 @@ using PPWCode.Util.Time.I;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-public interface IExecutionPeriod<T>
-    where T : struct, IComparable<T>, IEquatable<T>
+public interface IExecutionPeriod<TExecutionPeriod, TExecution>
+    where TExecutionPeriod : IPeriod<TExecution>
+    where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
 {
-    IPeriod<T> ExecutionPeriod { get; }
+    TExecutionPeriod? ExecutionPeriod { get; set;  }
 }

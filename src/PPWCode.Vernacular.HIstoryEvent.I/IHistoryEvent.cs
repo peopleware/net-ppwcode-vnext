@@ -1,12 +1,13 @@
+using PPWCode.Util.Time.I;
+
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-public interface IHistoryEvent<T, TOwner> : IKnowledgePeriod<T>
-    where T : struct, IComparable<T>, IEquatable<T>
+public interface IHistoryEvent<TKnowledgePeriod, TKnowledge, out TOwner, in TSelf> : IKnowledgePeriod<TKnowledgePeriod, TKnowledge>
+    where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
+    where TKnowledgePeriod : IPeriod<TKnowledge>
+    where TSelf : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TSelf>
 {
     TOwner Owner { get; }
 
-    bool HasIdenticalEventProperties(IHistoryEvent<T, TOwner> other);
-    bool HasIdenticalExecutionPeriod(IHistoryEvent<T, TOwner> other);
-    void SetKnowledgePeriod(T? from, T? to);
-    void SetExecutionPeriod(T? from, T? to);
+    bool HasIdenticalEventProperties(TSelf other);
 }

@@ -1,17 +1,22 @@
+using PPWCode.Util.Time.I;
 using PPWCode.Vernacular.Contracts.I;
 using PPWCode.Vernacular.Persistence.V;
 using PPWCode.Vernacular.RequestContext.I;
 using PPWCode.Vernacular.Semantics.V;
 
+using SemanticException = PPWCode.Vernacular.Exceptions.IV.SemanticException;
+
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
 /// <inheritdoc />
-public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHistoryEventStore<TOwner, TEvent, TId, T, TContext>
-    where TEvent : IHistoryEvent<T, TOwner>, IPersistentObject<TId>
-    where T : struct, IComparable<T>, IEquatable<T>
-    where TContext : class, IHistoryEventContext<T>
+public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, TKnowledge, TContext>
+    : IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, TKnowledge, TContext, TEvent>
     where TOwner : notnull
     where TId : IEquatable<TId>
+    where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
+    where TKnowledgePeriod : Period<TKnowledge>, new()
+    where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
+    where TContext : class, IHistoryEventContext<TKnowledge>
 {
     private readonly IDictionary<TOwner, ISet<TEvent>> _ownerEvents =
         new Dictionary<TOwner, ISet<TEvent>>();
@@ -19,18 +24,18 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
     private readonly ISet<TOwner> _touchedOwners =
         new HashSet<TOwner>();
 
-    private T? _currentTransactionTime;
-    private T? _previousTransactionTime;
+    private TKnowledge? _currentTransactionTime;
+    private TKnowledge? _previousTransactionTime;
 
-    protected HistoryEventStore(IRequestContext<T> requestContext)
+    protected HistoryEventStore(IRequestContext<TKnowledge> requestContext)
     {
         RequestContext = requestContext;
     }
 
-    public IRequestContext<T> RequestContext { get; }
+    public IRequestContext<TKnowledge> RequestContext { get; }
 
     /// <inheritdoc />
-    public virtual TEvent Open(TEvent @event, T transactionTime, TContext? context = default)
+    public virtual TEvent Open(TEvent @event, TKnowledge transactionTime, TContext? context = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
@@ -39,25 +44,26 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
         Contract.Requires(_currentTransactionTime is null || _currentTransactionTime.Value.Equals(transactionTime));
 
         _currentTransactionTime ??= transactionTime;
-        @event.SetKnowledgePeriod(transactionTime, null);
-        StoreEvent(@event, context);
+        @event.KnowledgePeriod = new TKnowledgePeriod { From = transactionTime, To = null };
+        StoreEvent(@event);
 
         return @event;
     }
 
     /// <inheritdoc />
-    public virtual TEvent Close(TEvent @event, T transactionTime, TContext? context = default)
+    public virtual TEvent Close(TEvent @event, TKnowledge transactionTime, TContext? context = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
         Contract.Requires(transactionTime.CompareTo(RequestContext.RequestTimestamp) <= 0);
         Contract.Requires(_previousTransactionTime is null || (_previousTransactionTime.Value.CompareTo(transactionTime) <= 0));
         Contract.Requires(_currentTransactionTime is null || _currentTransactionTime.Value.Equals(transactionTime));
+        Contract.Requires(@event.KnowledgePeriod is not null);
 
         _currentTransactionTime ??= transactionTime;
-        @event.SetKnowledgePeriod(@event.KnowledgePeriod.From, transactionTime);
+        @event.KnowledgePeriod = new TKnowledgePeriod { From = @event.KnowledgePeriod!.From, To = transactionTime };
 
-        StoreEvent(@event, context);
+        StoreEvent(@event);
 
         return @event;
     }
@@ -67,7 +73,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
         => Process(RequestContext.RequestTimestamp, context);
 
     /// <inheritdoc />
-    public virtual ISet<TEvent> Process(T transactionTime, TContext? context = default)
+    public virtual ISet<TEvent> Process(TKnowledge transactionTime, TContext? context = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
@@ -89,7 +95,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
             Contract.Assert(_ownerEvents.ContainsKey(owner));
             Contract.Assert(
                 _ownerEvents[owner]
-                    .All(e => !e.KnowledgePeriod.From.Equals(e.KnowledgePeriod.To)
+                    .All(e => !e.KnowledgePeriod!.From.Equals(e.KnowledgePeriod.To)
                               || e.KnowledgePeriod.From.Equals(transactionTime)));
 
             // events-to-process should only contain events from the current transaction-time
@@ -97,7 +103,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
             // but any events that are not on the current transaction-time must be older and can be ignored
             IEnumerable<TEvent> eventsToIgnore =
                 _ownerEvents[owner]
-                    .Where(e => !e.KnowledgePeriod.From.Equals(transactionTime)
+                    .Where(e => !e.KnowledgePeriod!.From.Equals(transactionTime)
                                 && !e.KnowledgePeriod.To.Equals(transactionTime));
             _ownerEvents[owner].ExceptWith(eventsToIgnore);
             ISet<TEvent> events = _ownerEvents[owner];
@@ -105,7 +111,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
             // remove events with an empty knowledge period [X, X[
             TEvent[] emptyKnowledgePeriods =
                 events
-                    .Where(e => e.KnowledgePeriod.From.Equals(e.KnowledgePeriod.To))
+                    .Where(e => e.KnowledgePeriod!.From.Equals(e.KnowledgePeriod.To))
                     .ToArray();
             foreach (TEvent @event in emptyKnowledgePeriods)
             {
@@ -125,8 +131,9 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
                 TEvent @event = eventsToProcess.First();
                 TEvent[] candidates =
                     eventsToProcess
-                        .Where(e => @event.HasIdenticalEventProperties(e) && e.HasIdenticalExecutionPeriod(e))
-                        .OrderBy(e => e.KnowledgePeriod.From)
+                        .Where(e => @event.HasIdenticalEventProperties(e))
+                        .Where(e => HasIdenticalExecutionPeriod(e, @event))
+                        .OrderBy(e => e.KnowledgePeriod!.From)
                         .ToArray();
                 Contract.Assert(candidates.Length <= 2);
 
@@ -138,11 +145,11 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
 
                     // if there are 2 candidates, the following should always be true,
                     // this must be true, since only the events related to transaction-time are processed
-                    Contract.Assert(original.KnowledgePeriod.To.Equals(candidate.KnowledgePeriod.From));
+                    Contract.Assert(original.KnowledgePeriod!.To.Equals(candidate.KnowledgePeriod!.From));
                     Contract.Assert(candidate.KnowledgePeriod.From.Equals(transactionTime));
                     Contract.Assert(candidate.KnowledgePeriod.To == null);
 
-                    original.SetKnowledgePeriod(original.KnowledgePeriod.From, null);
+                    original.KnowledgePeriod = new TKnowledgePeriod { From = original.KnowledgePeriod.From, To = null };
 
                     if (!candidate.IsTransient)
                     {
@@ -187,6 +194,19 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
     }
 
     /// <summary>
+    ///     Compares two events of type <typeparamref name="TEvent" />, if they have the same execution period, it should
+    ///     return
+    ///     true.
+    /// </summary>
+    /// <param name="event">The event that being used for equality of their executing period</param>
+    /// <param name="otherEvent">The other event that being used for equality of their executing period</param>
+    /// <returns>
+    ///     Returns <c>true</c> if both have the same execution period or none of them implement
+    ///     <see cref="IExecutionPeriod{TExecutionPeriod,TExecution}" />
+    /// </returns>
+    protected abstract bool HasIdenticalExecutionPeriod(TEvent @event, TEvent otherEvent);
+
+    /// <summary>
     ///     Given an event of type <typeparamref name="TEvent" />, extract / determine a root object of type
     ///     <typeparamref name="TOwner" />
     /// </summary>
@@ -194,7 +214,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
     /// <returns>
     ///     An object of type <typeparamref name="TOwner" />
     /// </returns>
-    protected virtual TOwner ExtractOwnerFrom(TEvent @event)
+    protected virtual TOwner? ExtractOwnerFrom(TEvent @event)
         => @event.Owner;
 
     /// <summary>
@@ -216,7 +236,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
     /// <summary>
     ///     Delete the <paramref name="event" /> in the data store.
     /// </summary>
-    /// <remarks>The <paramref name="event"/> is guaranteed a non-transient entity</remarks>
+    /// <remarks>The <paramref name="event" /> is guaranteed a non-transient entity</remarks>
     /// <param name="event">event to be deleted</param>
     /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
     protected abstract void Delete(TEvent @event, TContext? context);
@@ -224,14 +244,18 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, T, TContext> : IHis
     /// <summary>
     ///     Add the <paramref name="event" /> in the data store.
     /// </summary>
-    /// <remarks>The <paramref name="event"/> is guaranteed a transient entity</remarks>
+    /// <remarks>The <paramref name="event" /> is guaranteed a transient entity</remarks>
     /// <param name="event">event to be added</param>
     /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
     protected abstract void Insert(TEvent @event, TContext? context);
 
-    private void StoreEvent(TEvent @event, TContext? context)
+    private void StoreEvent(TEvent @event)
     {
-        TOwner root = ExtractOwnerFrom(@event);
+        TOwner? root = ExtractOwnerFrom(@event);
+        if (root is null)
+        {
+            throw new SemanticException($"The @event can not be store without an owner.");
+        }
 
         if (!_ownerEvents.ContainsKey(root))
         {

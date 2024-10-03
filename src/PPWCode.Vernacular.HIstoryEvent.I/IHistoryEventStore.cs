@@ -1,4 +1,5 @@
-﻿using PPWCode.Vernacular.Persistence.V;
+﻿using PPWCode.Util.Time.I;
+using PPWCode.Vernacular.Persistence.V;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
@@ -10,15 +11,19 @@ namespace PPWCode.Vernacular.HistoryEvent.I;
 /// </summary>
 /// <typeparam name="TOwner">generic type of the owner</typeparam>
 /// <typeparam name="TEvent">generic type of the event</typeparam>
-/// <typeparam name="TId">generic type of the identification of the </typeparam>
-/// <typeparam name="T">generic type of the knowledge period members</typeparam>
+/// <typeparam name="TId">generic type of the identification of TEvent</typeparam>
+/// <typeparam name="TKnowledgePeriod">generic type of the knowledge period</typeparam>
+/// <typeparam name="TKnowledge">generic type of the knowledge period members</typeparam>
 /// <typeparam name="TContext">type of the context can be used to have extension points during processing</typeparam>
-public interface IHistoryEventStore<TOwner, TEvent, TId, in T, in TContext>
-    where TEvent : IHistoryEvent<T, TOwner>, IPersistentObject<TId>
-    where T : struct, IComparable<T>, IEquatable<T>
-    where TContext : IHistoryEventContext<T>
+/// <typeparam name="TSelf">type of the implementation</typeparam>
+public interface IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, in TKnowledge, in TContext, TSelf>
+    where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TSelf>, IPersistentObject<TId>
+    where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
+    where TContext : IHistoryEventContext<TKnowledge>
     where TOwner : notnull
     where TId : IEquatable<TId>
+    where TKnowledgePeriod : Period<TKnowledge>, new()
+    where TSelf : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TSelf>
 {
     /// <summary>
     ///     Registers the given event in the store, using the given transaction time.
@@ -27,7 +32,7 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, in T, in TContext>
     /// <param name="transactionTime">the transaction time used for the knowledge dates</param>
     /// <param name="context">optional context of type <typeparamref name="TContext"/></param>
     /// <returns>the newly created event, which is no longer transient</returns>
-    TEvent Open(TEvent @event, T transactionTime, TContext? context = default);
+    TEvent Open(TEvent @event, TKnowledge transactionTime, TContext? context = default);
 
     /// <summary>
     ///     Closes the given event in the store, using the given transaction time.
@@ -36,7 +41,7 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, in T, in TContext>
     /// <param name="transactionTime">the transaction time used for the knowledge dates</param>
     /// <param name="context">optional context of type <typeparamref name="TContext"/></param>
     /// <returns>the updated event</returns>
-    TEvent Close(TEvent @event, T transactionTime, TContext? context = default);
+    TEvent Close(TEvent @event, TKnowledge transactionTime, TContext? context = default);
 
     /// <summary>
     ///     Processes the opened and closed events in this store.  This means that all newly created
@@ -51,7 +56,7 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, in T, in TContext>
     ///     opened or closed, and did not have an empty knowledge period.
     /// </returns>
     /// <remarks>This method is only to be used during the migration!</remarks>
-    ISet<TEvent> Process(T transactionTime, TContext? context = default);
+    ISet<TEvent> Process(TKnowledge transactionTime, TContext? context = default);
 
     /// <summary>
     ///     Processes the opened and closed events in this store.  This means that all newly created

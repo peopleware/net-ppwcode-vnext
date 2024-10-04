@@ -26,10 +26,10 @@ public abstract class DateTimeOffsetPeriod
     }
 
     /// <inheritdoc />
-    public override DateTimeOffset MinValue
+    protected override DateTimeOffset MinValue
         => DateTimeOffset.MinValue;
 
     /// <inheritdoc />
-    public override DateTimeOffset MaxValue
+    protected override DateTimeOffset MaxValue
         => DateTimeOffset.MaxValue;
 }

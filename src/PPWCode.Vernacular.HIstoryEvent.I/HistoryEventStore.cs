@@ -12,11 +12,11 @@ namespace PPWCode.Vernacular.HistoryEvent.I;
 public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, TKnowledge, TContext>
     : IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, TKnowledge, TContext, TEvent>
     where TOwner : notnull
-    where TId : IEquatable<TId>
     where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
+    where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
     where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
-    where TContext : class, IHistoryEventContext<TKnowledge>
+    where TContext : IHistoryEventStoreContext
 {
     private readonly IDictionary<TOwner, ISet<TEvent>> _ownerEvents =
         new Dictionary<TOwner, ISet<TEvent>>();
@@ -69,11 +69,11 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     }
 
     /// <inheritdoc />
-    public virtual ISet<TEvent> Process(TContext? context = default)
-        => Process(RequestContext.RequestTimestamp, context);
+    public virtual ISet<TEvent> Process(TContext? context = default, Action<TEvent, TContext?>? onCreate = default)
+        => Process(RequestContext.RequestTimestamp, context, onCreate);
 
     /// <inheritdoc />
-    public virtual ISet<TEvent> Process(TKnowledge transactionTime, TContext? context = default)
+    public virtual ISet<TEvent> Process(TKnowledge transactionTime, TContext? context = default, Action<TEvent, TContext?>? onCreate = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
@@ -180,7 +180,14 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
         // save
         foreach (TEvent @event in result.Where(e => e.IsTransient))
         {
-            Insert(@event, context);
+            if (onCreate is not null)
+            {
+                onCreate.Invoke(@event, context);
+            }
+            else
+            {
+                Insert(@event, context);
+            }
         }
 
         // reset transaction time

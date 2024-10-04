@@ -28,6 +28,9 @@
         "resolved": "1.1.0",
         "contentHash": "rj9+WoWdvJjOT9auGGk+WYz2gSwNSGuVLrUv0UdghcgGX10cYdoiZG5Ad9pzIukrdCRqQBayMI4OI/xbiXEbJw=="
       },
+      "ppwcode.util.authorisation.i": {
+        "type": "Project"
+      },
       "ppwcode.util.time.i": {
         "type": "Project",
         "dependencies": {

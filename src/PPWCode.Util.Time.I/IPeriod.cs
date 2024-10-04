@@ -16,9 +16,6 @@ namespace PPWCode.Util.Time.I;
 public interface IPeriod<T> : ICivilizedObject
     where T : struct, IComparable<T>, IEquatable<T>
 {
-    T MinValue { get; }
-    T MaxValue { get; }
-
     T? From { get; }
     T? To { get; }
 
@@ -28,5 +25,6 @@ public interface IPeriod<T> : ICivilizedObject
     bool Contains(T? other);
     bool Contains(IPeriod<T>? other);
     bool Overlaps(IPeriod<T>? other);
+    bool IsCompletelyContainedWithin(IPeriod<T>? other);
     IPeriod<T>? OverlappingPeriod(IPeriod<T>? other);
 }

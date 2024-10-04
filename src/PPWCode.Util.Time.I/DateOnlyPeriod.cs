@@ -26,10 +26,10 @@ public abstract class DateOnlyPeriod
     }
 
     /// <inheritdoc />
-    public override DateOnly MinValue
+    protected override DateOnly MinValue
         => DateOnly.MinValue;
 
     /// <inheritdoc />
-    public override DateOnly MaxValue
+    protected override DateOnly MaxValue
         => DateOnly.MaxValue;
 }

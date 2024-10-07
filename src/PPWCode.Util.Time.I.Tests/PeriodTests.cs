@@ -57,4 +57,19 @@ public abstract class PeriodTests<TPeriod, T> : BasePeriodTests<TPeriod, T>
         IPeriod<T> period2 = ConvertFromStringPeriod(periodAsString2);
         return ConvertToString(period1.OverlappingPeriod(period2));
     }
+
+    [TestCase("[null,null[", "[null,null[", ExpectedResult = true)]
+    [TestCase("[2025-01-01,null[", "[null,null[", ExpectedResult = true)]
+    [TestCase("[2025-01-01,2025-02-01[", "[null,null[", ExpectedResult = true)]
+    [TestCase("[2025-01-01,2025-02-01[", "[2025-01-01,2025-02-01[", ExpectedResult = true)]
+    [TestCase("[2025-01-01,2025-02-01[", "[2024-01-01,2025-02-01[", ExpectedResult = true)]
+    [TestCase("[2025-01-01,2025-02-01[", "[2025-01-01,2026-02-01[", ExpectedResult = true)]
+    [TestCase("[2025-01-01,2025-02-01[", "[2024-01-01,2026-02-01[", ExpectedResult = true)]
+    [TestCase("[null,null[", "[2025-01-01,null[", ExpectedResult = false)]
+    public bool check_IsCompletelyContainedWithin(string periodAsString1, string periodAsString2)
+    {
+        IPeriod<T> period1 = ConvertFromStringPeriod(periodAsString1);
+        IPeriod<T> period2 = ConvertFromStringPeriod(periodAsString2);
+        return period1.IsCompletelyContainedWithin(period2);
+    }
 }

@@ -116,7 +116,7 @@ namespace PPWCode.Util.Validation.IV.European.France
 
             if (result)
             {
-                result = Regex.IsMatch(identification, "[0-9]{6}[0-9AB][0-9]{8}");
+                result = Regex.IsMatch(identification, "[0-9]{5}(?:[0-9]{2}|2A|2B)[0-9]{8}");
             }
 
             // sex can contain [1,2,3,4,7,8]

@@ -30,6 +30,8 @@ namespace PPWCode.Util.Validation.IV.Tests.European.France
                 yield return string.Empty;
                 yield return "1";
                 yield return "1234123";
+                yield return "180013A07512345";
+                yield return "180013B07512345";
             }
         }
 
@@ -74,7 +76,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.France
 
         [Test]
         [TestCaseSource(nameof(InvalidIdentifications))]
-        public void bsn_is_not_valid(string identification)
+        public void nir_is_not_valid(string identification)
         {
             // Arrange
             NIR nir = new (identification);
@@ -90,7 +92,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.France
 
         [Test]
         [TestCaseSource(nameof(StrictValidIdentifications))]
-        public void bsn_is_strict_valid(string identification)
+        public void nir_is_strict_valid(string identification)
         {
             // Arrange
             NIR nir = new (identification);
@@ -107,7 +109,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.France
 
         [Test]
         [TestCaseSource(nameof(ValidIdentifications))]
-        public void bsn_is_valid(string identification)
+        public void nir_is_valid(string identification)
         {
             // Arrange
             NIR nir = new (identification);

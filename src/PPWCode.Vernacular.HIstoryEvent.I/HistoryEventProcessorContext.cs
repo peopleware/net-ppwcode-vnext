@@ -3,7 +3,7 @@ using PPWCode.Vernacular.Persistence.V;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-public class GenericHistoryContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+public class HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
     where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
     where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -13,7 +13,7 @@ public class GenericHistoryContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKn
     where TSubEvent : TEvent
     where THistoryEventStoreContext : IHistoryEventStoreContext
 {
-    public GenericHistoryContext(
+    public HistoryEventProcessorContext(
         IEnumerable<TSubEvent> events,
         PeriodHistory<TExecutionPeriod, TExecution>? referenceHistory = default,
         PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory = default,

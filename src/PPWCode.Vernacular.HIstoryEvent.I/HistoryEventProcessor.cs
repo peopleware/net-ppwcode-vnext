@@ -6,9 +6,9 @@ using PPWCode.Vernacular.RequestContext.I;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-/// <inheritdoc cref="IGenericHistory{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext}" />
-public abstract class GenericHistory<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
-    : IGenericHistory<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+/// <inheritdoc cref="IHistoryEventProcessor{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext}" />
+public abstract class HistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+    : IHistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
     where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>, IExecutionPeriod<TExecutionPeriod, TExecution>
     where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -22,19 +22,19 @@ public abstract class GenericHistory<TOwner, TSubEvent, TId, TKnowledgePeriod, T
     private readonly Stack<PeriodHistory<TExecutionPeriod, TExecution>?> _permissionHistoryStack = new ();
     private PeriodHistory<TExecutionPeriod, TExecution>? _permissionHistory;
 
-    protected GenericHistory(
+    protected HistoryEventProcessor(
         IRequestContext<TKnowledge> requestContext,
         IHistoryEventStore<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, THistoryEventStoreContext, TEvent> eventStore,
-        GenericHistoryContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> context)
+        HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> eventProcessorContext)
     {
-        TransactionTime = context.TransactionTime ?? requestContext.RequestTimestamp;
+        TransactionTime = eventProcessorContext.TransactionTime ?? requestContext.RequestTimestamp;
         EventStore = eventStore;
-        Context = context;
+        EventProcessorContext = eventProcessorContext;
 
-        Events = context.Events.ToList();
-        _permissionHistory = context.PermissionHistory;
-        ReferenceHistory = context.ReferenceHistory;
-        HistoryEventStoreContext = context.HistoryEventStoreContext;
+        Events = eventProcessorContext.Events.ToList();
+        _permissionHistory = eventProcessorContext.PermissionHistory;
+        ReferenceHistory = eventProcessorContext.ReferenceHistory;
+        HistoryEventStoreContext = eventProcessorContext.HistoryEventStoreContext;
 
         // events must be civilized
         if (Events.Any(e => !e.IsCivilized))
@@ -84,7 +84,7 @@ public abstract class GenericHistory<TOwner, TSubEvent, TId, TKnowledgePeriod, T
     public IList<TSubEvent> Events { get; }
 
     /// <inheritdoc />
-    public GenericHistoryContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> Context { get; }
+    public HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> EventProcessorContext { get; }
 
     /// <inheritdoc />
     public PeriodHistory<TExecutionPeriod, TExecution>? ReferenceHistory { get; }

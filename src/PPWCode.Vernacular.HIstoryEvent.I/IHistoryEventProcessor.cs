@@ -15,8 +15,8 @@ namespace PPWCode.Vernacular.HistoryEvent.I
     /// <typeparam name="TExecutionPeriod">generic type of the execution period</typeparam>
     /// <typeparam name="TExecution">generic type of the execution period members</typeparam>
     /// <typeparam name="TEvent">type of the implementation</typeparam>
-    /// <typeparam name="THistoryEventStoreContext">type of the optional context</typeparam>
-    public interface IGenericHistory<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+    /// <typeparam name="THistoryEventStoreContext">type of the optional eventProcessorContext</typeparam>
+    public interface IHistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
         where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>, IExecutionPeriod<TExecutionPeriod, TExecution>
         where TId : IEquatable<TId>
         where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -27,9 +27,9 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         where THistoryEventStoreContext : IHistoryEventStoreContext
     {
         /// <summary>
-        ///      Original context that we need to process the history.
+        ///      Original eventProcessorContext that we need to process the history.
         /// </summary>
-        GenericHistoryContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> Context { get; }
+        HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> EventProcessorContext { get; }
 
         /// <summary>
         ///     The <see cref="ReferenceHistory" /> is an ordered set of events that must be used as a reference timeline.

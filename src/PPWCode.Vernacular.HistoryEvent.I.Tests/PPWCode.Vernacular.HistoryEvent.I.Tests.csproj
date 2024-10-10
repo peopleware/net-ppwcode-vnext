@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PPWCode.Vernacular.HIstoryEvent.I\PPWCode.Vernacular.HIstoryEvent.I.csproj" />
+      <ProjectReference Include="..\PPWCode.Vernacular.HistoryEvent.I\PPWCode.Vernacular.HistoryEvent.I.csproj" />
     </ItemGroup>
 
 </Project>

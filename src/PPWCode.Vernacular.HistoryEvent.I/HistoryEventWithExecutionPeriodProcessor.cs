@@ -6,9 +6,9 @@ using PPWCode.Vernacular.RequestContext.I;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-/// <inheritdoc cref="IHistoryEventProcessor{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext}" />
-public abstract class HistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
-    : IHistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+/// <inheritdoc cref="IHistoryEventWithExecutionPeriodProcessor{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext}" />
+public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+    : IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
     where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>, IExecutionPeriod<TExecutionPeriod, TExecution>
     where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -22,7 +22,7 @@ public abstract class HistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePe
     private readonly Stack<PeriodHistory<TExecutionPeriod, TExecution>?> _permissionHistoryStack = new ();
     private PeriodHistory<TExecutionPeriod, TExecution>? _permissionHistory;
 
-    protected HistoryEventProcessor(
+    protected HistoryEventWithExecutionPeriodProcessor(
         IRequestContext<TKnowledge> requestContext,
         IHistoryEventStore<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, THistoryEventStoreContext, TEvent> eventStore,
         HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> eventProcessorContext)

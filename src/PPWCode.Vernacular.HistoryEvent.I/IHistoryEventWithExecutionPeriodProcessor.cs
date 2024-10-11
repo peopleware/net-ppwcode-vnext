@@ -16,7 +16,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
     /// <typeparam name="TExecution">generic type of the execution period members</typeparam>
     /// <typeparam name="TEvent">type of the implementation</typeparam>
     /// <typeparam name="THistoryEventStoreContext">type of the optional eventProcessorContext</typeparam>
-    public interface IHistoryEventProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+    public interface IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
         where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>, IExecutionPeriod<TExecutionPeriod, TExecution>
         where TId : IEquatable<TId>
         where TKnowledgePeriod : Period<TKnowledge>, new()

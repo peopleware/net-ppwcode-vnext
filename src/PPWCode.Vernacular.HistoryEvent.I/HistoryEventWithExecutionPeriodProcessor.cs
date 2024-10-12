@@ -15,7 +15,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
     where TExecutionPeriod : Period<TExecution>, new()
     where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
-    where TSubEvent : class, TEvent, IEquatable<TSubEvent>, IExecutionPeriod<TExecutionPeriod, TExecution>, new()
+    where TSubEvent : class, TEvent, IExecutionPeriod<TExecutionPeriod, TExecution>, new()
     where THistoryEventStoreContext : IHistoryEventStoreContext
     where TReferenceHistory : PeriodHistory<TExecutionPeriod, TExecution>
     where TPermissionHistory : PeriodHistory<TExecutionPeriod, TExecution>

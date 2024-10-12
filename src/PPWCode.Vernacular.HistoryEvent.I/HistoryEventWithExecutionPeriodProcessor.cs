@@ -6,9 +6,9 @@ using PPWCode.Vernacular.RequestContext.I;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-/// <inheritdoc cref="IHistoryEventWithExecutionPeriodProcessor{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext}" />
-public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
-    : IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+/// <inheritdoc cref="IHistoryEventWithExecutionPeriodProcessor{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext,TReferenceHistory,TPermissionHistory}" />
+public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory>
+    : IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory>
     where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
     where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -17,15 +17,17 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
     where TSubEvent : class, TEvent, IEquatable<TSubEvent>, IExecutionPeriod<TExecutionPeriod, TExecution>, new()
     where THistoryEventStoreContext : IHistoryEventStoreContext
+    where TReferenceHistory : PeriodHistory<TExecutionPeriod, TExecution>
+    where TPermissionHistory : PeriodHistory<TExecutionPeriod, TExecution>
 {
     private static readonly TExecutionPeriod _infinitiveExecutionPeriod = new () { From = null, To = null };
-    private readonly Stack<PeriodHistory<TExecutionPeriod, TExecution>?> _permissionHistoryStack = new ();
-    private PeriodHistory<TExecutionPeriod, TExecution>? _permissionHistory;
+    private readonly Stack<TPermissionHistory?> _permissionHistoryStack = new ();
+    private TPermissionHistory? _permissionHistory;
 
     protected HistoryEventWithExecutionPeriodProcessor(
         IRequestContext<TKnowledge> requestContext,
         IHistoryEventStore<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, THistoryEventStoreContext, TEvent> eventStore,
-        HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> eventProcessorContext)
+        HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory> eventProcessorContext)
     {
         TransactionTime = eventProcessorContext.TransactionTime ?? requestContext.RequestTimestamp;
         EventStore = eventStore;
@@ -84,13 +86,13 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     public IList<TSubEvent> Events { get; }
 
     /// <inheritdoc />
-    public HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> EventProcessorContext { get; }
+    public HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory> EventProcessorContext { get; }
 
     /// <inheritdoc />
-    public PeriodHistory<TExecutionPeriod, TExecution>? ReferenceHistory { get; }
+    public TReferenceHistory? ReferenceHistory { get; }
 
     /// <inheritdoc />
-    public PeriodHistory<TExecutionPeriod, TExecution>? PermissionHistory
+    public TPermissionHistory? PermissionHistory
         => _permissionHistory;
 
     /// <inheritdoc />
@@ -202,7 +204,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     }
 
     /// <inheritdoc />
-    public void Create(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, TSubEvent @event)
+    public void Create(TPermissionHistory? permissionHistory, TSubEvent @event)
         => ExecuteWithinAnotherPermissionHistory(permissionHistory, () => Create(@event));
 
     /// <inheritdoc />
@@ -268,7 +270,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     }
 
     /// <inheritdoc />
-    public void Delete(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, TExecutionPeriod executionPeriod)
+    public void Delete(TPermissionHistory? permissionHistory, TExecutionPeriod executionPeriod)
         => ExecuteWithinAnotherPermissionHistory(permissionHistory, () => Delete(executionPeriod));
 
     /// <inheritdoc />
@@ -299,7 +301,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
 
     /// <inheritdoc />
     public void Update(
-        PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory,
+        TPermissionHistory? permissionHistory,
         TSubEvent @event,
         TExecutionPeriod newExecutionPeriod,
         bool sticky)
@@ -421,7 +423,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
 
     /// <inheritdoc />
     public void Update(
-        PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory,
+        TPermissionHistory? permissionHistory,
         TSubEvent @event,
         TSubEvent newEvent,
         bool sticky)
@@ -684,7 +686,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         }
     }
 
-    private void ExecuteWithinAnotherPermissionHistory(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, Action action)
+    private void ExecuteWithinAnotherPermissionHistory(TPermissionHistory? permissionHistory, Action action)
     {
         _permissionHistoryStack.Push(_permissionHistory);
         try

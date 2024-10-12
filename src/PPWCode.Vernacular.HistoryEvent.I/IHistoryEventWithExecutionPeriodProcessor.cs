@@ -16,7 +16,9 @@ namespace PPWCode.Vernacular.HistoryEvent.I
     /// <typeparam name="TExecution">generic type of the execution period members</typeparam>
     /// <typeparam name="TEvent">type of the implementation</typeparam>
     /// <typeparam name="THistoryEventStoreContext">type of the optional eventProcessorContext</typeparam>
-    public interface IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+    /// <typeparam name="TReferenceHistory">type of the reference history in the processor context</typeparam>
+    /// <typeparam name="TPermissionHistory">type of the permission history in the processor context</typeparam>
+    public interface IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory>
         where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
         where TId : IEquatable<TId>
         where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -25,25 +27,27 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
         where TSubEvent : class, TEvent, IExecutionPeriod<TExecutionPeriod, TExecution>, new()
         where THistoryEventStoreContext : IHistoryEventStoreContext
+        where TReferenceHistory : PeriodHistory<TExecutionPeriod, TExecution>
+        where TPermissionHistory : PeriodHistory<TExecutionPeriod, TExecution>
     {
         /// <summary>
         ///      Original eventProcessorContext that we need to process the history.
         /// </summary>
-        HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext> EventProcessorContext { get; }
+        HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory> EventProcessorContext { get; }
 
         /// <summary>
         ///     The <see cref="ReferenceHistory" /> is an ordered set of events that must be used as a reference timeline.
         ///     For every point in time that has an event in the reference timeline, this history must also have an event
         ///     on that point, and vice versa. This is an invariant that must be respected during updates on this history.
         /// </summary>
-        PeriodHistory<TExecutionPeriod, TExecution>? ReferenceHistory { get; }
+        TReferenceHistory? ReferenceHistory { get; }
 
         /// <summary>
         ///     The <see cref="PermissionHistory" /> is an ordered set of events that represents the permissions of the user
         ///     of this history. The user can only change something in this history on a given point in time if the
         ///     PermissionHistory has an event at that point in time.
         /// </summary>
-        PeriodHistory<TExecutionPeriod, TExecution>? PermissionHistory { get; }
+        TPermissionHistory? PermissionHistory { get; }
 
         /// <summary>
         ///     The reference time point at which all operations on the history take place.
@@ -96,7 +100,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// <param name="permissionHistory">the given permission history</param>
         /// <param name="event">the given, transient, event</param>
         /// <remarks>The given <paramref name="permissionHistory" /> overrules the configured <see cref="PermissionHistory" />.</remarks>
-        void Create(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, TSubEvent @event);
+        void Create(TPermissionHistory? permissionHistory, TSubEvent @event);
 
         /// <summary>
         ///     Clears the history over the given <paramref name="executionPeriod" />. During the removal and update of the
@@ -115,7 +119,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// <param name="permissionHistory">the given permission history</param>
         /// <param name="executionPeriod">the given period</param>
         /// <remarks>The given <paramref name="permissionHistory" /> overrules the configured <see cref="PermissionHistory" />.</remarks>
-        void Delete(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, TExecutionPeriod executionPeriod);
+        void Delete(TPermissionHistory? permissionHistory, TExecutionPeriod executionPeriod);
 
         /// <summary>
         ///     Updates the given <paramref name="event" /> in the history with a new execution period.  During the update, the
@@ -138,7 +142,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// <param name="newExecutionPeriod">the new execution period</param>
         /// <param name="sticky">whether the bordering events should also move</param>
         /// <remarks>The given <paramref name="permissionHistory" /> overrules the configured <see cref="PermissionHistory" />.</remarks>
-        void Update(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, TSubEvent @event, TExecutionPeriod newExecutionPeriod, bool sticky);
+        void Update(TPermissionHistory? permissionHistory, TSubEvent @event, TExecutionPeriod newExecutionPeriod, bool sticky);
 
         /// <summary>
         ///     Updates the given <paramref name="event" /> in the history with the given <paramref name="newEvent" />.
@@ -160,7 +164,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// <param name="newEvent">the new not transient event</param>
         /// <param name="sticky">whether the bordering events should expand based on the execution period of the new event</param>
         /// <remarks>The given <paramref name="permissionHistory" /> overrules the configured <see cref="PermissionHistory" />.</remarks>
-        void Update(PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory, TSubEvent @event, TSubEvent newEvent, bool sticky);
+        void Update(TPermissionHistory? permissionHistory, TSubEvent @event, TSubEvent newEvent, bool sticky);
 
         /// <summary>
         ///     Processes all remaining changes in the underlying event store. And removes any events from the history that are

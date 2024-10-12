@@ -3,7 +3,7 @@ using PPWCode.Vernacular.Persistence.V;
 
 namespace PPWCode.Vernacular.HistoryEvent.I;
 
-public class HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
+public class HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext, TReferenceHistory, TPermissionHistory>
     where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
     where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
@@ -12,11 +12,13 @@ public class HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeri
     where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
     where TSubEvent : TEvent
     where THistoryEventStoreContext : IHistoryEventStoreContext
+    where TReferenceHistory : PeriodHistory<TExecutionPeriod, TExecution>
+    where TPermissionHistory : PeriodHistory<TExecutionPeriod, TExecution>
 {
     public HistoryEventProcessorContext(
         IEnumerable<TSubEvent> events,
-        PeriodHistory<TExecutionPeriod, TExecution>? referenceHistory = default,
-        PeriodHistory<TExecutionPeriod, TExecution>? permissionHistory = default,
+        TReferenceHistory? referenceHistory = default,
+        TPermissionHistory? permissionHistory = default,
         THistoryEventStoreContext? historyEventStoreContext = default,
         TKnowledge? transactionTime = default)
     {
@@ -30,9 +32,9 @@ public class HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeri
     public ISet<TSubEvent> Events { get; }
 
     public THistoryEventStoreContext? HistoryEventStoreContext { get; }
-    public PeriodHistory<TExecutionPeriod, TExecution>? ReferenceHistory { get; }
+    public TReferenceHistory? ReferenceHistory { get; }
 
-    public PeriodHistory<TExecutionPeriod, TExecution>? PermissionHistory { get; }
+    public TPermissionHistory? PermissionHistory { get; }
 
     public TKnowledge? TransactionTime { get; }
 }

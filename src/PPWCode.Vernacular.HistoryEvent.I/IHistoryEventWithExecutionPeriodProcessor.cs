@@ -17,13 +17,13 @@ namespace PPWCode.Vernacular.HistoryEvent.I
     /// <typeparam name="TEvent">type of the implementation</typeparam>
     /// <typeparam name="THistoryEventStoreContext">type of the optional eventProcessorContext</typeparam>
     public interface IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
-        where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>, IExecutionPeriod<TExecutionPeriod, TExecution>
+        where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
         where TId : IEquatable<TId>
         where TKnowledgePeriod : Period<TKnowledge>, new()
         where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
         where TExecutionPeriod : Period<TExecution>, new()
         where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
-        where TSubEvent : class, TEvent, new()
+        where TSubEvent : class, TEvent, IExecutionPeriod<TExecutionPeriod, TExecution>, new()
         where THistoryEventStoreContext : IHistoryEventStoreContext
     {
         /// <summary>

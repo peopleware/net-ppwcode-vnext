@@ -9,13 +9,13 @@ namespace PPWCode.Vernacular.HistoryEvent.I;
 /// <inheritdoc cref="IHistoryEventWithExecutionPeriodProcessor{TOwner,TSubEvent,TId,TKnowledgePeriod,TKnowledge,TExecutionPeriod,TExecution,TEvent,THistoryEventStoreContext}" />
 public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
     : IHistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent, TId, TKnowledgePeriod, TKnowledge, TExecutionPeriod, TExecution, TEvent, THistoryEventStoreContext>
-    where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>, IExecutionPeriod<TExecutionPeriod, TExecution>
+    where TEvent : IHistoryEvent<TKnowledgePeriod, TKnowledge, TOwner, TEvent>, IPersistentObject<TId>
     where TId : IEquatable<TId>
     where TKnowledgePeriod : Period<TKnowledge>, new()
     where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
     where TExecutionPeriod : Period<TExecution>, new()
     where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
-    where TSubEvent : class, TEvent, IEquatable<TSubEvent>, new()
+    where TSubEvent : class, TEvent, IEquatable<TSubEvent>, IExecutionPeriod<TExecutionPeriod, TExecution>, new()
     where THistoryEventStoreContext : IHistoryEventStoreContext
 {
     private static readonly TExecutionPeriod _infinitiveExecutionPeriod = new () { From = null, To = null };

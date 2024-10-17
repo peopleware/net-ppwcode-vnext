@@ -10,4 +10,5 @@ public interface IHistoryEvent<TKnowledgePeriod, TKnowledge, out TOwner, in TSel
     TOwner Owner { get; }
 
     bool HasIdenticalEventProperties(TSelf other);
+    bool IsInSameGroup(TSelf other);
 }

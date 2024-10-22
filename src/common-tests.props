@@ -1,0 +1,21 @@
+<Project>
+
+    <Import Project=".\common.props"/>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*"/>
+        <PackageReference Include="NUnit" Version="4.*"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.*"/>
+        <PackageReference Include="NUnit.Analyzers" Version="4.*">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+
+        <!-- logger for test report in junit format -->
+        <PackageReference Include="JUnitTestLogger" Version="1.*"/>
+
+        <!-- logger for test report in nunit format -->
+        <PackageReference Include="NunitXml.TestLogger" Version="3.*"/>
+    </ItemGroup>
+
+</Project>

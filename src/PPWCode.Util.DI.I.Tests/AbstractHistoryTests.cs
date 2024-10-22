@@ -19,7 +19,7 @@ public class AbstractHistoryTests : ServiceBasedTests
         Assert.That(serviceA, Is.Not.Null);
         Assert.That(serviceA.DisposeCount, Is.EqualTo(0));
         Assert.That(serviceA.ServiceB, Is.Not.Null);
-        Assert.That(serviceA.ServiceB!.DisposeCount, Is.EqualTo(0));
+        Assert.That(serviceA.ServiceB.DisposeCount, Is.EqualTo(0));
     }
 
     [Test]
@@ -39,7 +39,7 @@ public class AbstractHistoryTests : ServiceBasedTests
         Assert.That(serviceA, Is.Not.Null);
         Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceA.ServiceB, Is.Not.Null);
-        Assert.That(serviceA.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -56,7 +56,7 @@ public class AbstractHistoryTests : ServiceBasedTests
         Assert.That(serviceC.DisposeCount, Is.EqualTo(0));
         Assert.That(serviceC.Context, Is.EqualTo(context));
         Assert.That(serviceC.ServiceB, Is.Not.Null);
-        Assert.That(serviceC.ServiceB!.DisposeCount, Is.EqualTo(0));
+        Assert.That(serviceC.ServiceB.DisposeCount, Is.EqualTo(0));
     }
 
     [Test]
@@ -77,7 +77,7 @@ public class AbstractHistoryTests : ServiceBasedTests
         Assert.That(serviceC.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceC.Context, Is.EqualTo(context));
         Assert.That(serviceC.ServiceB, Is.Not.Null);
-        Assert.That(serviceC.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceC.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -95,14 +95,14 @@ public class AbstractHistoryTests : ServiceBasedTests
                 Assert.That(service, Is.Not.Null);
                 Assert.That(service.DisposeCount, Is.EqualTo(0));
                 Assert.That(service.ServiceB, Is.Not.Null);
-                Assert.That(service.ServiceB!.DisposeCount, Is.EqualTo(0));
+                Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                 serviceA = service;
             });
 
         Assert.That(serviceA, Is.Not.Null);
-        Assert.That(serviceA!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceA.ServiceB, Is.Not.Null);
-        Assert.That(serviceA.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -120,15 +120,15 @@ public class AbstractHistoryTests : ServiceBasedTests
                 Assert.That(service, Is.Not.Null);
                 Assert.That(service.DisposeCount, Is.EqualTo(0));
                 Assert.That(service.ServiceB, Is.Not.Null);
-                Assert.That(service.ServiceB!.DisposeCount, Is.EqualTo(0));
+                Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                 serviceA = service;
                 return Task.CompletedTask;
             }).ConfigureAwait(false);
 
         Assert.That(serviceA, Is.Not.Null);
-        Assert.That(serviceA!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceA.ServiceB, Is.Not.Null);
-        Assert.That(serviceA.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -147,16 +147,16 @@ public class AbstractHistoryTests : ServiceBasedTests
                 Assert.That(service.DisposeCount, Is.EqualTo(0));
                 Assert.That(service.Context, Is.EqualTo(c));
                 Assert.That(service.ServiceB, Is.Not.Null);
-                Assert.That(service.ServiceB!.DisposeCount, Is.EqualTo(0));
+                Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                 serviceC = service;
             },
             context);
 
         Assert.That(serviceC, Is.Not.Null);
-        Assert.That(serviceC!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceC.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceC.Context, Is.EqualTo(context));
         Assert.That(serviceC.ServiceB, Is.Not.Null);
-        Assert.That(serviceC.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceC.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -175,17 +175,17 @@ public class AbstractHistoryTests : ServiceBasedTests
                 Assert.That(service.DisposeCount, Is.EqualTo(0));
                 Assert.That(service.Context, Is.EqualTo(c));
                 Assert.That(service.ServiceB, Is.Not.Null);
-                Assert.That(service.ServiceB!.DisposeCount, Is.EqualTo(0));
+                Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                 serviceC = service;
                 return Task.CompletedTask;
             },
             context);
 
         Assert.That(serviceC, Is.Not.Null);
-        Assert.That(serviceC!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceC.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceC.Context, Is.EqualTo(context));
         Assert.That(serviceC.ServiceB, Is.Not.Null);
-        Assert.That(serviceC.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceC.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -205,16 +205,16 @@ public class AbstractHistoryTests : ServiceBasedTests
                         Assert.That(service, Is.Not.Null);
                         Assert.That(service.DisposeCount, Is.EqualTo(0));
                         Assert.That(service.ServiceB, Is.Not.Null);
-                        Assert.That(service.ServiceB!.DisposeCount, Is.EqualTo(0));
+                        Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                         serviceA = service;
                         return 1;
                     });
 
         Assert.That(result, Is.EqualTo(1));
         Assert.That(serviceA, Is.Not.Null);
-        Assert.That(serviceA!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceA.ServiceB, Is.Not.Null);
-        Assert.That(serviceA.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 
     [Test]
@@ -234,15 +234,15 @@ public class AbstractHistoryTests : ServiceBasedTests
                         Assert.That(service, Is.Not.Null);
                         Assert.That(service.DisposeCount, Is.EqualTo(0));
                         Assert.That(service.ServiceB, Is.Not.Null);
-                        Assert.That(service.ServiceB!.DisposeCount, Is.EqualTo(0));
+                        Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                         serviceA = service;
                         return Task.FromResult(1);
                     });
 
         Assert.That(result, Is.EqualTo(1));
         Assert.That(serviceA, Is.Not.Null);
-        Assert.That(serviceA!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
         Assert.That(serviceA.ServiceB, Is.Not.Null);
-        Assert.That(serviceA.ServiceB!.DisposeCount, Is.EqualTo(1));
+        Assert.That(serviceA.ServiceB.DisposeCount, Is.EqualTo(1));
     }
 }

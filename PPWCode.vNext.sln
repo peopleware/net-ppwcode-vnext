@@ -56,6 +56,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.RequestC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.RequestContext.I.Tests", "src\PPWCode.Vernacular.RequestContext.I.Tests\PPWCode.Vernacular.RequestContext.I.Tests.csproj", "{17F200AB-0D31-4354-8C21-A7AC1C957018}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.DI.I", "src\PPWCode.Util.DI.I\PPWCode.Util.DI.I.csproj", "{D74359A3-42CA-4733-9501-655E71B4968D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.DI.I.Tests", "src\PPWCode.Util.DI.I.Tests\PPWCode.Util.DI.I.Tests.csproj", "{BAF685DB-13AD-4C34-9533-5035710F015F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,5 +149,13 @@ Global
 		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17F200AB-0D31-4354-8C21-A7AC1C957018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D74359A3-42CA-4733-9501-655E71B4968D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D74359A3-42CA-4733-9501-655E71B4968D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D74359A3-42CA-4733-9501-655E71B4968D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D74359A3-42CA-4733-9501-655E71B4968D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAF685DB-13AD-4C34-9533-5035710F015F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAF685DB-13AD-4C34-9533-5035710F015F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAF685DB-13AD-4C34-9533-5035710F015F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAF685DB-13AD-4C34-9533-5035710F015F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

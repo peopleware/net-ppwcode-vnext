@@ -172,6 +172,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// </summary>
         /// <param name="transactionTime">use this transaction time as a reference, as the 'current' transaction time</param>
         /// <param name="onCreate">Optional lambda that will be invoked and should be responsible to save the event</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>
         ///     This returns a set of all modified events.  The set contains both events that
         ///     received an end time on the knowledge period, and events that are completely new.
@@ -184,13 +185,15 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         ///     very end when all operations are finished.
         /// </remarks>
         /// <remarks>This method is only to be used during the migration!</remarks>
-        ISet<TSubEvent> Process(TKnowledge transactionTime, Action<TSubEvent, THistoryEventStoreContext?>? onCreate = default);
+        /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+        Task<ISet<TSubEvent>> ProcessAsync(TKnowledge transactionTime, Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Processes all remaining changes in the underlying event store. And removes any events from the history that are
         ///     still transient after the processing.
         /// </summary>
         /// <param name="onCreate">Optional lambda that will be invoked and should be responsible to save the event</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
         /// <returns>
         ///     This returns a set of all modified events.  The set contains both events that
         ///     received an end time on the knowledge period, and events that are completely new.
@@ -202,6 +205,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         ///     in the same request, they should all use the same event store and the process method should only be called at the
         ///     very end when all operations are finished.
         /// </remarks>
-        ISet<TSubEvent> Process(Action<TSubEvent, THistoryEventStoreContext?>? onCreate = default);
+        /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+        Task<ISet<TSubEvent>> ProcessAsync(Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
     }
 }

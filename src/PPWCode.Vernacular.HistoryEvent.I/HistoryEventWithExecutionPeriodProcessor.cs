@@ -430,16 +430,16 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         => ExecuteWithinAnotherPermissionHistory(permissionHistory, () => Update(@event, newEvent, sticky));
 
     /// <inheritdoc />
-    public ISet<TSubEvent> Process(TKnowledge transactionTime, Action<TSubEvent, THistoryEventStoreContext?>? onCreate = default)
-        => InternalProcess(() => EventStore.Process(transactionTime, HistoryEventStoreContext, onCreate));
+    public Task<ISet<TSubEvent>> ProcessAsync(TKnowledge transactionTime, Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+        => InternalProcessAsync(can => EventStore.ProcessAsync(transactionTime, HistoryEventStoreContext, onCreate, can), cancellationToken);
 
     /// <inheritdoc />
-    public ISet<TSubEvent> Process(Action<TSubEvent, THistoryEventStoreContext?>? onCreate = default)
-        => InternalProcess(() => EventStore.Process(HistoryEventStoreContext, onCreate));
+    public Task<ISet<TSubEvent>> ProcessAsync(Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+        => InternalProcessAsync(can => EventStore.ProcessAsync(HistoryEventStoreContext, onCreate, can), cancellationToken);
 
-    private ISet<TSubEvent> InternalProcess(Func<ISet<TSubEvent>> eventStoreProcess)
+    private async Task<ISet<TSubEvent>> InternalProcessAsync(Func<CancellationToken, Task<ISet<TSubEvent>>> eventStoreProcess, CancellationToken cancellationToken = default)
     {
-        ISet<TSubEvent> result = eventStoreProcess();
+        ISet<TSubEvent> result = await eventStoreProcess(cancellationToken).ConfigureAwait(false);
         foreach (TSubEvent transient in Events.Where(e => e.IsTransient).ToList())
         {
             Events.Remove(transient);
@@ -637,7 +637,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
                 while (tobeNode != null)
                 {
                     // tobe exists, but no old original ⇒ all new creates
-                    EventStore.Open(tobeNode.Value, TransactionTime);
+                    EventStore.Open(tobeNode.Value, TransactionTime, HistoryEventStoreContext);
                     Events.Add(tobeNode.Value);
                     tobeNode = tobeNode.Next;
                 }
@@ -651,7 +651,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
                 while (originalNode != null)
                 {
                     // tobe does not exist, but old exists ⇒ close all events
-                    EventStore.Close(originalNode.Value, TransactionTime);
+                    EventStore.Close(originalNode.Value, TransactionTime, HistoryEventStoreContext);
                     originalNode = originalNode.Next;
                 }
 
@@ -661,7 +661,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
             // originals behind, catch up
             if (originalNode.Value.ExecutionPeriod!.CoalesceFrom.CompareTo(tobeNode.Value.ExecutionPeriod!.CoalesceFrom) < 0)
             {
-                EventStore.Close(originalNode.Value, TransactionTime);
+                EventStore.Close(originalNode.Value, TransactionTime, HistoryEventStoreContext);
                 originalNode = originalNode.Next;
 
                 continue;
@@ -680,7 +680,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
             }
 
             // original not before tobe, tobe takes precedence
-            EventStore.Open(tobeNode.Value, TransactionTime);
+            EventStore.Open(tobeNode.Value, TransactionTime, HistoryEventStoreContext);
             Events.Add(tobeNode.Value);
             tobeNode = tobeNode.Next;
         }

@@ -50,26 +50,30 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, in TK
     /// </summary>
     /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
     /// <param name="onCreate">Optional lambda that will be invoked and should be responsible to save the event</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>
     ///     The method returns all events that were persisted, i.e. all events that were either
     ///     opened or closed, and did not have an empty knowledge period.
     /// </returns>
     /// <remarks>This method is only to be used during the migration!</remarks>
-    ISet<TEvent> Process(TContext? context = default, Action<TEvent, TContext?>? onCreate = default);
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Processes the opened and closed events in this store.  This means that all newly created
     ///     events that do not have an empty knowledge period, will be created in the repository.
-    ///     Events with an empty knowledge period, were created and closed in the same "session" and
+    ///     Events with an empty knowledge period, where created and closed in the same "session" and
     ///     these will be dropped.
     /// </summary>
     /// <param name="transactionTime">use this transaction time as a reference, as the 'current' transaction time</param>
     /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
     /// <param name="onCreate">Optional lambda that will be invoked and should be responsible to save the event</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>
     ///     The method returns all events that were persisted, i.e. all events that were either
     ///     opened or closed, and did not have an empty knowledge period.
     /// </returns>
     /// <remarks>This method is only to be used during the migration!</remarks>
-    ISet<TEvent> Process(TKnowledge transactionTime, TContext? context = default, Action<TEvent, TContext?>? onCreate = default);
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
 }

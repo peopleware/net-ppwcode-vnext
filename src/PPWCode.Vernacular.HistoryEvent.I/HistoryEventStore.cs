@@ -69,11 +69,11 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     }
 
     /// <inheritdoc />
-    public virtual ISet<TEvent> Process(TContext? context = default, Action<TEvent, TContext?>? onCreate = default)
-        => Process(RequestContext.RequestTimestamp, context, onCreate);
+    public virtual Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+        => ProcessAsync(RequestContext.RequestTimestamp, context, onCreate, cancellationToken);
 
     /// <inheritdoc />
-    public virtual ISet<TEvent> Process(TKnowledge transactionTime, TContext? context = default, Action<TEvent, TContext?>? onCreate = default)
+    public virtual async Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
@@ -117,7 +117,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
             {
                 if (!@event.IsTransient)
                 {
-                    Delete(@event, context);
+                    await DeleteAsync(@event, context, cancellationToken).ConfigureAwait(false);
                 }
 
                 events.Remove(@event);
@@ -153,7 +153,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
 
                     if (!candidate.IsTransient)
                     {
-                        Delete(candidate, context);
+                        await DeleteAsync(candidate, context, cancellationToken).ConfigureAwait(false);
                     }
 
                     events.Remove(candidate);
@@ -182,11 +182,11 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
         {
             if (onCreate is not null)
             {
-                onCreate.Invoke(@event, context);
+                await onCreate.Invoke(@event, context, cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                Insert(@event, context);
+                await InsertAsync(@event, context, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -221,7 +221,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     /// <returns>
     ///     An object of type <typeparamref name="TOwner" />
     /// </returns>
-    protected virtual TOwner? ExtractOwnerFrom(TEvent @event)
+    protected virtual TOwner ExtractOwnerFrom(TEvent @event)
         => @event.Owner;
 
     /// <summary>
@@ -246,7 +246,12 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     /// <remarks>The <paramref name="event" /> is guaranteed a non-transient entity</remarks>
     /// <param name="event">event to be deleted</param>
     /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
-    protected abstract void Delete(TEvent @event, TContext? context);
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    protected abstract Task DeleteAsync(TEvent @event, TContext? context, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Add the <paramref name="event" /> in the data store.
@@ -254,7 +259,12 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     /// <remarks>The <paramref name="event" /> is guaranteed a transient entity</remarks>
     /// <param name="event">event to be added</param>
     /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
-    protected abstract void Insert(TEvent @event, TContext? context);
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    protected abstract Task InsertAsync(TEvent @event, TContext? context, CancellationToken cancellationToken = default);
 
     private void StoreEvent(TEvent @event)
     {

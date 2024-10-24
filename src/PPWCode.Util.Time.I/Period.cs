@@ -73,14 +73,14 @@ public abstract class Period<T>
     /// <inheritdoc />
     public virtual bool Contains(T? other)
     {
-        if (other is null)
-        {
-            return false;
-        }
-
         if (!IsCivilized)
         {
             throw new ProgrammingError("Validation of period contains can only be done on Civilized objects");
+        }
+
+        if (other is null)
+        {
+            return false;
         }
 
         return (CoalesceFrom.CompareTo(other.Value) <= 0) && (other.Value.CompareTo(CoalesceTo) < 0);
@@ -89,14 +89,14 @@ public abstract class Period<T>
     /// <inheritdoc />
     public virtual bool Contains(IPeriod<T>? other)
     {
+        if (!IsCivilized || (other is not null && !other.IsCivilized))
+        {
+            throw new ProgrammingError("Validation of period contains can only be done on Civilized objects");
+        }
+
         if (other is null)
         {
             return false;
-        }
-
-        if (!IsCivilized || !other.IsCivilized)
-        {
-            throw new ProgrammingError("Validation of period contains can only be done on Civilized objects");
         }
 
         return (CoalesceFrom.CompareTo(other.CoalesceFrom) <= 0) && (other.CoalesceTo.CompareTo(CoalesceTo) <= 0);
@@ -105,14 +105,14 @@ public abstract class Period<T>
     /// <inheritdoc />
     public virtual bool Overlaps(IPeriod<T>? other)
     {
+        if (!IsCivilized || (other is not null && !other.IsCivilized))
+        {
+            throw new ProgrammingError("Validation of period overlap can only be done on Civilized objects");
+        }
+
         if (other is null)
         {
             return false;
-        }
-
-        if (!IsCivilized || !other.IsCivilized)
-        {
-            throw new ProgrammingError("Validation of period overlap can only be done on Civilized objects");
         }
 
         return (CoalesceFrom.CompareTo(other.CoalesceTo) < 0) && (other.CoalesceFrom.CompareTo(CoalesceTo) < 0);
@@ -121,14 +121,14 @@ public abstract class Period<T>
     /// <inheritdoc />
     public virtual bool IsCompletelyContainedWithin(IPeriod<T>? other)
     {
+        if (!IsCivilized || (other is not null && !other.IsCivilized))
+        {
+            throw new ProgrammingError("Validation of period contains can only be done on Civilized objects");
+        }
+
         if (other is null)
         {
             return true;
-        }
-
-        if (!IsCivilized || !other.IsCivilized)
-        {
-            throw new ProgrammingError("Validation of period contains can only be done on Civilized objects");
         }
 
         return (other.CoalesceFrom.CompareTo(CoalesceFrom) <= 0)
@@ -138,14 +138,14 @@ public abstract class Period<T>
     /// <inheritdoc />
     public virtual IPeriod<T>? OverlappingPeriod(IPeriod<T>? other)
     {
+        if (!IsCivilized || (other is not null && !other.IsCivilized))
+        {
+            throw new ProgrammingError("Validation of period overlap can only be done on Civilized objects");
+        }
+
         if (other == null)
         {
             return null;
-        }
-
-        if (!IsCivilized || !other.IsCivilized)
-        {
-            throw new ProgrammingError("Validation of period overlap can only be done on Civilized objects");
         }
 
         T? maxFrom = CoalesceFrom.CompareTo(other.CoalesceFrom) > 0 ? From : other.From;

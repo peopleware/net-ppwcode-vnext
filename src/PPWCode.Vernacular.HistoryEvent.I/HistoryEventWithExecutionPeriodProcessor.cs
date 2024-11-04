@@ -336,7 +336,9 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         // - X'...X........Y'..Y......
         // - .....X...X'...Y'..Y......
         // that means there will always be 3 intervals to deal with: pre, middle and post
-        if (!historyEvent.ExecutionPeriod!.Overlaps(newHistoryEvent.ExecutionPeriod))
+        PPWCode.Vernacular.Contracts.I.Contract.Assert(historyEvent.ExecutionPeriod != null);
+        PPWCode.Vernacular.Contracts.I.Contract.Assert(newHistoryEvent.ExecutionPeriod != null);
+        if (!historyEvent.ExecutionPeriod.Overlaps(newHistoryEvent.ExecutionPeriod))
         {
             throw CreateInvalidExecutionPeriodUpdate();
         }

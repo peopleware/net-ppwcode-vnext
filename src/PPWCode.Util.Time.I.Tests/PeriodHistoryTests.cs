@@ -214,7 +214,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory([]);
 
         // Act
-        TPeriod? period = periodHistory.GetPeriodAt(Create(2018, 1, 15));
+        TPeriod? period = periodHistory.GetPeriodAt(CreatePoint(2018, 1, 15));
 
         // Assert
         Assert.That(period, Is.Null);
@@ -224,15 +224,15 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     public void test_get_period_at_with_single_period()
     {
         // Arrange
-        TPeriod period = CreatePeriod(Create(2018, 1, 1), Create(2018, 2, 1));
+        TPeriod period = CreatePeriod(CreatePoint(2018, 1, 1), CreatePoint(2018, 2, 1));
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory([period]);
 
         // Act
-        TPeriod? periodBefore = periodHistory.GetPeriodAt(Create(2017, 12, 31));
-        TPeriod? periodOnStart = periodHistory.GetPeriodAt(Create(2018, 1, 1));
-        TPeriod? periodMiddle = periodHistory.GetPeriodAt(Create(2018, 1, 15));
-        TPeriod? periodOnEnd = periodHistory.GetPeriodAt(Create(2018, 2, 1));
-        TPeriod? periodAfter = periodHistory.GetPeriodAt(Create(2018, 2, 5));
+        TPeriod? periodBefore = periodHistory.GetPeriodAt(CreatePoint(2017, 12, 31));
+        TPeriod? periodOnStart = periodHistory.GetPeriodAt(CreatePoint(2018, 1, 1));
+        TPeriod? periodMiddle = periodHistory.GetPeriodAt(CreatePoint(2018, 1, 15));
+        TPeriod? periodOnEnd = periodHistory.GetPeriodAt(CreatePoint(2018, 2, 1));
+        TPeriod? periodAfter = periodHistory.GetPeriodAt(CreatePoint(2018, 2, 5));
 
         // Assert
         Assert.That(periodBefore, Is.Null);
@@ -246,16 +246,16 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     public void test_get_period_at_with_multiple_periods()
     {
         // Arrange
-        TPeriod period1 = CreatePeriod(Create(2018, 1, 1), Create(2018, 2, 1));
-        TPeriod period2 = CreatePeriod(Create(2018, 3, 1), Create(2018, 4, 1));
+        TPeriod period1 = CreatePeriod(CreatePoint(2018, 1, 1), CreatePoint(2018, 2, 1));
+        TPeriod period2 = CreatePeriod(CreatePoint(2018, 3, 1), CreatePoint(2018, 4, 1));
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory([period1, period2]);
 
         // Act
-        TPeriod? periodBefore = periodHistory.GetPeriodAt(Create(2017, 12, 31));
-        TPeriod? periodOnFirst = periodHistory.GetPeriodAt(Create(2018, 1, 10));
-        TPeriod? periodBetween = periodHistory.GetPeriodAt(Create(2018, 2, 15));
-        TPeriod? periodOnSecond = periodHistory.GetPeriodAt(Create(2018, 3, 10));
-        TPeriod? periodAfter = periodHistory.GetPeriodAt(Create(2018, 4, 15));
+        TPeriod? periodBefore = periodHistory.GetPeriodAt(CreatePoint(2017, 12, 31));
+        TPeriod? periodOnFirst = periodHistory.GetPeriodAt(CreatePoint(2018, 1, 10));
+        TPeriod? periodBetween = periodHistory.GetPeriodAt(CreatePoint(2018, 2, 15));
+        TPeriod? periodOnSecond = periodHistory.GetPeriodAt(CreatePoint(2018, 3, 10));
+        TPeriod? periodAfter = periodHistory.GetPeriodAt(CreatePoint(2018, 4, 15));
 
         // Assert
         Assert.That(periodBefore, Is.Null);
@@ -272,7 +272,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         PeriodHistory<TPeriod, T> history = CreatePeriodHistory([]);
 
         // Act
-        IList<TPeriod> periods = history.GetPeriodsOverlappingAt(Create(2018, 1, 15), Create(2018, 5, 15));
+        IList<TPeriod> periods = history.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 15), CreatePoint(2018, 5, 15));
 
         // Assert
         Assert.That(periods, Is.Empty);
@@ -282,16 +282,16 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     public void test_get_periods_overlapping_at_with_single_period()
     {
         // Arrange
-        TPeriod period = CreatePeriod(Create(2018, 1, 1), Create(2018, 2, 1));
+        TPeriod period = CreatePeriod(CreatePoint(2018, 1, 1), CreatePoint(2018, 2, 1));
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory([period]);
 
         // Act
-        IList<TPeriod> periodsBefore = periodHistory.GetPeriodsOverlappingAt(Create(2017, 5, 1), Create(2018, 1, 1));
-        IList<TPeriod> periodsContaining = periodHistory.GetPeriodsOverlappingAt(Create(2018, 1, 10), Create(2018, 1, 15));
-        IList<TPeriod> periodsCovering = periodHistory.GetPeriodsOverlappingAt(Create(2017, 12, 10), Create(2018, 3, 15));
-        IList<TPeriod> periodsOverlappingStart = periodHistory.GetPeriodsOverlappingAt(Create(2017, 12, 10), Create(2018, 1, 15));
-        IList<TPeriod> periodsOverlappingEnd = periodHistory.GetPeriodsOverlappingAt(Create(2018, 1, 25), Create(2018, 3, 15));
-        IList<TPeriod> periodsAfter = periodHistory.GetPeriodsOverlappingAt(Create(2018, 2, 1), Create(2018, 2, 5));
+        IList<TPeriod> periodsBefore = periodHistory.GetPeriodsOverlappingAt(CreatePoint(2017, 5, 1), CreatePoint(2018, 1, 1));
+        IList<TPeriod> periodsContaining = periodHistory.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 10), CreatePoint(2018, 1, 15));
+        IList<TPeriod> periodsCovering = periodHistory.GetPeriodsOverlappingAt(CreatePoint(2017, 12, 10), CreatePoint(2018, 3, 15));
+        IList<TPeriod> periodsOverlappingStart = periodHistory.GetPeriodsOverlappingAt(CreatePoint(2017, 12, 10), CreatePoint(2018, 1, 15));
+        IList<TPeriod> periodsOverlappingEnd = periodHistory.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 25), CreatePoint(2018, 3, 15));
+        IList<TPeriod> periodsAfter = periodHistory.GetPeriodsOverlappingAt(CreatePoint(2018, 2, 1), CreatePoint(2018, 2, 5));
 
         // Assert
         Assert.That(periodsBefore, Is.Empty);
@@ -310,20 +310,20 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     public void test_get_periods_overlapping_at_with_multiple_periods()
     {
         // Arrange
-        TPeriod period1 = CreatePeriod(Create(2018, 1, 1), Create(2018, 2, 1));
-        TPeriod period2 = CreatePeriod(Create(2018, 3, 1), Create(2018, 4, 1));
+        TPeriod period1 = CreatePeriod(CreatePoint(2018, 1, 1), CreatePoint(2018, 2, 1));
+        TPeriod period2 = CreatePeriod(CreatePoint(2018, 3, 1), CreatePoint(2018, 4, 1));
         PeriodHistory<TPeriod, T> history = CreatePeriodHistory([period1, period2]);
 
         // Act
-        IList<TPeriod> periodsBefore = history.GetPeriodsOverlappingAt(Create(2017, 5, 1), Create(2018, 1, 1));
-        IList<TPeriod> periodsContaining1 = history.GetPeriodsOverlappingAt(Create(2018, 1, 10), Create(2018, 1, 15));
-        IList<TPeriod> periodsContaining2 = history.GetPeriodsOverlappingAt(Create(2018, 3, 10), Create(2018, 3, 15));
-        IList<TPeriod> periodsCovering1 = history.GetPeriodsOverlappingAt(Create(2017, 12, 10), Create(2018, 2, 15));
-        IList<TPeriod> periodsCovering2 = history.GetPeriodsOverlappingAt(Create(2018, 2, 10), Create(2018, 4, 21));
-        IList<TPeriod> periodsCoveringAll = history.GetPeriodsOverlappingAt(Create(2017, 12, 10), Create(2018, 5, 15));
-        IList<TPeriod> periodsOverlapping12 = history.GetPeriodsOverlappingAt(Create(2018, 1, 23), Create(2018, 3, 5));
-        IList<TPeriod> periodsBetween12 = history.GetPeriodsOverlappingAt(Create(2018, 2, 23), Create(2018, 2, 25));
-        IList<TPeriod> periodsAfter = history.GetPeriodsOverlappingAt(Create(2018, 4, 1), Create(2018, 2, 5));
+        IList<TPeriod> periodsBefore = history.GetPeriodsOverlappingAt(CreatePoint(2017, 5, 1), CreatePoint(2018, 1, 1));
+        IList<TPeriod> periodsContaining1 = history.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 10), CreatePoint(2018, 1, 15));
+        IList<TPeriod> periodsContaining2 = history.GetPeriodsOverlappingAt(CreatePoint(2018, 3, 10), CreatePoint(2018, 3, 15));
+        IList<TPeriod> periodsCovering1 = history.GetPeriodsOverlappingAt(CreatePoint(2017, 12, 10), CreatePoint(2018, 2, 15));
+        IList<TPeriod> periodsCovering2 = history.GetPeriodsOverlappingAt(CreatePoint(2018, 2, 10), CreatePoint(2018, 4, 21));
+        IList<TPeriod> periodsCoveringAll = history.GetPeriodsOverlappingAt(CreatePoint(2017, 12, 10), CreatePoint(2018, 5, 15));
+        IList<TPeriod> periodsOverlapping12 = history.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 23), CreatePoint(2018, 3, 5));
+        IList<TPeriod> periodsBetween12 = history.GetPeriodsOverlappingAt(CreatePoint(2018, 2, 23), CreatePoint(2018, 2, 25));
+        IList<TPeriod> periodsAfter = history.GetPeriodsOverlappingAt(CreatePoint(2018, 4, 1), CreatePoint(2018, 2, 5));
 
         // Assert
         Assert.That(periodsBefore, Is.Empty);
@@ -349,16 +349,16 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     public void test_get_periods_overlapping_with_open_ended_period()
     {
         // Arrange
-        TPeriod period = CreatePeriod(Create(2018, 1, 1), null);
+        TPeriod period = CreatePeriod(CreatePoint(2018, 1, 1), null);
         TPeriod infinitePeriod = CreatePeriod(null, null);
         PeriodHistory<TPeriod, T> history = CreatePeriodHistory([period]);
 
         // Act
-        IList<TPeriod> periodsBefore = history.GetPeriodsOverlappingAt(Create(2017, 5, 1), Create(2018, 1, 1));
-        IList<TPeriod> periodsContaining = history.GetPeriodsOverlappingAt(Create(2018, 1, 10), Create(2018, 1, 15));
-        IList<TPeriod> periodsContaining2 = history.GetPeriodsOverlappingAt(Create(2018, 1, 10), infinitePeriod.CoalesceTo);
-        IList<TPeriod> periodsOverlappingStart = history.GetPeriodsOverlappingAt(Create(2017, 12, 10), Create(2018, 1, 15));
-        IList<TPeriod> periodsOverlappingStart2 = history.GetPeriodsOverlappingAt(Create(2017, 12, 10), infinitePeriod.CoalesceTo);
+        IList<TPeriod> periodsBefore = history.GetPeriodsOverlappingAt(CreatePoint(2017, 5, 1), CreatePoint(2018, 1, 1));
+        IList<TPeriod> periodsContaining = history.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 10), CreatePoint(2018, 1, 15));
+        IList<TPeriod> periodsContaining2 = history.GetPeriodsOverlappingAt(CreatePoint(2018, 1, 10), infinitePeriod.CoalesceTo);
+        IList<TPeriod> periodsOverlappingStart = history.GetPeriodsOverlappingAt(CreatePoint(2017, 12, 10), CreatePoint(2018, 1, 15));
+        IList<TPeriod> periodsOverlappingStart2 = history.GetPeriodsOverlappingAt(CreatePoint(2017, 12, 10), infinitePeriod.CoalesceTo);
 
         // Assert
         Assert.That(periodsBefore, Is.Empty);
@@ -376,17 +376,17 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     public string? test_creation(StringArray stringArray)
     {
         // Arrange
-        T startDate = Create(2017, 1, 1);
+        T startDate = CreatePoint(2017, 1, 1);
 
         List<TPeriod> allPeriods = new ();
-        foreach (string? periodAsString in stringArray.Strings)
+        foreach (string periodAsString in stringArray.Strings)
         {
-            allPeriods.AddRange(GeneratePeriods(startDate, periodAsString));
+            allPeriods.AddRange(ConvertStringToPeriods(startDate, periodAsString));
         }
 
         // Act
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(allPeriods);
-        string? actualPeriodHistoryAsString = CreatePeriodsAsString(startDate, periodHistory.Periods);
+        string? actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, periodHistory.Periods);
 
         // Assert
         return actualPeriodHistoryAsString;
@@ -399,11 +399,11 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         string expectedPeriodsAsString)
     {
         // Arrange
-        T startDate = Create(2017, 1, 1);
+        T startDate = CreatePoint(2017, 1, 1);
 
-        PeriodHistory<TPeriod, T> initialPeriods = CreatePeriodHistory(GeneratePeriods(startDate, initialPeriodsAsString));
-        PeriodHistory<TPeriod, T> intersectPeriods = CreatePeriodHistory(GeneratePeriods(startDate, intersectPeriodsAsString));
-        PeriodHistory<TPeriod, T> expectedPeriods = CreatePeriodHistory(GeneratePeriods(startDate, expectedPeriodsAsString));
+        PeriodHistory<TPeriod, T> initialPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, initialPeriodsAsString));
+        PeriodHistory<TPeriod, T> intersectPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, intersectPeriodsAsString));
+        PeriodHistory<TPeriod, T> expectedPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, expectedPeriodsAsString));
 
         // Act
         PeriodHistory<TPeriod, T> actualPeriods = CreatePeriodHistory(initialPeriods.IntersectWith(intersectPeriods));
@@ -419,11 +419,11 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         string expectedPeriodsAsString)
     {
         // Arrange
-        T startDate = Create(2017, 1, 1);
+        T startDate = CreatePoint(2017, 1, 1);
 
-        PeriodHistory<TPeriod, T> initialPeriods = CreatePeriodHistory(GeneratePeriods(startDate, initialPeriodsAsString));
-        PeriodHistory<TPeriod, T> exceptPeriods = CreatePeriodHistory(GeneratePeriods(startDate, exceptPeriodsAsString));
-        PeriodHistory<TPeriod, T> expectedPeriods = CreatePeriodHistory(GeneratePeriods(startDate, expectedPeriodsAsString));
+        PeriodHistory<TPeriod, T> initialPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, initialPeriodsAsString));
+        PeriodHistory<TPeriod, T> exceptPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, exceptPeriodsAsString));
+        PeriodHistory<TPeriod, T> expectedPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, expectedPeriodsAsString));
 
         // Act
         PeriodHistory<TPeriod, T> actualPeriods = CreatePeriodHistory(initialPeriods.ExceptWith(exceptPeriods));

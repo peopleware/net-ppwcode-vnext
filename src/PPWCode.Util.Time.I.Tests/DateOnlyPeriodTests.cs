@@ -3,22 +3,22 @@ namespace PPWCode.Util.Time.I.Tests;
 public class DateOnlyPeriodTests : PeriodTests<DateOnlyPeriod, DateOnly>
 {
     /// <inheritdoc />
-    protected override DateOnlyPeriod CreatePeriod(DateOnly? from, DateOnly? to)
-        => new (from, to);
+    protected override string PointToString(DateOnly value)
+        => $"{value:yyyy-MM-dd}";
 
     /// <inheritdoc />
-    protected override DateOnly Create(int year, int month, int day)
+    protected override DateOnly StringToPoint(string value)
+        => DateOnly.Parse(value);
+
+    /// <inheritdoc />
+    protected override DateOnly CreatePoint(int year, int month, int day)
         => new (year, month, day);
 
     /// <inheritdoc />
-    protected override DateOnly AddMonths(DateOnly date, int i)
+    protected override DateOnly AddToPoint(DateOnly date, int i)
         => date.AddMonths(i);
 
     /// <inheritdoc />
-    protected override DateOnly? ConvertFromString(string? value)
-        => string.IsNullOrWhiteSpace(value) ? null : DateOnly.Parse(value);
-
-    /// <inheritdoc />
-    protected override string ConvertToString(DateOnly? value)
-        => value is null ? "null" : $"{value.Value:yyyy-MM-dd}";
+    protected override DateOnlyPeriod CreatePeriod(DateOnly? from, DateOnly? to)
+        => new (from, to);
 }

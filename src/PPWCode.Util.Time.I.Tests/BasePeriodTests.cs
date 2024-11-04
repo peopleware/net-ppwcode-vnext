@@ -11,24 +11,36 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
     where TPeriod : class, IPeriod<T>
     where T : struct, IComparable<T>, IEquatable<T>
 {
+    private const string NullString = "null";
+
     // ReSharper disable once StaticMemberInGenericType
-    private static readonly Regex _regex = new (@"^\[\s*(?:(\d{4}-\d{1,2}-\d{1,2})|null)\s*,\s*(?:(\d{4}-\d{1,2}-\d{1,2})|null)\s*\[$");
+    private static readonly Regex _regex = new (@"^\[\s*(\d{4}-\d{1,2}-\d{1,2}|null)\s*,\s*(\d{4}-\d{1,2}-\d{1,2}|null)\s*\[$");
     protected abstract TPeriod CreatePeriod(T? from, T? to);
-    protected abstract T? ConvertFromString(string? value);
-    protected abstract string ConvertToString(T? value);
+    protected abstract T StringToPoint(string value);
+    protected abstract string PointToString(T value);
 
-    protected abstract T Create(int year, int month, int day);
-    protected abstract T AddMonths(T date, int i);
+    protected abstract T CreatePoint(int year, int month, int day);
+    protected abstract T AddToPoint(T date, int i);
 
-    protected virtual TPeriod ConvertFromStringPeriod(string? value)
+    protected virtual string ConvertPointToString(T? value)
+        => value == null
+               ? NullString
+               : PointToString(value.Value);
+
+    protected virtual T? ConvertStringToPoint(string value)
+        => string.Equals(value, NullString, StringComparison.InvariantCultureIgnoreCase)
+               ? null
+               : StringToPoint(value);
+
+    protected virtual TPeriod ConvertStringToPeriod(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
             Match m = _regex.Match(value);
             if (m.Success)
             {
-                T? from = ConvertFromString(m.Groups[1].Value);
-                T? to = ConvertFromString(m.Groups[2].Value);
+                T? from = ConvertStringToPoint(m.Groups[1].Value);
+                T? to = ConvertStringToPoint(m.Groups[2].Value);
                 return CreatePeriod(from, to);
             }
         }
@@ -36,11 +48,8 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
         throw new ArgumentException($"'{value}' is not a valid period string");
     }
 
-    protected virtual string? ConvertToString(TPeriod? period)
-        => ConvertToString(period as IPeriod<T>);
-
-    protected virtual string? ConvertToString(IPeriod<T>? period)
-        => period is null ? null : $"[{ConvertToString(period.From)},{ConvertToString(period.To)}[";
+    protected virtual string ConvertPeriodToString(IPeriod<T> period)
+        => $"[{ConvertPointToString(period.From)},{ConvertPointToString(period.To)}[";
 
     // _ => empty
     // X => part of interval (period = 1 month)
@@ -48,13 +57,8 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
     //
     // "___XXXX__XXXXX_XXXXX_XXXXX_XXXX."
     // "___X__X__XXXXX_XXXXX_XXXXX_XXXX_"
-    public TPeriod[] GeneratePeriods(T startDate, string? intervalString)
+    public TPeriod[] ConvertStringToPeriods(T startDate, string intervalString)
     {
-        if (intervalString is null)
-        {
-            return [];
-        }
-
         char[] stateChars = intervalString.ToCharArray();
         Stack<TPeriod> periods = new ();
 
@@ -101,13 +105,13 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
                     throw new InternalProgrammingError("Invalid period string!");
             }
 
-            currentDate = AddMonths(currentDate, 1);
+            currentDate = AddToPoint(currentDate, 1);
         }
 
         return periods.ToArray();
     }
 
-    protected string? CreatePeriodsAsString(T startDate, IEnumerable<TPeriod> periods)
+    protected string ConvertPeriodsToString(T startDate, IEnumerable<TPeriod> periods)
     {
         LinkedList<TPeriod> linkedPeriods = new (periods.OrderBy(p => p.CoalesceFrom));
         LinkedListNode<TPeriod>? firstNode = linkedPeriods.First;
@@ -115,7 +119,7 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
 
         if (firstNode is null)
         {
-            return null;
+            return string.Empty;
         }
 
         if (firstNode.Value.From is null)
@@ -126,7 +130,7 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
         // when we have a first node, we definitively have a last node
         T? endDate = lastNode!.Value.To;
         StringBuilder sb = new ();
-        for (T date = startDate; endDate is null || (date.CompareTo(endDate.Value) < 0); date = AddMonths(date, 1))
+        for (T date = startDate; endDate is null || (date.CompareTo(endDate.Value) < 0); date = AddToPoint(date, 1))
         {
             TPeriod? period = linkedPeriods.FirstOrDefault(p => p.Contains(date));
             if (endDate is null && (lastNode.Value == period))

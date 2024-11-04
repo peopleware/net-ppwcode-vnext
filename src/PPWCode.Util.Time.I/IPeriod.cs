@@ -24,9 +24,9 @@ public interface IPeriod<T>
     T CoalesceFrom { get; }
     T CoalesceTo { get; }
 
-    bool Contains(T? other);
-    bool Contains(IPeriod<T>? other);
-    bool Overlaps(IPeriod<T>? other);
-    bool IsCompletelyContainedWithin(IPeriod<T>? other);
-    IPeriod<T>? OverlappingPeriod(IPeriod<T>? other);
+    bool Contains(T other);
+    bool Contains(IPeriod<T> other);
+    bool Overlaps(IPeriod<T> other);
+    bool IsCompletelyContainedWithin(IPeriod<T> other);
+    IPeriod<T> OverlappingPeriod(IPeriod<T> other);
 }

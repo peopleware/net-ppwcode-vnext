@@ -88,7 +88,7 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
     public void test_can_handle_empty_periods(Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<TPeriod>> lambda)
     {
         // Arrange
-        T startDate = Create(2017, 1, 1);
+        T startDate = CreatePoint(2017, 1, 1);
         PeriodMultiHistory<TPeriod, T> periodMultiHistory = CreateMultiPeriodHistory([]);
 
         // Act
@@ -104,18 +104,18 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
     public string? test_covering_periods(StringArray stringArray)
     {
         // Arrange
-        T startDate = Create(2017, 7, 1);
+        T startDate = CreatePoint(2017, 7, 1);
 
         List<TPeriod> allPeriods = new ();
         foreach (string? periodAsString in stringArray.Strings)
         {
-            allPeriods.AddRange(GeneratePeriods(startDate, periodAsString));
+            allPeriods.AddRange(ConvertStringToPeriods(startDate, periodAsString));
         }
 
         // Act
         PeriodMultiHistory<TPeriod, T> periodMultiHistory = CreateMultiPeriodHistory(allPeriods);
         IEnumerable<TPeriod> optimalPeriods = periodMultiHistory.GetOptimalCoveringPeriods();
-        string? actualPeriodHistoryAsString = CreatePeriodsAsString(startDate, optimalPeriods);
+        string? actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, optimalPeriods);
 
         // Assert
         return actualPeriodHistoryAsString;

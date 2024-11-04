@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 using NUnit.Framework;
@@ -45,6 +46,61 @@ public class DateTimeOffsetPeriodTests : PeriodTests<DateTimeOffsetPeriod, DateT
         string display = "2024-03-04T08:09:02+02:30";
         Assert.That(PointToString(point), Is.EqualTo(display));
         Assert.That(StringToPoint(display), Is.EqualTo(point));
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "EqualExpressionComparison", Justification = "Tests")]
+    [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract", Justification = "Tests")]
+    public void check_equals_1()
+    {
+        string p = "[2024-03-04T08:09:02+02:30,2024-10-23T17:41:57-07:00[";
+        DateTimeOffsetPeriod period = ConvertStringToPeriod(p);
+        Assert.That(() => period.Equals(period), Is.True);
+#pragma warning disable CS1718 // Comparison made to same variable
+        Assert.That(() => period == period, Is.True);
+        Assert.That(() => period != period, Is.False);
+#pragma warning restore CS1718 // Comparison made to same variable
+        Assert.That(() => period.Equals(null), Is.False);
+        Assert.That(() => period == null, Is.False);
+        Assert.That(() => period != null, Is.True);
+        Assert.That(() => period.Equals(null), Is.False);
+    }
+
+    [Test]
+    [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global", Justification = "Tests")]
+    public void check_equals_2()
+    {
+        string p = "[2024-03-04T00:00:00+00:00,2024-10-23T00:00:00+00:00[";
+        DateTimeOffsetPeriod period = ConvertStringToPeriod(p);
+        DateOnlyPeriod datePeriod = new DateOnlyPeriod(new DateOnly(2024, 3, 4), new DateOnly(2024, 10, 23));
+        Assert.That(() => period.Equals(datePeriod), Is.False);
+        Assert.That(() => datePeriod.Equals(period), Is.False);
+    }
+
+    [Test]
+    public void check_equals_3()
+    {
+        string p1 = "[2024-03-04T08:09:02+02:30,2024-10-23T17:41:57-07:00[";
+        string p2 = "[2024-03-04T06:39:02+01:00,2024-10-23T19:41:57-05:00[";
+        DateTimeOffsetPeriod period1 = ConvertStringToPeriod(p1);
+        DateTimeOffsetPeriod period2 = ConvertStringToPeriod(p2);
+        Assert.That(() => period1.Equals(period2), Is.True);
+        Assert.That(() => period2.Equals(period1), Is.True);
+        Assert.That(() => period1 == period2, Is.True);
+        Assert.That(() => period2 == period1, Is.True);
+    }
+
+    [Test]
+    public void check_equals_4()
+    {
+        string p1 = "[2024-03-04T08:09:02+02:30,2024-10-23T17:41:57-07:00[";
+        string p2 = "[2024-03-04T08:09:02+02:30,2024-10-23T17:41:57-05:00[";
+        DateTimeOffsetPeriod period1 = ConvertStringToPeriod(p1);
+        DateTimeOffsetPeriod period2 = ConvertStringToPeriod(p2);
+        Assert.That(() => period1.Equals(period2), Is.False);
+        Assert.That(() => period2.Equals(period1), Is.False);
+        Assert.That(() => period1 == period2, Is.False);
+        Assert.That(() => period2 == period1, Is.False);
     }
 
     [TestCase("[null,null[", "2024-03-04T08:09:02+02:30", ExpectedResult = true)]

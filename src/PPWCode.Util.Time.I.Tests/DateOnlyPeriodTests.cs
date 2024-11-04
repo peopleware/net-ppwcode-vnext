@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 using NUnit.Framework;
 
 namespace PPWCode.Util.Time.I.Tests;
@@ -23,6 +25,10 @@ public class DateOnlyPeriodTests : PeriodTests<DateOnlyPeriod, DateOnly>
     /// <inheritdoc />
     protected override DateOnlyPeriod CreatePeriod(DateOnly? from, DateOnly? to)
         => new (from, to);
+
+    /// <inheritdoc />
+    protected override Regex PeriodRegex
+        => new (@"^\[\s*(?<point1>\d{4}-\d{1,2}-\d{1,2}|null)\s*,\s*(?<point2>\d{4}-\d{1,2}-\d{1,2}|null)\s*\[$", RegexOptions.Compiled);
 
     [TestCase("[null,null[", "2025-01-01", ExpectedResult = true)]
     [TestCase("[2024-09-10,null[", "2025-01-01", ExpectedResult = true)]

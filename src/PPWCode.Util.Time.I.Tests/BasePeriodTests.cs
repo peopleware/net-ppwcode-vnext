@@ -13,8 +13,6 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
 {
     private const string NullString = "null";
 
-    // ReSharper disable once StaticMemberInGenericType
-    private static readonly Regex _regex = new (@"^\[\s*(\d{4}-\d{1,2}-\d{1,2}|null)\s*,\s*(\d{4}-\d{1,2}-\d{1,2}|null)\s*\[$");
     protected abstract TPeriod CreatePeriod(T? from, T? to);
     protected abstract T StringToPoint(string value);
     protected abstract string PointToString(T value);
@@ -32,15 +30,21 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
                ? null
                : StringToPoint(value);
 
+    /// <summary>
+    ///     Regex that must have 2 named groups: point1 to refer to the start point
+    ///     and point2 to refer to the end point.
+    /// </summary>
+    protected abstract Regex PeriodRegex { get; }
+
     protected virtual TPeriod ConvertStringToPeriod(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
-            Match m = _regex.Match(value);
+            Match m = PeriodRegex.Match(value);
             if (m.Success)
             {
-                T? from = ConvertStringToPoint(m.Groups[1].Value);
-                T? to = ConvertStringToPoint(m.Groups[2].Value);
+                T? from = ConvertStringToPoint(m.Groups["point1"].Value);
+                T? to = ConvertStringToPoint(m.Groups["point2"].Value);
                 return CreatePeriod(from, to);
             }
         }

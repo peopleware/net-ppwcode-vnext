@@ -1,4 +1,6 @@
-﻿namespace PPWCode.Util.Time.I.Tests;
+﻿using System.Text.RegularExpressions;
+
+namespace PPWCode.Util.Time.I.Tests;
 
 public class DateOnlyPeriodMultiHistoryTests : PeriodMultiHistoryTests<DateOnlyPeriod, DateOnly>
 {
@@ -17,6 +19,10 @@ public class DateOnlyPeriodMultiHistoryTests : PeriodMultiHistoryTests<DateOnlyP
     /// <inheritdoc />
     protected override DateOnly AddToPoint(DateOnly date, int i)
         => date.AddMonths(i);
+
+    /// <inheritdoc />
+    protected override Regex PeriodRegex
+        => new (@"^\[\s*(?<point1>\d{4}-\d{1,2}-\d{1,2}|null)\s*,\s*(?<point2>\d{4}-\d{1,2}-\d{1,2}|null)\s*\[$", RegexOptions.Compiled);
 
     /// <inheritdoc />
     protected override DateOnlyPeriod CreatePeriod(DateOnly? from, DateOnly? to)

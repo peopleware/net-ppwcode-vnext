@@ -45,6 +45,15 @@
         "resolved": "3.1.20",
         "contentHash": "Pd9EYPNsQGaKYW+F+l7vTuvDjp8tzTYLqqfLM1Sz5WwLHhvnaJArQZjw/93WF3i07Rxb50WFVu0kjrjKCVFHDg=="
       },
+      "PPWCode.Vernacular.Contracts.I": {
+        "type": "Direct",
+        "requested": "[1.*, )",
+        "resolved": "1.2.0",
+        "contentHash": "lSc82pJXbsXuqPt/5YsHdS6gdHtcnhryWKvFC+2YIs+6ILH5lkuavrBLVWGDYVALmaDTba96T3YlylZaYhnzIw==",
+        "dependencies": {
+          "PPWCode.Vernacular.Exceptions.IV": "1.2.0"
+        }
+      },
       "StyleCop.Analyzers": {
         "type": "Direct",
         "requested": "[1.1.118, )",
@@ -78,26 +87,39 @@
         "resolved": "13.0.1",
         "contentHash": "ppPFpBcvxdsfUonNcvITKqLl3bqxWbDCZIzDWHzjpdAHRFfZe0Dw9HmA0+za13IdyrgJwpkDTDA9fHaxOrt20A=="
       },
+      "PPWCode.Vernacular.Exceptions.IV": {
+        "type": "Transitive",
+        "resolved": "1.2.0",
+        "contentHash": "hWD5pr+4qtnAJHjTqxBPX2wT6WO8e9wMqudXYPlDGveDk9Mk2+DyZaz+DDs810hV3Fhfz7pXhS5H7WTcMI6zrg=="
+      },
       "System.Reflection.Metadata": {
         "type": "Transitive",
         "resolved": "1.6.0",
         "contentHash": "COC1aiAJjCoA5GBF+QKL2uLqEBew4JsCkQmoHKbN3TlOZKa2fKLz5CpiRQKDz0RsAOEGsVKqOD5bomsXq/4STQ=="
       },
       "ppwcode.util.authorisation.i": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )"
+        }
       },
       "ppwcode.util.time.i": {
         "type": "Project",
         "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )",
           "PPWCode.Vernacular.Semantics.V": "[0.0.9, )"
         }
       },
       "ppwcode.vernacular.exceptions.v": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )"
+        }
       },
       "ppwcode.vernacular.persistence.v": {
         "type": "Project",
         "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )",
           "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )",
           "PPWCode.Vernacular.Semantics.V": "[0.0.9, )"
         }
@@ -105,6 +127,7 @@
       "ppwcode.vernacular.semantics.v": {
         "type": "Project",
         "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )",
           "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )"
         }
       }

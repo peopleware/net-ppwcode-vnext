@@ -1,4 +1,4 @@
-// Copyright 2024 by PeopleWare n.v..
+﻿// Copyright 2024 by PeopleWare n.v..
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -9,24 +9,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using PPWCode.Vernacular.Semantics.V;
+namespace PPWCode.Vernacular.Semantics.V;
 
-namespace PPWCode.Util.Time.I;
-
-public interface IPeriod<T>
-    : ICivilizedObject,
-      IIsEmpty
-    where T : struct, IComparable<T>, IEquatable<T>
+/// <summary>
+///     This interface indicates that the class, struct, or record does not contain any functional data
+/// </summary>
+public interface IIsEmpty
 {
-    T? From { get; }
-    T? To { get; }
-
-    T CoalesceFrom { get; }
-    T CoalesceTo { get; }
-
-    bool Contains(T? other);
-    bool Contains(IPeriod<T>? other);
-    bool Overlaps(IPeriod<T>? other);
-    bool IsCompletelyContainedWithin(IPeriod<T>? other);
-    IPeriod<T>? OverlappingPeriod(IPeriod<T>? other);
+    /// <summary>
+    ///     Does this instance contain functional data?
+    /// </summary>
+    bool IsEmpty { get; }
 }

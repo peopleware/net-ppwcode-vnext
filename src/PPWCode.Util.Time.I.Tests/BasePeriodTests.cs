@@ -1,8 +1,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 
-using NUnit.Framework;
-
+using PPWCode.Vernacular.Contracts.I;
 using PPWCode.Vernacular.Exceptions.V;
 
 namespace PPWCode.Util.Time.I.Tests;
@@ -63,45 +62,37 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
     // "___X__X__XXXXX_XXXXX_XXXXX_XXXX_"
     public TPeriod[] ConvertStringToPeriods(T startDate, string intervalString)
     {
-        char[] stateChars = intervalString.ToCharArray();
+        ReadOnlySpan<char> stateChars = intervalString.AsSpan();
         Stack<TPeriod> periods = new ();
-
         T currentDate = startDate;
         TPeriod? current = null;
+        char? previous = null;
+
         foreach (char c in stateChars)
         {
             switch (c)
             {
                 case 'X':
-                    if (current == null)
-                    {
-                        current = CreatePeriod(currentDate, null);
-                        periods.Push(current);
-                    }
+                    current ??= CreatePeriod(currentDate, null);
 
                     break;
                 case '_':
                     if (current != null)
                     {
-                        periods.Pop();
                         periods.Push(CreatePeriod(current.From, currentDate));
                         current = null;
                     }
 
                     break;
                 case '.':
-                    if (current != null)
+                    if (previous == null)
                     {
-                        // ends with dot
-                        periods.Pop();
-                        periods.Push(CreatePeriod(current.From, null));
-                        current = null;
+                        Contract.Assert(current == null);
+                        current = CreatePeriod(null, null);
                     }
                     else
                     {
-                        // starts with dot
-                        current = CreatePeriod(null, null);
-                        periods.Push(current);
+                        current = CreatePeriod(current == null ? currentDate : current.From, null);
                     }
 
                     break;
@@ -110,6 +101,12 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
             }
 
             currentDate = AddToPoint(currentDate, 1);
+            previous = c;
+        }
+
+        if (current != null)
+        {
+            periods.Push(CreatePeriod(current.From, previous == '.' ? null : currentDate));
         }
 
         return periods.ToArray();
@@ -117,26 +114,32 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
 
     protected string ConvertPeriodsToString(T startDate, IEnumerable<TPeriod> periods)
     {
-        LinkedList<TPeriod> linkedPeriods = new (periods.OrderBy(p => p.CoalesceFrom));
-        LinkedListNode<TPeriod>? firstNode = linkedPeriods.First;
-        LinkedListNode<TPeriod>? lastNode = linkedPeriods.Last;
-
-        if (firstNode is null)
+        // empty, no periods
+        if (!periods.Any())
         {
             return string.Empty;
         }
 
-        if (firstNode.Value.From is null)
-        {
-            Assert.That(false, "Infinitive periods aren't supported");
-        }
+        // convert to linked list
+        LinkedList<TPeriod> linkedPeriods = new (periods.OrderBy(p => p.CoalesceFrom));
+        LinkedListNode<TPeriod>? firstNode = linkedPeriods.First;
+        LinkedListNode<TPeriod>? lastNode = linkedPeriods.Last;
 
-        // when we have a first node, we definitively have a last node
-        T? endDate = lastNode!.Value.To;
+        Contract.Assert(firstNode != null);
+        Contract.Assert(lastNode != null);
+
+        // loop through linked list
+        T? endDate = lastNode.Value.To;
         StringBuilder sb = new ();
         for (T date = startDate; endDate is null || (date.CompareTo(endDate.Value) < 0); date = AddToPoint(date, 1))
         {
             TPeriod? period = linkedPeriods.FirstOrDefault(p => p.Contains(date));
+            if (period is { From: null } && (firstNode.Value == period))
+            {
+                sb.Append('.');
+                break;
+            }
+
             if (endDate is null && (lastNode.Value == period))
             {
                 sb.Append('.');
@@ -147,5 +150,22 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
         }
 
         return sb.ToString();
+    }
+
+    protected string CanonicalizePeriodsString(string periodsString)
+    {
+        string handlePlusInfinity =
+            Regex.Replace(
+                periodsString,
+                @"^((?<start>X|\.?[_X]*_)|\.)(X+\.)$",
+                "${start}.",
+                RegexOptions.Compiled);
+        string handleTrailingEmpty =
+            Regex.Replace(
+                handlePlusInfinity,
+                @"^(?<start>\._|\.?[_X]*X|)(_+)$",
+                "${start}",
+                RegexOptions.Compiled);
+        return handleTrailingEmpty;
     }
 }

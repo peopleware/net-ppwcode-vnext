@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
 
 using PPWCode.Util.Collection.I;
+using PPWCode.Vernacular.Contracts.I;
 
 namespace PPWCode.Util.Time.I.Tests;
 
@@ -206,6 +207,31 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     }
 
     protected abstract PeriodHistory<TPeriod, T> CreatePeriodHistory(IEnumerable<TPeriod> periods);
+
+    [TestCase("XXXXX.", "X.")]
+    [TestCase("X__X_XXX.", "X__X_.")]
+    [TestCase("_XXX.", "_.")]
+    [TestCase("XXX", "XXX")]
+    [TestCase("XXX.", "X.")]
+    [TestCase(".X", ".X")]
+    [TestCase(".XXX.", ".")]
+    [TestCase("._", "._")]
+    [TestCase(".XXX_", ".XXX")]
+    [TestCase("_.", "_.")]
+    [TestCase(".", ".")]
+    [TestCase("XX___", "XX")]
+    [TestCase("XX___X_", "XX___X")]
+    [TestCase("_", "")]
+    [TestCase("____", "")]
+    [TestCase(".________", "._")]
+    [TestCase(".XXXX___", ".XXXX")]
+    [TestCase("._.", "._.")]
+    [TestCase(".__.", ".__.")]
+    [TestCase("._X_.", "._X_.")]
+    public void test_canonicalize_periods_string(string original, string expected)
+    {
+        Assert.That(CanonicalizePeriodsString(original), Is.EqualTo(expected));
+    }
 
     [Test]
     public void test_get_period_at_with_no_periods()
@@ -430,5 +456,169 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Assert
         Assert.That(actualPeriods.Periods.SetEqual(expectedPeriods.Periods, new PeriodComparer<T>()));
+    }
+
+    [TestCase(
+        "XXXX_",
+        "_XX__",
+        "XXXX_")]
+    [TestCase(
+        "X_X_X",
+        "__XXX",
+        "__X_X")]
+    [TestCase(
+        "X_X_XXX_X.",
+        "___XXXXXX_",
+        "____XXX_X.")]
+    [TestCase(
+        "XXXX_XXXX.",
+        "____X_____",
+        "__________")]
+    public void test_get_periods_overlapping_at(string initial, string overlap, string expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+        TPeriod[] overlapPeriods = ConvertStringToPeriods(startDate, overlap);
+        Contract.Assert(overlapPeriods.Length == 1);
+        TPeriod overlapPeriod = overlapPeriods[0];
+
+        // Act
+        IList<TPeriod> overlappingPeriods = periodHistory.GetPeriodsOverlappingAt(overlapPeriod);
+
+        // Assert
+        Assert.That(
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, overlappingPeriods)),
+            Is.EqualTo(CanonicalizePeriodsString(expected)));
+    }
+
+    [TestCase("XX_X_.", 0, "XX____")]
+    [TestCase("XX_X_.", 1, "XX____")]
+    [TestCase("XX_X_.", 2, "___X__")]
+    [TestCase("XX_X_.", 3, "___X__")]
+    [TestCase("XX_X_.", 4, "_____.")]
+    [TestCase("XX_X_.", 5, "_____.")]
+    [TestCase("XX_X_.", 6, "_____.")]
+    [TestCase("XX_X__", 6, "______")]
+    public void test_period_at_or_immediately_after(string initial, int idx, string expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+        T point = AddToPoint(startDate, idx);
+
+        // Act
+        TPeriod? period = periodHistory.GetPeriodAtOrImmediatelyAfter(point);
+
+        // Assert
+        Assert.That(
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            Is.EqualTo(CanonicalizePeriodsString(expected)));
+    }
+
+    [TestCase("XX_X_.", 0, "XX____")]
+    [TestCase("XX_X_.", 1, "XX____")]
+    [TestCase("XX_X_.", 2, "XX____")]
+    [TestCase("XX_X_.", 3, "___X__")]
+    [TestCase("XX_X_.", 4, "___X__")]
+    [TestCase("XX_X_.", 5, "_____.")]
+    [TestCase("XX_X_.", 6, "_____.")]
+    [TestCase("XX_X__", 6, "___X__")]
+    [TestCase("__XX__", 1, "______")]
+    public void test_period_at_or_immediately_before(string initial, int idx, string expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+        T point = AddToPoint(startDate, idx);
+
+        // Act
+        TPeriod? period = periodHistory.GetPeriodAtOrImmediatelyBefore(point);
+
+        // Assert
+        Assert.That(
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            Is.EqualTo(CanonicalizePeriodsString(expected)));
+    }
+
+    [TestCase("XX_X__", 0, "XX____")]
+    [TestCase("XX_X__", 1, "XX____")]
+    [TestCase("XX_X__", 2, "___X__")]
+    [TestCase("XX_X__", 3, "___X__")]
+    [TestCase("XX_X__", 4, "___X__")]
+    [TestCase("XX_X__", 5, "___X__")]
+    [TestCase("XX_X__", 6, "___X__")]
+    [TestCase("XX_X_.", 3, "___X__")]
+    [TestCase("XX_X_.", 4, "_____.")]
+    [TestCase("XX_X_.", 5, "_____.")]
+    [TestCase("XX_X_.", 6, "_____.")]
+    public void test_period_at_or_immediately_after_or_immediately_before(string initial, int idx, string expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+        T point = AddToPoint(startDate, idx);
+
+        // Act
+        TPeriod? period = periodHistory.GetPeriodAtOrImmediatelyAfterOrImmediatelyBefore(point);
+
+        // Assert
+        Assert.That(
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            Is.EqualTo(CanonicalizePeriodsString(expected)));
+    }
+
+    [TestCase("XX_X__", 0, "XX____")]
+    [TestCase("XX_X__", 1, "XX____")]
+    [TestCase("XX_X__", 2, "XX____")]
+    [TestCase("XX_X__", 3, "___X__")]
+    [TestCase("XX_X__", 4, "___X__")]
+    [TestCase("XX_X__", 5, "___X__")]
+    [TestCase("XX_X__", 6, "___X__")]
+    [TestCase("XX_X_.", 3, "___X__")]
+    [TestCase("XX_X_.", 4, "___X__")]
+    [TestCase("XX_X_.", 5, "_____.")]
+    [TestCase("XX_X_.", 6, "_____.")]
+    public void test_period_at_or_immediately_before_or_immediately_after(string initial, int idx, string expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+        T point = AddToPoint(startDate, idx);
+
+        // Act
+        TPeriod? period = periodHistory.GetPeriodAtOrImmediatelyBeforeOrImmediatelyAfter(point);
+
+        // Assert
+        Assert.That(
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            Is.EqualTo(CanonicalizePeriodsString(expected)));
+    }
+
+    [TestCase("XX_X__", 0, true)]
+    [TestCase("XX_X__", 1, true)]
+    [TestCase("XX_X__", 2, false)]
+    [TestCase("XX_X__", 3, true)]
+    [TestCase("XX_X__", 4, false)]
+    [TestCase("XX_X__", 5, false)]
+    [TestCase("XX_X__", 6, false)]
+    [TestCase("XX_X_.", 3, true)]
+    [TestCase("XX_X_.", 4, false)]
+    [TestCase("XX_X_.", 5, true)]
+    [TestCase("XX_X_.", 6, true)]
+    [TestCase("_XXXX.", 0, false)]
+    [TestCase("_XXXX.", 1, true)]
+    public void test_has_period_at(string initial, int idx, bool expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+        T point = AddToPoint(startDate, idx);
+
+        // Act
+        bool actual = periodHistory.HasPeriodAt(point);
+
+        // Assert
+        Assert.That(actual, Is.EqualTo(expected));
     }
 }

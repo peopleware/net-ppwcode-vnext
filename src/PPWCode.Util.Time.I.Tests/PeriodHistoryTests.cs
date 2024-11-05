@@ -373,7 +373,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
     }
 
     [TestCaseSource(nameof(CreationCases))]
-    public string? test_creation(StringArray stringArray)
+    public string test_creation(StringArray stringArray)
     {
         // Arrange
         T startDate = CreatePoint(2017, 1, 1);
@@ -386,7 +386,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Act
         PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(allPeriods);
-        string? actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, periodHistory.Periods);
+        string actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, periodHistory.Periods);
 
         // Assert
         return actualPeriodHistoryAsString;

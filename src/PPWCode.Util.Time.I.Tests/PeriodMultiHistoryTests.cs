@@ -115,7 +115,7 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
         // Act
         PeriodMultiHistory<TPeriod, T> periodMultiHistory = CreateMultiPeriodHistory(allPeriods);
         IEnumerable<TPeriod> optimalPeriods = periodMultiHistory.GetOptimalCoveringPeriods();
-        string? actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, optimalPeriods);
+        string actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, optimalPeriods);
 
         // Assert
         return actualPeriodHistoryAsString;

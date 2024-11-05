@@ -42,13 +42,19 @@ public abstract class PpwDbContext<TTimestamp> : DbContext
         // Be sure that the types are correct for audit record stamping
         foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
         {
-            if (entity.ClrType.GetInterface(nameof(IInsertAuditable<TTimestamp>)) is not null)
+            List<Type> interfaces =
+                entity
+                    .ClrType.GetInterfaces()
+                    .Where(i => i.IsGenericType)
+                    .ToList();
+
+            if (interfaces.Any(i => i.GetGenericTypeDefinition() == typeof(IInsertAuditable<>)))
             {
                 IMutableProperty? createdByProperty = entity.FindProperty(nameof(IInsertAuditable<TTimestamp>.CreatedBy));
                 createdByProperty?.SetMaxLength(AuditColumnLength);
             }
 
-            if (entity.ClrType.GetInterface(nameof(IUpdateAuditable<TTimestamp>)) is not null)
+            if (interfaces.Any(i => i.GetGenericTypeDefinition() == typeof(IUpdateAuditable<>)))
             {
                 IMutableProperty? createdByProperty = entity.FindProperty(nameof(IUpdateAuditable<TTimestamp>.LastModifiedBy));
                 createdByProperty?.SetMaxLength(AuditColumnLength);

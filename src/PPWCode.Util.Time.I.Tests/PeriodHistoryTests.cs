@@ -512,7 +512,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Assert
         Assert.That(
-            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [period] : [])),
             Is.EqualTo(CanonicalizePeriodsString(expected)));
     }
 
@@ -537,7 +537,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Assert
         Assert.That(
-            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [period] : [])),
             Is.EqualTo(CanonicalizePeriodsString(expected)));
     }
 
@@ -564,7 +564,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Assert
         Assert.That(
-            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [period] : [])),
             Is.EqualTo(CanonicalizePeriodsString(expected)));
     }
 
@@ -591,7 +591,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Assert
         Assert.That(
-            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [ period ] : [])),
+            CanonicalizePeriodsString(ConvertPeriodsToString(startDate, period != null ? [period] : [])),
             Is.EqualTo(CanonicalizePeriodsString(expected)));
     }
 

@@ -100,7 +100,7 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
                 throw new ProgrammingError("model should be civilized", cse);
             }
 
-            if (model.IsTransient)
+            if (IsTransient(model))
             {
                 SetIdAndCreateAuditProperties(model, GetNextIdFor(model));
             }
@@ -137,7 +137,7 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
     {
         // Is the entity civilized? If not, we do not perform an 'update'.
         model.ThrowIfNotCivilized();
-        if (model.IsTransient)
+        if (IsTransient(model))
         {
             throw new ProgrammingError("model cannot be transient.");
         }
@@ -168,7 +168,7 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
     {
         // Is the entity civilized? If not, we do not perform an 'update'.
         model.ThrowIfNotCivilized();
-        if (!model.IsTransient)
+        if (!IsTransient(model))
         {
             throw new ProgrammingError("model should be transient.");
         }
@@ -200,6 +200,13 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
             .ConfigureAwait(false)
             .GetAwaiter()
             .GetResult();
+
+    /// <inheritdoc />
+    public virtual bool IsTransient(TModel model)
+        => model.IsTransient;
+
+    protected bool IsTransient(TBase model)
+        => model.IsTransient;
 
     protected abstract TId GetNextIdFor(TBase model);
     protected abstract void SetIdAndCreateAuditProperties(TBase model, TId id);

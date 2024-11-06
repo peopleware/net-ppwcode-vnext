@@ -119,7 +119,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     /// <inheritdoc />
     public void Create(TSubEvent historyEvent)
     {
-        if (historyEvent is not { IsTransient: true })
+        if (!EventStore.IsTransient(historyEvent, HistoryEventStoreContext))
         {
             throw new InternalProgrammingError("Create can only be called with a transient event!");
         }
@@ -276,7 +276,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     /// <inheritdoc />
     public void Update(TSubEvent historyEvent, TExecutionPeriod newExecutionPeriod, bool sticky)
     {
-        if ((historyEvent == null) || historyEvent.IsTransient)
+        if (EventStore.IsTransient(historyEvent, HistoryEventStoreContext))
         {
             throw new InternalProgrammingError("Update can only be called on a non-transient existing event!");
         }
@@ -307,9 +307,9 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         bool sticky)
         => ExecuteWithinAnotherPermissionHistory(permissionHistory, () => Update(@event, newExecutionPeriod, sticky));
 
-    public void Update(TSubEvent? historyEvent, TSubEvent newHistoryEvent, bool sticky)
+    public void Update(TSubEvent historyEvent, TSubEvent newHistoryEvent, bool sticky)
     {
-        if ((historyEvent == null) || historyEvent.IsTransient)
+        if (EventStore.IsTransient(historyEvent, HistoryEventStoreContext))
         {
             throw new InternalProgrammingError("Update can only be called on a non-transient existing event!");
         }
@@ -319,7 +319,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
             throw new InternalProgrammingError("Update can only be called on an actual event in the history!");
         }
 
-        if (newHistoryEvent is not { IsTransient: true })
+        if (!EventStore.IsTransient(newHistoryEvent, HistoryEventStoreContext))
         {
             throw new InternalProgrammingError("Update can only be called with a transient replacement event!");
         }
@@ -440,7 +440,10 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     private async Task<ISet<TSubEvent>> InternalProcessAsync(Func<CancellationToken, Task<ISet<TSubEvent>>> eventStoreProcess, CancellationToken cancellationToken = default)
     {
         ISet<TSubEvent> result = await eventStoreProcess(cancellationToken).ConfigureAwait(false);
-        foreach (TSubEvent transient in Events.Where(e => e.IsTransient).ToList())
+        foreach (TSubEvent transient in
+                 Events
+                     .Where(e => EventStore.IsTransient(e, HistoryEventStoreContext))
+                     .ToList())
         {
             Events.Remove(transient);
         }

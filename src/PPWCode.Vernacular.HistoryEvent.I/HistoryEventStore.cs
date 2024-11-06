@@ -115,7 +115,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
                     .ToArray();
             foreach (TEvent @event in emptyKnowledgePeriods)
             {
-                if (!@event.IsTransient)
+                if (!IsTransient(@event, context))
                 {
                     await DeleteAsync(@event, context, cancellationToken).ConfigureAwait(false);
                 }
@@ -151,7 +151,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
 
                     original.KnowledgePeriod = new TKnowledgePeriod { From = original.KnowledgePeriod.From, To = null };
 
-                    if (!candidate.IsTransient)
+                    if (!IsTransient(candidate, context))
                     {
                         await DeleteAsync(candidate, context, cancellationToken).ConfigureAwait(false);
                     }
@@ -178,7 +178,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
         OnProcessActualEvents(result, context);
 
         // save
-        foreach (TEvent @event in result.Where(e => e.IsTransient))
+        foreach (TEvent @event in result.Where(e => IsTransient(e, context)))
         {
             if (onCreate is not null)
             {
@@ -199,6 +199,9 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
 
         return result;
     }
+
+    /// <inheritdoc />
+    public abstract bool IsTransient(TEvent @event, TContext? context = default);
 
     /// <summary>
     ///     Compares two events of type <typeparamref name="TEvent" />, if they have the same execution period, it should

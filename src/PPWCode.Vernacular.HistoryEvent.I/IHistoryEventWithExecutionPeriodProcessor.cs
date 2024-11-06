@@ -152,7 +152,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// <param name="event">the given, transient, event</param>
         /// <param name="newEvent">the new not transient event</param>
         /// <param name="sticky">whether the bordering events should expand based on the execution period of the new event</param>
-        void Update(TSubEvent? @event, TSubEvent newEvent, bool sticky);
+        void Update(TSubEvent @event, TSubEvent newEvent, bool sticky);
 
         /// <summary>
         ///     Updates the given <paramref name="event" /> in the history with the given <paramref name="newEvent" />.

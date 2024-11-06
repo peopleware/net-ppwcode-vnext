@@ -42,7 +42,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.Update" />
     public virtual void Update(TModel model)
     {
-        if (!model.IsTransient)
+        if (!IsTransient(model))
         {
             TModel? foundEntity = GetById(model.Id!);
             if (foundEntity is not null)
@@ -57,7 +57,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.Update" />
     public virtual async Task UpdateAsync(TModel model, CancellationToken cancellationToken = default)
     {
-        if (!model.IsTransient)
+        if (!IsTransient(model))
         {
             TModel? foundEntity = await GetByIdAsync(model.Id!, cancellationToken).ConfigureAwait(false);
             if (foundEntity is not null)
@@ -72,7 +72,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.Add" />
     public virtual void Insert(TModel model)
     {
-        if (!model.IsTransient)
+        if (!IsTransient(model))
         {
             throw new ProgrammingError("Adding a non-transient entity is not allowed.");
         }
@@ -83,7 +83,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.AddRange(TModel[])" />
     public virtual async Task InsertAsync(TModel model, CancellationToken cancellationToken = default)
     {
-        if (!model.IsTransient)
+        if (!IsTransient(model))
         {
             throw new ProgrammingError("Adding a non-transient entity is not allowed.");
         }
@@ -103,6 +103,13 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
         DbSet.Remove(model);
 
         return Task.CompletedTask;
+    }
+
+    /// <inheritdoc cref="IRepository{TModel,TId}.IsTransient" />
+    public virtual bool IsTransient(TModel model)
+    {
+        EntityState state = _context.Entry(model).State;
+        return (state == EntityState.Added) || ((state == EntityState.Detached) && model.IsTransient);
     }
 
     /// <inheritdoc cref="DbContext.Set{TModel}()" />

@@ -76,4 +76,12 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, in TK
     /// <remarks>This method is only to be used during the migration!</remarks>
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
     Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     An entity (or model) is considered transient if it has been created but not yet saved to the database.
+    /// </summary>
+    /// <param name="event">The entity for which to update.</param>
+    /// <param name="context">optional context of type <typeparamref name="TContext" /></param>
+    /// <returns><c>true</c> if transient.</returns>
+    bool IsTransient(TEvent @event, TContext? context = default);
 }

@@ -621,4 +621,45 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         // Assert
         Assert.That(actual, Is.EqualTo(expected));
     }
+
+    [TestCase("_____")]
+    [TestCase(".____", null, 1)]
+    [TestCase("_X_X_", 1, 2, 3, 4)]
+    [TestCase("XXXXX", 0, 5)]
+    [TestCase("_XXX_", 1, 4)]
+    public void test_points(string initial, params int?[] expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+
+        // Act
+        IList<T?> points = periodHistory.PeriodDateTimes;
+        T?[] expectedPoints =
+            expected
+                .Select(i => i == null ? (T?)null : AddToPoint(startDate, i.Value))
+                .ToArray();
+
+        // Assert
+        Assert.That(points, Is.EqualTo(expectedPoints));
+    }
+
+    [TestCase("_____", null)]
+    [TestCase(".____", null)]
+    [TestCase("_X_X_", 1)]
+    [TestCase("XXXXX", 0)]
+    [TestCase("_XXX_", 1)]
+    public void test_oldest_point(string initial, int? expected)
+    {
+        // Arrange
+        T startDate = CreatePoint(2020, 1, 1);
+        PeriodHistory<TPeriod, T> periodHistory = CreatePeriodHistory(ConvertStringToPeriods(startDate, initial));
+
+        // Act
+        T? point = periodHistory.OldestFromDate;
+        T? expectedPoint = expected == null ? (T?)null : AddToPoint(startDate, expected.Value);
+
+        // Assert
+        Assert.That(point, Is.EqualTo(expectedPoint));
+    }
 }

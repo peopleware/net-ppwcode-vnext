@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PPWCode.Vernacular.Persistence.V\PPWCode.Vernacular.Persistence.V.csproj" />
+      <ProjectReference Include="..\PPWCode.Vernacular.RequestContext.I\PPWCode.Vernacular.RequestContext.I.csproj" />
     </ItemGroup>
     
 </Project>

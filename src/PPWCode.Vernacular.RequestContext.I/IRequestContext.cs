@@ -5,4 +5,5 @@ public interface IRequestContext<out T>
 {
     bool IsReadOnly { get; }
     T RequestTimestamp { get; }
+    string IdentityName { get; }
 }

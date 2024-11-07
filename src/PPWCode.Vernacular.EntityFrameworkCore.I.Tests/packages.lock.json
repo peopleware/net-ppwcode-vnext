@@ -200,13 +200,21 @@
         "resolved": "1.6.0",
         "contentHash": "COC1aiAJjCoA5GBF+QKL2uLqEBew4JsCkQmoHKbN3TlOZKa2fKLz5CpiRQKDz0RsAOEGsVKqOD5bomsXq/4STQ=="
       },
+      "ppwcode.util.time.i": {
+        "type": "Project",
+        "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )",
+          "PPWCode.Vernacular.Semantics.V": "[0.0.9, )"
+        }
+      },
       "ppwcode.vernacular.entityframeworkcore.i": {
         "type": "Project",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "[8.0.*, )",
           "Microsoft.EntityFrameworkCore.Relational": "[8.0.*, )",
           "PPWCode.Vernacular.Contracts.I": "[1.*, )",
-          "PPWCode.Vernacular.Persistence.V": "[0.0.9, )"
+          "PPWCode.Vernacular.Persistence.V": "[0.0.9, )",
+          "PPWCode.Vernacular.RequestContext.I": "[0.0.9, )"
         }
       },
       "ppwcode.vernacular.exceptions.v": {
@@ -221,6 +229,13 @@
           "PPWCode.Vernacular.Contracts.I": "[1.*, )",
           "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )",
           "PPWCode.Vernacular.Semantics.V": "[0.0.9, )"
+        }
+      },
+      "ppwcode.vernacular.requestcontext.i": {
+        "type": "Project",
+        "dependencies": {
+          "PPWCode.Util.Time.I": "[0.0.9, )",
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )"
         }
       },
       "ppwcode.vernacular.semantics.v": {

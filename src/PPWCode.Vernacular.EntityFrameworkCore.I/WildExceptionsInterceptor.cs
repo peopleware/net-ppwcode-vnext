@@ -13,7 +13,7 @@ public class WildExceptionsInterceptor : SaveChangesInterceptor
         InterceptionResult<int> result,
         CancellationToken cancellationToken = default)
     {
-        if (eventData.Context != null)
+        if (eventData.Context is not null)
         {
             CompoundSemanticException cse = Validate(eventData.Context);
             if (!cse.IsEmpty)

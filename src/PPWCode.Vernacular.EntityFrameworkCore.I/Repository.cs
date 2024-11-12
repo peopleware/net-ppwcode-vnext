@@ -107,10 +107,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
 
     /// <inheritdoc cref="IRepository{TModel,TId}.IsTransient" />
     public virtual bool IsTransient(TModel model)
-    {
-        EntityState state = _context.Entry(model).State;
-        return (state == EntityState.Added) || ((state == EntityState.Detached) && model.IsTransient);
-    }
+        => model.IsTransient;
 
     /// <inheritdoc cref="DbContext.Set{TModel}()" />
     public virtual DbSet<TModel> DbSet

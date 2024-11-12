@@ -139,9 +139,9 @@ public interface IRepository<TModel, in TId>
     void Delete(TModel model);
 
     /// <summary>
-    ///     An entity (or model) is considered transient if it has been created but not yet saved to the database.
+    ///     An entity (or model) is considered transient if it has been created but not yet saved to the persistent store.
     /// </summary>
-    /// <param name="model">The entity for which to update.</param>
+    /// <param name="model">The entity to be checked.</param>
     /// <returns><c>true</c> if transient.</returns>
     bool IsTransient(TModel model);
 }

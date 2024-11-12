@@ -100,6 +100,13 @@
       "ppwcode.util.collection.i": {
         "type": "Project",
         "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )",
+          "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )"
+        }
+      },
+      "ppwcode.vernacular.exceptions.v": {
+        "type": "Project",
+        "dependencies": {
           "PPWCode.Vernacular.Contracts.I": "[1.*, )"
         }
       }

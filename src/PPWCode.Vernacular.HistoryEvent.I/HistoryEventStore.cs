@@ -68,6 +68,13 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
         return @event;
     }
 
+    public virtual void UndoClose(TEvent originalEvent, TContext? context = default)
+    {
+        Contract.Assert(originalEvent.KnowledgePeriod is not null);
+
+        originalEvent.KnowledgePeriod = new TKnowledgePeriod { From = originalEvent.KnowledgePeriod.From, To = null };
+    }
+
     /// <inheritdoc />
     public virtual Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
         => ProcessAsync(RequestContext.RequestTimestamp, context, onCreate, cancellationToken);
@@ -145,11 +152,13 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
 
                     // if there are 2 candidates, the following should always be true,
                     // this must be true, since only the events related to transaction-time are processed
-                    Contract.Assert(original.KnowledgePeriod!.To.Equals(candidate.KnowledgePeriod!.From));
+                    Contract.Assert(original.KnowledgePeriod is not null);
+                    Contract.Assert(candidate.KnowledgePeriod is not null);
+                    Contract.Assert(original.KnowledgePeriod.To.Equals(candidate.KnowledgePeriod.From));
                     Contract.Assert(candidate.KnowledgePeriod.From.Equals(transactionTime));
                     Contract.Assert(candidate.KnowledgePeriod.To == null);
 
-                    original.KnowledgePeriod = new TKnowledgePeriod { From = original.KnowledgePeriod.From, To = null };
+                    UndoClose(original, context);
 
                     if (!IsTransient(candidate, context))
                     {

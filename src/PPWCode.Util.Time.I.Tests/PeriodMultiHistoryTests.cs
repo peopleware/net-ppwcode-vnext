@@ -17,15 +17,15 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
         {
             yield return
                 new TestCaseData(
-                        new Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<TPeriod>>((mh, d) => mh.GetPeriodsAt(d)))
+                        new Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<IPeriod<T>>>((mh, d) => mh.GetPeriodsAt(d)))
                     .SetName("empty_periods_GetPeriodsAt");
             yield return
                 new TestCaseData(
-                        new Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<TPeriod>>((mh, _) => mh.GetPeriodsOverlappingAt(null, null)))
+                        new Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<IPeriod<T>>>((mh, _) => mh.GetPeriodsOverlappingAt(null, null)))
                     .SetName("empty_periods_GetPeriodsOverlappingAt");
             yield return
                 new TestCaseData(
-                        new Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<TPeriod>>((mh, _) => mh.GetOptimalCoveringPeriods()))
+                        new Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<IPeriod<T>>>((mh, _) => mh.GetOptimalCoveringPeriods()))
                     .SetName("empty_periods_GetOptimalCoveringPeriods");
         }
     }
@@ -81,18 +81,18 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
         }
     }
 
-    protected abstract PeriodMultiHistory<TPeriod, T> CreateMultiPeriodHistory(IEnumerable<TPeriod> periods);
+    protected abstract PeriodMultiHistory<TPeriod, T> CreateMultiPeriodHistory(IEnumerable<IPeriod<T>> periods);
 
     [Test]
     [TestCaseSource(nameof(EmptyPeriodMultiHistoryCases))]
-    public void test_can_handle_empty_periods(Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<TPeriod>> lambda)
+    public void test_can_handle_empty_periods(Func<PeriodMultiHistory<TPeriod, T>, T, IEnumerable<IPeriod<T>>> lambda)
     {
         // Arrange
         T startDate = CreatePoint(2017, 1, 1);
         PeriodMultiHistory<TPeriod, T> periodMultiHistory = CreateMultiPeriodHistory([]);
 
         // Act
-        IEnumerable<TPeriod> periods = lambda(periodMultiHistory, startDate);
+        IEnumerable<IPeriod<T>> periods = lambda(periodMultiHistory, startDate);
 
         // Assert
         Assert.That(periods, Is.Not.Null);
@@ -114,7 +114,7 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
 
         // Act
         PeriodMultiHistory<TPeriod, T> periodMultiHistory = CreateMultiPeriodHistory(allPeriods);
-        IEnumerable<TPeriod> optimalPeriods = periodMultiHistory.GetOptimalCoveringPeriods();
+        IEnumerable<IPeriod<T>> optimalPeriods = periodMultiHistory.GetOptimalCoveringPeriods();
         string actualPeriodHistoryAsString = ConvertPeriodsToString(startDate, optimalPeriods);
 
         // Assert

@@ -80,7 +80,7 @@ public abstract class PeriodMultiHistory<TPeriod, T>
         _root = new RangeTreeNode(periods);
     }
 
-    protected abstract TPeriod Create(T? from, T? to);
+    protected abstract IPeriod<T> Create(T? from, T? to);
 
     /// <summary>
     ///     Returns the periods in the multi-history that contain the given <paramref name="date" />.
@@ -120,7 +120,7 @@ public abstract class PeriodMultiHistory<TPeriod, T>
     /// </returns>
     public IEnumerable<TPeriod> GetPeriodsOverlappingAt(T? startDate, T? endDate)
     {
-        TPeriod period = Create(startDate, endDate);
+        IPeriod<T> period = Create(startDate, endDate);
         return GetPeriodsOverlappingAt(period.CoalesceFrom, period.CoalesceTo);
     }
 
@@ -132,7 +132,7 @@ public abstract class PeriodMultiHistory<TPeriod, T>
     /// <returns>
     ///     An enumerable collection of <typeparamref name="TPeriod"/> instances
     /// </returns>
-    public IEnumerable<TPeriod> GetOptimalCoveringPeriods()
+    public IEnumerable<IPeriod<T>> GetOptimalCoveringPeriods()
         => _root.GetOptimalCoveringPeriods(Create);
 
     /// <summary>
@@ -223,21 +223,21 @@ public abstract class PeriodMultiHistory<TPeriod, T>
             return result;
         }
 
-        public LinkedList<TPeriod> GetOptimalCoveringPeriods(Func<T?, T?, TPeriod> create)
+        public LinkedList<IPeriod<T>> GetOptimalCoveringPeriods(Func<T?, T?, IPeriod<T>> create)
         {
             // get optimal covering periods left and right
-            LinkedList<TPeriod>? leftCoveringPeriods = Left?.GetOptimalCoveringPeriods(create);
-            LinkedList<TPeriod>? rightCoveringPeriods = Right?.GetOptimalCoveringPeriods(create);
-            LinkedListNode<TPeriod>? leftTailNode = leftCoveringPeriods?.Last;
-            LinkedListNode<TPeriod>? rightHeadNode = rightCoveringPeriods?.First;
-            LinkedList<TPeriod> coveringPeriods = new ();
+            LinkedList<IPeriod<T>>? leftCoveringPeriods = Left?.GetOptimalCoveringPeriods(create);
+            LinkedList<IPeriod<T>>? rightCoveringPeriods = Right?.GetOptimalCoveringPeriods(create);
+            LinkedListNode<IPeriod<T>>? leftTailNode = leftCoveringPeriods?.Last;
+            LinkedListNode<IPeriod<T>>? rightHeadNode = rightCoveringPeriods?.First;
+            LinkedList<IPeriod<T>> coveringPeriods = new ();
 
             if (Inner.Any())
             {
                 // inner periods are all overlapping "Center" value
                 T? rangeFrom = Inner.OrderBy(p => p.CoalesceFrom).First().From;
                 T? rangeTo = Inner.OrderBy(p => p.CoalesceTo).Last().To;
-                TPeriod runningPeriod = create(rangeFrom, rangeTo);
+                IPeriod<T> runningPeriod = create(rangeFrom, rangeTo);
 
                 // plug to left, all left periods are left of Center
                 //     BUT not left of [rangeFrom, rangeTo[
@@ -266,8 +266,8 @@ public abstract class PeriodMultiHistory<TPeriod, T>
                 }
 
                 // create new linked list
-                TPeriod coveringPeriod = runningPeriod;
-                LinkedListNode<TPeriod> coveringPeriodNode = new (coveringPeriod);
+                IPeriod<T> coveringPeriod = runningPeriod;
+                LinkedListNode<IPeriod<T>> coveringPeriodNode = new (coveringPeriod);
                 coveringPeriods.AddFirst(coveringPeriodNode);
             }
 

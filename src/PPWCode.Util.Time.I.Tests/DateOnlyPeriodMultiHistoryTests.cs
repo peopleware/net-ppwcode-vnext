@@ -29,6 +29,6 @@ public class DateOnlyPeriodMultiHistoryTests : PeriodMultiHistoryTests<DateOnlyP
         => new (from, to);
 
     /// <inheritdoc />
-    protected override PeriodMultiHistory<DateOnlyPeriod, DateOnly> CreateMultiPeriodHistory(IEnumerable<DateOnlyPeriod> periods)
-        => new DateOnlyPeriodMultiHistory(periods);
+    protected override PeriodMultiHistory<DateOnlyPeriod, DateOnly> CreateMultiPeriodHistory(IEnumerable<IPeriod<DateOnly>> periods)
+        => new DateOnlyPeriodMultiHistory(periods.Select(p => CreatePeriod(p.From, p.To)));
 }

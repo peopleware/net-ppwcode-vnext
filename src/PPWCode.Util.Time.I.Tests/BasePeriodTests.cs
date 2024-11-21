@@ -112,7 +112,7 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
         return periods.ToArray();
     }
 
-    protected string ConvertPeriodsToString(T startDate, IEnumerable<TPeriod> periods)
+    protected string ConvertPeriodsToString(T startDate, IEnumerable<IPeriod<T>> periods)
     {
         // empty, no periods
         if (!periods.Any())
@@ -121,9 +121,9 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
         }
 
         // convert to linked list
-        LinkedList<TPeriod> linkedPeriods = new (periods.OrderBy(p => p.CoalesceFrom));
-        LinkedListNode<TPeriod>? firstNode = linkedPeriods.First;
-        LinkedListNode<TPeriod>? lastNode = linkedPeriods.Last;
+        LinkedList<IPeriod<T>> linkedPeriods = new (periods.OrderBy(p => p.CoalesceFrom));
+        LinkedListNode<IPeriod<T>>? firstNode = linkedPeriods.First;
+        LinkedListNode<IPeriod<T>>? lastNode = linkedPeriods.Last;
 
         Contract.Assert(firstNode != null);
         Contract.Assert(lastNode != null);
@@ -133,7 +133,7 @@ public abstract class BasePeriodTests<TPeriod, T> : BaseFixture
         StringBuilder sb = new ();
         for (T date = startDate; endDate is null || (date.CompareTo(endDate.Value) < 0); date = AddToPoint(date, 1))
         {
-            TPeriod? period = linkedPeriods.FirstOrDefault(p => p.Contains(date));
+            IPeriod<T>? period = linkedPeriods.FirstOrDefault(p => p.Contains(date));
             if (period is { From: null } && (firstNode.Value == period))
             {
                 sb.Append('.');

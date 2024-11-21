@@ -119,7 +119,7 @@ namespace PPWCode.Util.Time.I
         public T? OldestFromDate
             => LinkedPeriods.First?.Value.From;
 
-        protected abstract TPeriod Create(T? from, T? to);
+        protected abstract IPeriod<T> Create(T? from, T? to);
 
         /// <summary>
         ///     Returns the period in the history that contains the
@@ -324,7 +324,7 @@ namespace PPWCode.Util.Time.I
         public bool HasPeriodAt(T date)
             => GetPeriodAt(date) != null;
 
-        public IEnumerable<TPeriod> IntersectWith<T2>(PeriodHistory<T2, T> other)
+        public IEnumerable<IPeriod<T>> IntersectWith<T2>(PeriodHistory<T2, T> other)
             where T2 : class, IPeriod<T>
         {
             if (other.Periods.Count == 0)
@@ -332,7 +332,7 @@ namespace PPWCode.Util.Time.I
                 return [];
             }
 
-            List<TPeriod> result = new ();
+            List<IPeriod<T>> result = new ();
 
             LinkedList<TPeriod> ours = LinkedPeriods;
             LinkedListNode<TPeriod>? oursCurrent = ours.First;
@@ -404,7 +404,7 @@ namespace PPWCode.Util.Time.I
             return result;
         }
 
-        public IEnumerable<TPeriod> ExceptWith<T2>(PeriodHistory<T2, T> otherPeriodHistory)
+        public IEnumerable<IPeriod<T>> ExceptWith<T2>(PeriodHistory<T2, T> otherPeriodHistory)
             where T2 : class, IPeriod<T>
         {
             if (otherPeriodHistory.Periods.Count == 0)
@@ -412,7 +412,7 @@ namespace PPWCode.Util.Time.I
                 return Periods;
             }
 
-            List<TPeriod> result = new ();
+            List<IPeriod<T>> result = new ();
 
             LinkedList<TPeriod> ourPeriods = LinkedPeriods;
             LinkedListNode<TPeriod>? oursCurrent = ourPeriods.First;
@@ -428,7 +428,7 @@ namespace PPWCode.Util.Time.I
                     othersCurrent = othersCurrent.Next;
                 }
 
-                TPeriod? period = oursCurrent.Value;
+                IPeriod<T>? period = oursCurrent.Value;
                 while ((othersCurrent != null) && (period != null) && period.Overlaps(othersCurrent.Value))
                 {
                     if (period.CoalesceFrom.CompareTo(othersCurrent.Value.CoalesceFrom) < 0)

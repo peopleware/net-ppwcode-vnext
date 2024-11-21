@@ -432,10 +432,10 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         PeriodHistory<TPeriod, T> expectedPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, expectedPeriodsAsString));
 
         // Act
-        PeriodHistory<TPeriod, T> actualPeriods = CreatePeriodHistory(initialPeriods.IntersectWith(intersectPeriods));
+        IEnumerable<IPeriod<T>> actualPeriods = initialPeriods.IntersectWith(intersectPeriods);
 
         // Assert
-        Assert.That(actualPeriods.Periods.SetEqual(expectedPeriods.Periods, new PeriodComparer<T>()));
+        Assert.That(actualPeriods.SetEqual(expectedPeriods.Periods, new PeriodComparer<T>()));
     }
 
     [TestCaseSource(nameof(ExceptWithCases))]
@@ -452,10 +452,10 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
         PeriodHistory<TPeriod, T> expectedPeriods = CreatePeriodHistory(ConvertStringToPeriods(startDate, expectedPeriodsAsString));
 
         // Act
-        PeriodHistory<TPeriod, T> actualPeriods = CreatePeriodHistory(initialPeriods.ExceptWith(exceptPeriods));
+        IEnumerable<IPeriod<T>> actualPeriods = initialPeriods.ExceptWith(exceptPeriods);
 
         // Assert
-        Assert.That(actualPeriods.Periods.SetEqual(expectedPeriods.Periods, new PeriodComparer<T>()));
+        Assert.That(actualPeriods.SetEqual(expectedPeriods.Periods, new PeriodComparer<T>()));
     }
 
     [TestCase(

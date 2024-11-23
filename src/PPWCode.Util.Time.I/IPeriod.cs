@@ -14,8 +14,7 @@ using PPWCode.Vernacular.Semantics.V;
 namespace PPWCode.Util.Time.I;
 
 public interface IPeriod<T>
-    : ICivilizedObject,
-      IIsEmpty
+    : ICivilizedObject
     where T : struct, IComparable<T>, IEquatable<T>
 {
     T? From { get; }

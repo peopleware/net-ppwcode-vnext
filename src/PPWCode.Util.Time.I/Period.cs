@@ -19,6 +19,7 @@ namespace PPWCode.Util.Time.I;
 public abstract class Period<T>
     : CivilizedObject,
       IPeriod<T>,
+      IIsEmpty,
       IEquatable<Period<T>>
     where T : struct, IComparable<T>, IEquatable<T>
 {

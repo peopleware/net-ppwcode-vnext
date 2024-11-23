@@ -25,7 +25,7 @@ public abstract class PersistentObject<TId>
 
     public virtual TId? Id { get; init; }
 
-    public virtual bool IsTransient
+    public virtual bool IdIsTransient
         => EqualityComparer<TId?>.Default.Equals(Id, default);
 
     public virtual TOther? As<TOther>()
@@ -47,7 +47,7 @@ public abstract class PersistentObject<TId>
             return true;
         }
 
-        if (IsTransient || other.IsTransient)
+        if (IdIsTransient || other.IdIsTransient)
         {
             return false;
         }
@@ -85,7 +85,7 @@ public abstract class PersistentObject<TId>
 
         // When this instance is transient, we use the base GetHashCode()
         // and remember it, so an instance can NEVER change its hash code.
-        if (IsTransient)
+        if (IdIsTransient)
         {
             _oldHashCode = base.GetHashCode();
             return _oldHashCode.Value;

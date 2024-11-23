@@ -22,14 +22,14 @@ public class PersistentObjectUtilsTests
     {
         // Arrange
         Person person = new ();
-        Assert.That(person.IsTransient, Is.True);
+        Assert.That(person.IdIsTransient, Is.True);
 
         // Act
         long expectedId = 1L;
         person.SetPersistentId(expectedId);
 
         // Assert
-        Assert.That(person.IsTransient, Is.False);
+        Assert.That(person.IdIsTransient, Is.False);
         Assert.That(person.Id, Is.EqualTo(expectedId));
     }
 
@@ -42,7 +42,7 @@ public class PersistentObjectUtilsTests
         string expectedBy = "User";
 
         Person person = new ();
-        Assert.That(person.IsTransient, Is.True);
+        Assert.That(person.IdIsTransient, Is.True);
         Assert.That(person.CreatedAt, Is.Null);
         Assert.That(person.CreatedBy, Is.Null);
         Assert.That(person.LastModifiedAt, Is.Null);
@@ -52,7 +52,7 @@ public class PersistentObjectUtilsTests
         person.SetIdAndCreateAuditProperties(expectedId, expectedNow, expectedBy);
 
         // Assert
-        Assert.That(person.IsTransient, Is.False);
+        Assert.That(person.IdIsTransient, Is.False);
         Assert.That(person.Id, Is.EqualTo(expectedId));
         Assert.That(person.CreatedAt, Is.EqualTo(expectedNow));
         Assert.That(person.CreatedBy, Is.EqualTo(expectedBy));
@@ -68,7 +68,7 @@ public class PersistentObjectUtilsTests
         string expectedBy = "User";
 
         Person person = new ();
-        Assert.That(person.IsTransient, Is.True);
+        Assert.That(person.IdIsTransient, Is.True);
         Assert.That(person.CreatedAt, Is.Null);
         Assert.That(person.CreatedBy, Is.Null);
         Assert.That(person.LastModifiedAt, Is.Null);
@@ -78,7 +78,7 @@ public class PersistentObjectUtilsTests
         person.SetLastModifiedProperties(expectedNow, expectedBy);
 
         // Assert
-        Assert.That(person.IsTransient, Is.True);
+        Assert.That(person.IdIsTransient, Is.True);
         Assert.That(person.CreatedAt, Is.Null);
         Assert.That(person.CreatedBy, Is.Null);
         Assert.That(person.LastModifiedAt, Is.EqualTo(expectedNow));

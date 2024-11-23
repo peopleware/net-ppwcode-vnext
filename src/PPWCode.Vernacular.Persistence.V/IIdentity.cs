@@ -16,7 +16,7 @@ public interface IIdentity<T>
 {
     T? Id { get; }
 
-    bool IsTransient { get; }
+    bool IdIsTransient { get; }
 
     bool IsSame(IIdentity<T>? other);
 }

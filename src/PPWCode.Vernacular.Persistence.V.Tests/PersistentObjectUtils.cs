@@ -60,7 +60,7 @@ public static class PersistentObjectUtils
     {
         if (persistentObject != null)
         {
-            if (persistentObject.IsTransient)
+            if (persistentObject.IdIsTransient)
             {
                 persistentObject.SetPersistentId(id);
             }

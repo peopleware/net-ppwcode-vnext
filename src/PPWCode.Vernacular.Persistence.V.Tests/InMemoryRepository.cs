@@ -100,7 +100,7 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
                 throw new ProgrammingError("model should be civilized", cse);
             }
 
-            if (IsTransient(model))
+            if (IdIsTransient(model))
             {
                 SetIdAndCreateAuditProperties(model, GetNextIdFor(model));
             }
@@ -203,10 +203,10 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
 
     /// <inheritdoc />
     public virtual bool IsTransient(TModel model)
-        => model.IsTransient;
+        => model.IdIsTransient;
 
-    protected bool IsTransient(TBase model)
-        => model.IsTransient;
+    protected bool IdIsTransient(TBase model)
+        => model.IdIsTransient;
 
     protected abstract TId GetNextIdFor(TBase model);
     protected abstract void SetIdAndCreateAuditProperties(TBase model, TId id);

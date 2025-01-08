@@ -75,7 +75,6 @@ public static class CollectionExtensions
         this IEnumerable<T> from,
         IEnumerable<T> to,
         IEqualityComparer<T> comparer)
-        where T : class
     {
         ISet<T> currentItems = from.ToHashSet(comparer);
         ISet<T> targetItems = to.ToHashSet(comparer);
@@ -95,7 +94,6 @@ public static class CollectionExtensions
         Action<T>? newAction,
         Action<T>? obsoleteAction,
         Action<T>? intersectedAction)
-        where T : class
         => from.ExecDiff(to, EqualityComparer<T>.Default, newAction, obsoleteAction, intersectedAction);
 
     public static void ExecDiff<T>(
@@ -105,7 +103,6 @@ public static class CollectionExtensions
         Action<T>? newAction,
         Action<T>? obsoleteAction,
         Action<T>? intersectedAction)
-        where T : class
     {
         DiffResult<T> diff = from.CalcDiff(to, comparer);
 
@@ -136,7 +133,6 @@ public static class CollectionExtensions
 }
 
 public class DiffResult<T>
-    where T : class
 {
     public DiffResult(
         ISet<T> newItems,

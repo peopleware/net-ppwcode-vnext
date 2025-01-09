@@ -18,28 +18,24 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     where TKnowledge : struct, IComparable<TKnowledge>, IEquatable<TKnowledge>
     where TContext : IHistoryEventStoreContext
 {
-    private readonly IDictionary<TOwner, ISet<TEvent>> _ownerEvents =
-        new Dictionary<TOwner, ISet<TEvent>>();
-
-    private readonly ISet<TOwner> _touchedOwners =
-        new HashSet<TOwner>();
+    private readonly IRequestContext<TKnowledge> _requestContext;
+    private readonly IDictionary<TOwner, ISet<TEvent>> _ownerEvents = new Dictionary<TOwner, ISet<TEvent>>();
+    private readonly ISet<TOwner> _touchedOwners = new HashSet<TOwner>();
 
     private TKnowledge? _currentTransactionTime;
     private TKnowledge? _previousTransactionTime;
 
     protected HistoryEventStore(IRequestContext<TKnowledge> requestContext)
     {
-        RequestContext = requestContext;
+        _requestContext = requestContext;
     }
-
-    public IRequestContext<TKnowledge> RequestContext { get; }
 
     /// <inheritdoc />
     public virtual TEvent Open(TEvent @event, TKnowledge transactionTime, TContext? context = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
-        Contract.Requires(transactionTime.CompareTo(RequestContext.RequestTimestamp) <= 0);
+        Contract.Requires(transactionTime.CompareTo(_requestContext.RequestTimestamp) <= 0);
         Contract.Requires(_previousTransactionTime is null || (_previousTransactionTime.Value.CompareTo(transactionTime) <= 0));
         Contract.Requires(_currentTransactionTime is null || _currentTransactionTime.Value.Equals(transactionTime));
 
@@ -55,7 +51,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
-        Contract.Requires(transactionTime.CompareTo(RequestContext.RequestTimestamp) <= 0);
+        Contract.Requires(transactionTime.CompareTo(_requestContext.RequestTimestamp) <= 0);
         Contract.Requires(_previousTransactionTime is null || (_previousTransactionTime.Value.CompareTo(transactionTime) <= 0));
         Contract.Requires(_currentTransactionTime is null || _currentTransactionTime.Value.Equals(transactionTime));
         Contract.Requires(@event.KnowledgePeriod is not null);
@@ -77,14 +73,14 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
 
     /// <inheritdoc />
     public virtual Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
-        => ProcessAsync(RequestContext.RequestTimestamp, context, onCreate, cancellationToken);
+        => ProcessAsync(_requestContext.RequestTimestamp, context, onCreate, cancellationToken);
 
     /// <inheritdoc />
     public virtual async Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one
-        Contract.Requires(transactionTime.CompareTo(RequestContext.RequestTimestamp) <= 0);
+        Contract.Requires(transactionTime.CompareTo(_requestContext.RequestTimestamp) <= 0);
         Contract.Requires(_previousTransactionTime is null || (_previousTransactionTime.Value.CompareTo(transactionTime) <= 0));
         Contract.Requires(_currentTransactionTime is null || _currentTransactionTime.Value.Equals(transactionTime));
 

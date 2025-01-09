@@ -22,6 +22,12 @@
         "resolved": "1.2.0",
         "contentHash": "hWD5pr+4qtnAJHjTqxBPX2wT6WO8e9wMqudXYPlDGveDk9Mk2+DyZaz+DDs810hV3Fhfz7pXhS5H7WTcMI6zrg=="
       },
+      "ppwcode.util.authorisation.i": {
+        "type": "Project",
+        "dependencies": {
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )"
+        }
+      },
       "ppwcode.util.time.i": {
         "type": "Project",
         "dependencies": {

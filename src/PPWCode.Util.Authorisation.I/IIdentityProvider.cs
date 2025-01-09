@@ -1,4 +1,4 @@
-namespace PPWCode.Vernacular.RequestContext.I;
+namespace PPWCode.Util.Authorisation.I;
 
 public interface IIdentityProvider
 {

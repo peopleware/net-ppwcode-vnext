@@ -137,6 +137,7 @@
       "ppwcode.vernacular.requestcontext.i": {
         "type": "Project",
         "dependencies": {
+          "PPWCode.Util.Authorisation.I": "[0.0.9, )",
           "PPWCode.Util.Time.I": "[0.0.9, )",
           "PPWCode.Vernacular.Contracts.I": "[1.*, )"
         }

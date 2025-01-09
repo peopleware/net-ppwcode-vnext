@@ -19,16 +19,16 @@ public class InMemoryPersonRepository
       IPersonRepository
 {
     private readonly ITimeProvider<DateTimeOffset> _timeProvider;
-    private readonly IPrincipalProvider _principalProvider;
+    private readonly IIdentityProvider _identityProvider;
     private readonly IPersonQueryManager _personQueryManager;
 
     public InMemoryPersonRepository(
         ITimeProvider<DateTimeOffset> timeProvider,
-        IPrincipalProvider principalProvider,
+        IIdentityProvider identityProvider,
         IPersonQueryManager personQueryManager)
     {
         _timeProvider = timeProvider;
-        _principalProvider = principalProvider;
+        _identityProvider = identityProvider;
         _personQueryManager = personQueryManager;
     }
 
@@ -38,11 +38,11 @@ public class InMemoryPersonRepository
 
     /// <inheritdoc />
     protected override void SetIdAndCreateAuditProperties(Person model, long id)
-        => model.SetIdAndCreateAuditProperties(id, _timeProvider.Now, _principalProvider.CurrentPrincipal.Identity?.Name ?? "Unknown");
+        => model.SetIdAndCreateAuditProperties(id, _timeProvider.Now, _identityProvider.IdentityName);
 
     /// <inheritdoc />
     protected override void SetLastModifiedProperties(Person model)
-        => model.SetLastModifiedProperties(_timeProvider.Now, _principalProvider.CurrentPrincipal.Identity?.Name ?? "Unknown");
+        => model.SetLastModifiedProperties(_timeProvider.Now, _identityProvider.IdentityName);
 
     /// <inheritdoc />
     public Task<List<Person>> FindByNameAsync(string name, CancellationToken cancellationToken = default)

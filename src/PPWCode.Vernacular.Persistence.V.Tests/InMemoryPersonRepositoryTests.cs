@@ -30,9 +30,10 @@ public class InMemoryPersonRepositoryTests : BaseFixture
         identity.AddClaim(new Claim("SUT", "testing"));
         ClaimsPrincipal principal = new (identity);
         IPrincipalProvider principalProvider = new PrincipalProvider(principal);
+        IIdentityProvider identityProvider = new IdentityProvider(principalProvider);
         PersonQueryManager queryManager = new ();
 
-        InMemoryPersonRepository repository = new (timeProvider, principalProvider, queryManager);
+        InMemoryPersonRepository repository = new (timeProvider, identityProvider, queryManager);
         repository.Initialize(people);
 
         return repository;

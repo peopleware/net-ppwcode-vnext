@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PPWCode.Util.Authorisation.I\PPWCode.Util.Authorisation.I.csproj" />
       <ProjectReference Include="..\PPWCode.Util.Time.I\PPWCode.Util.Time.I.csproj" />
     </ItemGroup>
 

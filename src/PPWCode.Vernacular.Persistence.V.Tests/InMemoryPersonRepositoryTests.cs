@@ -20,9 +20,9 @@ namespace PPWCode.Vernacular.Persistence.V.Tests;
 
 [TestFixture]
 [Parallelizable(ParallelScope.Fixtures)]
-public class PersonRepositoryTests : BaseFixture
+public class InMemoryPersonRepositoryTests : BaseFixture
 {
-    protected PersonRepository CreateRepository(IEnumerable<Person> people, DateTimeOffset? now = null, string? userName = null)
+    protected InMemoryPersonRepository CreateRepository(IEnumerable<Person> people, DateTimeOffset? now = null, string? userName = null)
     {
         ITimeProvider<DateTimeOffset> timeProvider = new TimeProvider(() => now ?? DateTimeOffset.Now);
         ClaimsIdentity identity = new ("MyAuthentication", ClaimTypes.Name, null);
@@ -32,7 +32,7 @@ public class PersonRepositoryTests : BaseFixture
         IPrincipalProvider principalProvider = new PrincipalProvider(principal);
         PersonQueryManager queryManager = new ();
 
-        PersonRepository repository = new (timeProvider, principalProvider, queryManager);
+        InMemoryPersonRepository repository = new (timeProvider, principalProvider, queryManager);
         repository.Initialize(people);
 
         return repository;
@@ -45,7 +45,7 @@ public class PersonRepositoryTests : BaseFixture
         long expectedId = IdGenerator.NextId;
         Person specificPerson = new () { Id = expectedId, Name = "Jef" };
         IEnumerable<Person> people = [specificPerson];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         Person? person = await repository.GetByIdAsync(expectedId);
@@ -62,7 +62,7 @@ public class PersonRepositoryTests : BaseFixture
         long expectedId = IdGenerator.NextId;
         Person specificPerson = new () { Id = expectedId, Name = "Jef" };
         IEnumerable<Person> people = [specificPerson];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         Person? person = repository.GetById(expectedId);
@@ -78,7 +78,7 @@ public class PersonRepositoryTests : BaseFixture
         // Arrange
         Person specificPerson = new () { Id = 1L, Name = "Jef" };
         IEnumerable<Person> people = [specificPerson];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         List<Person> foundPeople = await repository.FindAllAsync();
@@ -94,7 +94,7 @@ public class PersonRepositoryTests : BaseFixture
         long expectedId = IdGenerator.NextId;
         Person specificPerson = new () { Id = expectedId, Name = "Jef" };
         IEnumerable<Person> people = [specificPerson];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         List<Person> foundPeople = repository.FindAll();
@@ -112,7 +112,7 @@ public class PersonRepositoryTests : BaseFixture
         string newName = Guid.NewGuid().ToString();
         Person specificPerson = new () { Id = IdGenerator.NextId, Name = "Jef" };
         IEnumerable<Person> people = [specificPerson];
-        PersonRepository repository = CreateRepository(people, now, userName);
+        InMemoryPersonRepository repository = CreateRepository(people, now, userName);
 
         // Act
         specificPerson.Name = newName;
@@ -134,7 +134,7 @@ public class PersonRepositoryTests : BaseFixture
         string newName = Guid.NewGuid().ToString();
         Person specificPerson = new () { Id = IdGenerator.NextId, Name = "Jef" };
         IEnumerable<Person> people = [specificPerson];
-        PersonRepository repository = CreateRepository(people, now, userName);
+        InMemoryPersonRepository repository = CreateRepository(people, now, userName);
 
         // Act
         specificPerson.Name = newName;
@@ -153,7 +153,7 @@ public class PersonRepositoryTests : BaseFixture
         // Arrange
         DateTimeOffset now = DateTimeOffset.Now;
         string userName = Guid.NewGuid().ToString();
-        PersonRepository repository = CreateRepository([], now, userName);
+        InMemoryPersonRepository repository = CreateRepository([], now, userName);
 
         // Act
         Assert.That(repository.Models, Is.Empty);
@@ -174,7 +174,7 @@ public class PersonRepositoryTests : BaseFixture
         // Arrange
         DateTimeOffset now = DateTimeOffset.Now;
         string userName = Guid.NewGuid().ToString();
-        PersonRepository repository = CreateRepository([], now, userName);
+        InMemoryPersonRepository repository = CreateRepository([], now, userName);
 
         // Act
         Assert.That(repository.Models, Is.Empty);
@@ -196,7 +196,7 @@ public class PersonRepositoryTests : BaseFixture
         int id = IdGenerator.NextId;
         Person person = new () { Id = id, Name = "Jef" };
         IEnumerable<Person> people = [person];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         Assert.That(repository.Models, Has.Member(person));
@@ -213,7 +213,7 @@ public class PersonRepositoryTests : BaseFixture
         int id = IdGenerator.NextId;
         Person person = new () { Id = id, Name = "Jef" };
         IEnumerable<Person> people = [person];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         Assert.That(repository.Models, Has.Member(person));
@@ -233,7 +233,7 @@ public class PersonRepositoryTests : BaseFixture
         Person person2 = new () { Id = id, Name = "2" + name };
         Person person3 = new () { Id = id, Name = "3" + name };
         IEnumerable<Person> people = [person, person2, person3];
-        PersonRepository repository = CreateRepository(people);
+        InMemoryPersonRepository repository = CreateRepository(people);
 
         // Act
         List<Person> foundPeople = await repository.FindByNameAsync(name);

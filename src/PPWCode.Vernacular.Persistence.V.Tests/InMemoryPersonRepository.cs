@@ -14,24 +14,23 @@ using PPWCode.Util.Time.I;
 
 namespace PPWCode.Vernacular.Persistence.V.Tests;
 
-public class PersonRepository
+public class InMemoryPersonRepository
     : InMemoryRepository<Person, Person, long>,
       IPersonRepository
 {
-    public PersonRepository(
+    private readonly ITimeProvider<DateTimeOffset> _timeProvider;
+    private readonly IPrincipalProvider _principalProvider;
+    private readonly IPersonQueryManager _personQueryManager;
+
+    public InMemoryPersonRepository(
         ITimeProvider<DateTimeOffset> timeProvider,
         IPrincipalProvider principalProvider,
         IPersonQueryManager personQueryManager)
-        : base(personQueryManager)
     {
-        TimeProvider = timeProvider;
-        PrincipalProvider = principalProvider;
-        PersonQueryManager = personQueryManager;
+        _timeProvider = timeProvider;
+        _principalProvider = principalProvider;
+        _personQueryManager = personQueryManager;
     }
-
-    public ITimeProvider<DateTimeOffset> TimeProvider { get; }
-    public IPrincipalProvider PrincipalProvider { get; }
-    public IPersonQueryManager PersonQueryManager { get; }
 
     /// <inheritdoc />
     protected override long GetNextIdFor(Person model)
@@ -39,13 +38,13 @@ public class PersonRepository
 
     /// <inheritdoc />
     protected override void SetIdAndCreateAuditProperties(Person model, long id)
-        => model.SetIdAndCreateAuditProperties(id, TimeProvider.Now, PrincipalProvider.CurrentPrincipal.Identity?.Name ?? "Unknown");
+        => model.SetIdAndCreateAuditProperties(id, _timeProvider.Now, _principalProvider.CurrentPrincipal.Identity?.Name ?? "Unknown");
 
     /// <inheritdoc />
     protected override void SetLastModifiedProperties(Person model)
-        => model.SetLastModifiedProperties(TimeProvider.Now, PrincipalProvider.CurrentPrincipal.Identity?.Name ?? "Unknown");
+        => model.SetLastModifiedProperties(_timeProvider.Now, _principalProvider.CurrentPrincipal.Identity?.Name ?? "Unknown");
 
     /// <inheritdoc />
     public Task<List<Person>> FindByNameAsync(string name, CancellationToken cancellationToken = default)
-        => FindAsync(PersonQueryManager.FindByName(name), cancellationToken);
+        => FindAsync(_personQueryManager.FindByName(name), cancellationToken);
 }

@@ -52,22 +52,14 @@ namespace PPWCode.Vernacular.Persistence.V.Tests;
 ///         should be used for create and delete operations.
 ///     </para>
 /// </remarks>
-/// <typeparam name="TModel">the type that this repository works on</typeparam>
 /// <typeparam name="TBase">the base type of <typeparamref name="TModel" /></typeparam>
+/// <typeparam name="TModel">the type that this repository works on</typeparam>
 /// <typeparam name="TId">the type of the PK of <typeparamref name="TModel" /></typeparam>
-public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TModel, TId>
-    where TModel : IPersistentObject<TId>, TBase
+public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TModel, TId>
     where TBase : IPersistentObject<TId>
+    where TModel : IPersistentObject<TId>, TBase
     where TId : struct, IEquatable<TId>
 {
-    protected InMemoryRepository(IQueryManager<TModel, TId> queryManager)
-    {
-        QueryManager = queryManager;
-    }
-
-    // ReSharper disable once UnusedAutoPropertyAccessor.Global
-    public IQueryManager<TModel, TId> QueryManager { get; }
-
     /// <summary>
     ///     Returns the raw storage based on type <typeparamref name="TBase" /> and is meant for manipulation:
     ///     adding or removing instances.
@@ -221,8 +213,14 @@ public abstract class InMemoryRepository<TModel, TBase, TId> : IRepository<TMode
             .GetAwaiter()
             .GetResult();
 
-    protected virtual TResult? Get<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
-        => lambda(Queryable).SingleOrDefault();
+    protected virtual Task<TResult?> GetAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
+        => Task.FromResult(lambda(Queryable).SingleOrDefault());
+
+    protected TResult? Get<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
+        => GetAsync(lambda)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
 
     protected virtual Task<List<TResult>> FindAsync<TResult>(
         Func<IQueryable<TModel>, IQueryable<TResult>> lambda,

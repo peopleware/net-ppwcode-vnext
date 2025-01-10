@@ -22,6 +22,24 @@ namespace PPWCode.Vernacular.Persistence.V.Tests;
 [Parallelizable(ParallelScope.Fixtures)]
 public class InMemoryPersonRepositoryTests : BaseFixture
 {
+    protected List<Person>? BaseModels { get; private set; }
+
+    /// <inheritdoc />
+    protected override void OnSetup()
+    {
+        base.OnSetup();
+
+        BaseModels = [];
+    }
+
+    /// <inheritdoc />
+    protected override void OnTeardown()
+    {
+        BaseModels?.Clear();
+
+        base.OnTeardown();
+    }
+
     protected InMemoryPersonRepository CreateRepository(IEnumerable<Person> people, DateTimeOffset? now = null, string? userName = null)
     {
         ITimeProvider<DateTimeOffset> timeProvider = new TimeProvider(() => now ?? DateTimeOffset.Now);
@@ -33,7 +51,7 @@ public class InMemoryPersonRepositoryTests : BaseFixture
         IIdentityProvider identityProvider = new IdentityProvider(principalProvider);
         PersonQueryManager queryManager = new ();
 
-        InMemoryPersonRepository repository = new (timeProvider, identityProvider, queryManager);
+        InMemoryPersonRepository repository = new (BaseModels!, timeProvider, identityProvider, queryManager);
         repository.Initialize(people);
 
         return repository;

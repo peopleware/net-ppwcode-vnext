@@ -60,11 +60,16 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     where TModel : IPersistentObject<TId>, TBase
     where TId : struct, IEquatable<TId>
 {
+    protected InMemoryRepository(List<TBase> baseModels)
+    {
+        BaseModels = baseModels;
+    }
+
     /// <summary>
     ///     Returns the raw storage based on type <typeparamref name="TBase" /> and is meant for manipulation:
     ///     adding or removing instances.
     /// </summary>
-    public List<TBase> BaseModels { get; } = new ();
+    public List<TBase> BaseModels { get; }
 
     /// <summary>
     ///     Returns all instances that can be "seen" by this repository and is based on type

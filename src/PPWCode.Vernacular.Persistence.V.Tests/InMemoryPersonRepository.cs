@@ -23,9 +23,11 @@ public class InMemoryPersonRepository
     private readonly IPersonQueryManager _personQueryManager;
 
     public InMemoryPersonRepository(
+        List<Person> baseModels,
         ITimeProvider<DateTimeOffset> timeProvider,
         IIdentityProvider identityProvider,
         IPersonQueryManager personQueryManager)
+        : base(baseModels)
     {
         _timeProvider = timeProvider;
         _identityProvider = identityProvider;

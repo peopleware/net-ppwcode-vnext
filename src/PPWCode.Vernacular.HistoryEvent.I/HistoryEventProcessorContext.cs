@@ -18,9 +18,9 @@ public class HistoryEventProcessorContext<TOwner, TSubEvent, TId, TKnowledgePeri
     public HistoryEventProcessorContext(
         IEnumerable<TSubEvent> events,
         THistoryEventStoreContext? historyEventStoreContext = default,
-        TReferenceHistory? referenceHistory = default,
-        TPermissionHistory? permissionHistory = default,
-        TKnowledge? transactionTime = default)
+        TReferenceHistory? referenceHistory = null,
+        TPermissionHistory? permissionHistory = null,
+        TKnowledge? transactionTime = null)
     {
         Events = events.ToHashSet();
         ReferenceHistory = referenceHistory;

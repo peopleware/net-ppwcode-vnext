@@ -57,7 +57,7 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, in TK
     /// </returns>
     /// <remarks>This method is only to be used during the migration!</remarks>
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-    Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
+    Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     Processes the opened and closed events in this store.  This means that all newly created
@@ -75,7 +75,7 @@ public interface IHistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, in TK
     /// </returns>
     /// <remarks>This method is only to be used during the migration!</remarks>
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-    Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
+    Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default);
 
     /// <summary>
     ///     An entity (or model) is considered transient if it has been created but not yet saved to the database.

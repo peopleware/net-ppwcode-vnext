@@ -432,11 +432,11 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         => ExecuteWithinAnotherPermissionHistory(permissionHistory, () => Update(@event, newEvent, sticky));
 
     /// <inheritdoc />
-    public Task<ISet<TSubEvent>> ProcessAsync(TKnowledge transactionTime, Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+    public Task<ISet<TSubEvent>> ProcessAsync(TKnowledge transactionTime, Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default)
         => InternalProcessAsync(can => EventStore.ProcessAsync(transactionTime, HistoryEventStoreContext, onCreate, can), cancellationToken);
 
     /// <inheritdoc />
-    public Task<ISet<TSubEvent>> ProcessAsync(Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+    public Task<ISet<TSubEvent>> ProcessAsync(Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default)
         => InternalProcessAsync(can => EventStore.ProcessAsync(HistoryEventStoreContext, onCreate, can), cancellationToken);
 
     private async Task<ISet<TSubEvent>> InternalProcessAsync(Func<CancellationToken, Task<ISet<TSubEvent>>> eventStoreProcess, CancellationToken cancellationToken = default)
@@ -553,8 +553,8 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         dates.Aggregate(
             (x, y) =>
             {
-                TExecution? xx = !x.Equals(_infinitiveExecutionPeriod.CoalesceFrom) ? x : default(TExecution?);
-                TExecution? yy = !y.Equals(_infinitiveExecutionPeriod.CoalesceTo) ? y : default(TExecution?);
+                TExecution? xx = !x.Equals(_infinitiveExecutionPeriod.CoalesceFrom) ? x : null;
+                TExecution? yy = !y.Equals(_infinitiveExecutionPeriod.CoalesceTo) ? y : null;
                 intervals.Add(new TExecutionPeriod { From = xx, To = yy });
                 return y;
             });
@@ -597,7 +597,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
     /// <returns>An optimized list of events</returns>
     private List<TSubEvent> NormalizeEvents(List<TSubEvent> denormalizedEvents)
     {
-        TSubEvent? previousEvent = default;
+        TSubEvent? previousEvent = null;
         List<TSubEvent> events = new ();
         foreach (TSubEvent @event in denormalizedEvents)
         {

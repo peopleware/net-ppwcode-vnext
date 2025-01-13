@@ -186,7 +186,7 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         /// </remarks>
         /// <remarks>This method is only to be used during the migration!</remarks>
         /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-        Task<ISet<TSubEvent>> ProcessAsync(TKnowledge transactionTime, Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
+        Task<ISet<TSubEvent>> ProcessAsync(TKnowledge transactionTime, Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         ///     Processes all remaining changes in the underlying event store. And removes any events from the history that are
@@ -206,6 +206,6 @@ namespace PPWCode.Vernacular.HistoryEvent.I
         ///     very end when all operations are finished.
         /// </remarks>
         /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
-        Task<ISet<TSubEvent>> ProcessAsync(Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default);
+        Task<ISet<TSubEvent>> ProcessAsync(Func<TSubEvent, THistoryEventStoreContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default);
     }
 }

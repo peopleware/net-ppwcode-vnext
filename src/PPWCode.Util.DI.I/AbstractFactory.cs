@@ -89,12 +89,12 @@ public abstract class AbstractFactory
     protected void ExecuteInNewScope<TService>(
         Action<TService> action,
         object[]? parameters = null)
-        => ExecuteInNewScope<TService, int>((service, _) => action(service), default, _serviceProvider, parameters ?? []);
+        => ExecuteInNewScope<TService, int>((service, _) => action(service), 0, _serviceProvider, parameters ?? []);
 
     protected TResult ExecuteInNewScope<TService, TResult>(
         Func<TService, TResult> action,
         object[]? parameters = null)
-        => ExecuteInNewScope<TService, int, TResult>((service, _) => action(service), default, _serviceProvider, parameters ?? []);
+        => ExecuteInNewScope<TService, int, TResult>((service, _) => action(service), 0, _serviceProvider, parameters ?? []);
 
     protected async Task ExecuteInNewScopeAsync<TService, TContext>(
         Func<TService, TContext, CancellationToken, Task> action,
@@ -114,11 +114,11 @@ public abstract class AbstractFactory
         Func<TService, CancellationToken, Task> action,
         object[]? parameters = null,
         CancellationToken cancellationToken = default)
-        => await ExecuteInNewScopeAsync<TService, int>(async (service, _, can) => await action(service, can), default, _serviceProvider, parameters ?? [], cancellationToken).ConfigureAwait(false);
+        => await ExecuteInNewScopeAsync<TService, int>(async (service, _, can) => await action(service, can), 0, _serviceProvider, parameters ?? [], cancellationToken).ConfigureAwait(false);
 
     protected async Task<TResult> ExecuteInNewScopeAsync<TService, TResult>(
         Func<TService, CancellationToken, Task<TResult>> action,
         object[]? parameters = null,
         CancellationToken cancellationToken = default)
-        => await ExecuteInNewScopeAsync<TService, int, TResult>(async (service, _, can) => await action(service, can), default, _serviceProvider, parameters ?? [], cancellationToken).ConfigureAwait(false);
+        => await ExecuteInNewScopeAsync<TService, int, TResult>(async (service, _, can) => await action(service, can), 0, _serviceProvider, parameters ?? [], cancellationToken).ConfigureAwait(false);
 }

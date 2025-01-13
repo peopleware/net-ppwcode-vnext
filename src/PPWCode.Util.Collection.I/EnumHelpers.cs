@@ -37,7 +37,7 @@ public static class EnumHelpers
         where T : struct
         => value.TryParse(true, fallbackValue);
 
-    public static T? TryParse<T>(this int value, T? fallbackValue = default)
+    public static T? TryParse<T>(this int value, T? fallbackValue = null)
         where T : struct
         => Enum.IsDefined(typeof(T), value) ? (T?)Enum.ToObject(typeof(T), value) : fallbackValue;
 

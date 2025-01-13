@@ -72,11 +72,11 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
     }
 
     /// <inheritdoc />
-    public virtual Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+    public virtual Task<ISet<TEvent>> ProcessAsync(TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default)
         => ProcessAsync(_requestContext.RequestTimestamp, context, onCreate, cancellationToken);
 
     /// <inheritdoc />
-    public virtual async Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = default, CancellationToken cancellationToken = default)
+    public virtual async Task<ISet<TEvent>> ProcessAsync(TKnowledge transactionTime, TContext? context = default, Func<TEvent, TContext?, CancellationToken, Task>? onCreate = null, CancellationToken cancellationToken = default)
     {
         // when using the same event-store to process multiple transaction-times
         // each transaction-time should be the same or more recent than the previous one

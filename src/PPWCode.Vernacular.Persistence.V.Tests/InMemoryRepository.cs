@@ -57,7 +57,7 @@ namespace PPWCode.Vernacular.Persistence.V.Tests;
 /// <typeparam name="TId">the type of the PK of <typeparamref name="TModel" /></typeparam>
 public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TModel, TId>
     where TBase : IPersistentObject<TId>
-    where TModel : IPersistentObject<TId>, TBase
+    where TModel : TBase
     where TId : struct, IEquatable<TId>
 {
     protected InMemoryRepository(List<TBase> baseModels)

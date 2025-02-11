@@ -180,9 +180,7 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
             OnProcessRoot(owner, context);
         }
 
-        OnProcessActualEvents(result, context);
-
-        // save
+        // save all transient events
         foreach (TEvent @event in result.Where(e => IsTransient(e, context)))
         {
             if (onCreate is not null)
@@ -194,6 +192,9 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
                 await InsertAsync(@event, context, cancellationToken).ConfigureAwait(false);
             }
         }
+
+        // Allow extra functionality
+        OnProcessActualEvents(result, context);
 
         // reset transaction time
         Contract.Assert(_currentTransactionTime != null);

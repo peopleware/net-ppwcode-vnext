@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="..\common.props" />
+
+    <PropertyGroup>
+        <CodeAnalysisRuleSet>..\StyleCop.ruleset</CodeAnalysisRuleSet>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.*" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.*" />
+
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.*"/>
+        <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="7.*" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PPWCode.AspNetCore.Server.I\PPWCode.AspNetCore.Server.I.csproj" />
+      <ProjectReference Include="..\PPWCode.Vernacular.Persistence.V\PPWCode.Vernacular.Persistence.V.csproj" />
+      <ProjectReference Include="..\PPWCode.Vernacular.RequestContext.I\PPWCode.Vernacular.RequestContext.I.csproj" />
+    </ItemGroup>
+
+</Project>

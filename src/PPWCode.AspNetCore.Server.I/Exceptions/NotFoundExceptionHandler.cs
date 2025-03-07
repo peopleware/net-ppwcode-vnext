@@ -1,4 +1,4 @@
-﻿// Copyright 2025 by PeopleWare n.v..
+// Copyright 2025 by PeopleWare n.v..
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -9,21 +9,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PPWCode.AspNetCore.Server.I.Transactional;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
 [ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class TransactionalAttribute : Attribute
+public sealed class NotFoundExceptionHandler
+    : BaseExceptionHandler<NotFoundExceptionHandler, NotFoundException>
 {
-    public TransactionalAttribute(bool transactional)
-    {
-        Transactional = transactional;
-        IsolationLevel = IsolationLevel.Unspecified;
-    }
-
-    public bool Transactional { get; }
-    public IsolationLevel IsolationLevel { get; set; }
+    /// <inheritdoc />
+    protected override IActionResult CreateActionResult(ExceptionContext context)
+        => new NotFoundResult();
 }

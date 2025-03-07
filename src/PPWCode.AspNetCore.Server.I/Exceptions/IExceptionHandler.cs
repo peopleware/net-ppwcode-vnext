@@ -9,21 +9,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace PPWCode.AspNetCore.Server.I.Transactional;
+namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
-[ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class TransactionalAttribute : Attribute
+public interface IExceptionHandler
 {
-    public TransactionalAttribute(bool transactional)
-    {
-        Transactional = transactional;
-        IsolationLevel = IsolationLevel.Unspecified;
-    }
-
-    public bool Transactional { get; }
-    public IsolationLevel IsolationLevel { get; set; }
+    bool Handle(ExceptionContext context);
 }

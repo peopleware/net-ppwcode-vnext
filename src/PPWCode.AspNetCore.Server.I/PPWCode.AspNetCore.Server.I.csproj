@@ -16,4 +16,8 @@
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PPWCode.Vernacular.Exceptions.V\PPWCode.Vernacular.Exceptions.V.csproj" />
+    </ItemGroup>
+
 </Project>

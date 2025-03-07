@@ -9,21 +9,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 
-namespace PPWCode.AspNetCore.Server.I.Transactional;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+
+using PPWCode.Vernacular.Exceptions.V;
+
+namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
 [ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class TransactionalAttribute : Attribute
+public sealed class ExternalErrorExceptionHandler
+    : BaseExceptionHandler<ExternalErrorExceptionHandler, ExternalError>
 {
-    public TransactionalAttribute(bool transactional)
-    {
-        Transactional = transactional;
-        IsolationLevel = IsolationLevel.Unspecified;
-    }
+    /// <inheritdoc />
+    protected override bool LogException
+        => true;
 
-    public bool Transactional { get; }
-    public IsolationLevel IsolationLevel { get; set; }
+    /// <inheritdoc />
+    protected override IActionResult CreateActionResult(ExceptionContext context)
+        => new ObjectResult(context.Exception)
+           {
+               StatusCode = StatusCodes.Status500InternalServerError
+           };
 }

@@ -197,7 +197,8 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.Mvc.Versioning": "[5.1.0, )",
-          "PPWCode.Vernacular.Contracts.I": "[1.*, )"
+          "PPWCode.Vernacular.Contracts.I": "[1.*, )",
+          "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )"
         }
       },
       "ppwcode.util.authorisation.i": {

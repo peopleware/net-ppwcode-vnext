@@ -9,21 +9,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
+using PPWCode.Vernacular.Exceptions.V;
 
-namespace PPWCode.AspNetCore.Server.I.Transactional;
+namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
-[ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class TransactionalAttribute : Attribute
+public class NotFoundException : SemanticException
 {
-    public TransactionalAttribute(bool transactional)
-    {
-        Transactional = transactional;
-        IsolationLevel = IsolationLevel.Unspecified;
-    }
-
-    public bool Transactional { get; }
-    public IsolationLevel IsolationLevel { get; set; }
 }

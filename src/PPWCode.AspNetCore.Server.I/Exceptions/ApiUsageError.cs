@@ -9,21 +9,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Data;
-using System.Diagnostics.CodeAnalysis;
+using PPWCode.Vernacular.Exceptions.V;
 
-namespace PPWCode.AspNetCore.Server.I.Transactional;
+namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
-[ExcludeFromCodeCoverage]
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class TransactionalAttribute : Attribute
+/// <summary>
+///     This subclass of <see cref="ProgrammingError" />
+///     indicates a programming error in the code that is calling the exposed REST api.
+///     This error typically means that the calling code is not following the contracts of
+///     the REST api and must be fixed.
+/// </summary>
+public class ApiUsageError : SemanticException
 {
-    public TransactionalAttribute(bool transactional)
+    public ApiUsageError(string? message = null, Exception? innerException = null)
+        : base(message, innerException)
     {
-        Transactional = transactional;
-        IsolationLevel = IsolationLevel.Unspecified;
     }
-
-    public bool Transactional { get; }
-    public IsolationLevel IsolationLevel { get; set; }
 }

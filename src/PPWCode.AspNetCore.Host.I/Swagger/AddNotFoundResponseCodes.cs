@@ -19,7 +19,7 @@ using Microsoft.OpenApi.Models;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Swagger
+namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]

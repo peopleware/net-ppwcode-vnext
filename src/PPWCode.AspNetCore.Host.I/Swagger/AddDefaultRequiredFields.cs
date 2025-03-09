@@ -21,7 +21,7 @@ using PPWCode.AspNetCore.Host.I.Bootstrap;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Swagger
+namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     [ExcludeFromCodeCoverage]
     public class AddDefaultRequiredFields : BaseResponseCodes

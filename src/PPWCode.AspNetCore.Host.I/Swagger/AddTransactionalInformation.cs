@@ -20,7 +20,7 @@ using PPWCode.AspNetCore.Server.I.Transactional;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Swagger
+namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     /// <inheritdoc />
     /// <summary>

@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 using PPWCode.Vernacular.RequestContext.I;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Providers;
+namespace PPWCode.AspNetCore.Host.I.Providers;
 
 public sealed class WebApiReadOnlyProvider : IReadOnlyProvider
 {

@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 using PPWCode.AspNetCore.Server.I.Transactional;
 using PPWCode.Vernacular.Exceptions.IV;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Transactional;
+namespace PPWCode.AspNetCore.Host.I.Transactional;
 
 /// <summary>
 ///     The <see cref="TransactionMiddleware" /> handles transactions.

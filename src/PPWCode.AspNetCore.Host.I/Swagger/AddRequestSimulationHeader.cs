@@ -13,11 +13,11 @@ using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.OpenApi.Models;
 
-using PPWCode.Host.EntityFrameworkCore.I.Transactional;
+using PPWCode.AspNetCore.Host.I.Transactional;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Swagger
+namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     /// <inheritdoc />
     /// <summary>

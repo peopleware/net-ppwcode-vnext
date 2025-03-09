@@ -18,7 +18,7 @@ using PPWCode.Vernacular.Persistence.V;
 
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace PPWCode.Host.EntityFrameworkCore.I.Swagger
+namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     /// <inheritdoc />
     public abstract class BaseResponseCodes : IOperationFilter

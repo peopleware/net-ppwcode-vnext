@@ -44,7 +44,72 @@ limitations under the License.
 
 ## Use PPWCode.vNext
 
-Coming soon.
+The following describes how you can currently use `ppwcode-vnext` in your own
+solution. This is done by adding the `ppwcode-vnext` git repo as a submodule
+inside your own code. This is a very simple approach and has a lot of benefits
+at the current stage of development.
+
+### create git submodule
+
+We recommend the following commands to add the submodule inside your code base.
+
+``` shell
+# first go to the root of your code base
+# then add the submodule in the folder `ppwcode-vnext`
+#
+# add `net-ppwcode-vnext` repo as submodule in folder `ppwcode-vnext` 
+git submodule add https://github.com/peopleware/net-ppwcode-vnext.git ppwcode-vnext
+
+# prev cmd uses the default branch of the `ppwcode-vnext` repo
+# it is recommended to fix the submodule to a specific tag
+# this can be done in the folder of the submodule, it is a git repo
+cd ppwcode-vnext
+git checkout preview/20250309b
+
+# submodule is correctly configured now
+# commit the submodule configuration
+cd ..
+git commit -m "Add submodule for ppwcode-vnext on preview/20250309b"
+git push origin
+```
+
+Once these steps are done, the git submodule becomes available to everyone
+working on the repo. A user who pulls this update locally, needs to execute the
+following steps.
+
+``` shell
+# first go to the root of your code base
+# then pull the changes from origin
+git pull origin --ff-only
+
+# local code base now contains submodule configuration
+# however: submodule must still be initialized
+#
+# create the submodule folder and clone the repo
+git submodule init
+
+# switch to the registered version of the submodule code
+# note: this switches to the tag preview/20250309b
+git submodule update
+```
+
+Whenever pulled commits in your code base contain changes to the submodules, you
+need to update the submodule to make it point to the correct tag/commit. This is
+done as follows.
+
+``` shell
+git submodule update
+```
+
+To switch the submodule to another tag, the following commands need to be
+executed.
+
+``` shell
+cd ppwcode-vnext
+git checkout preview/20250309f
+cd ..
+git commit -m "Switch ppwcode-vnext to preview/20250309f"
+```
 
 
 

@@ -1,17 +1,7 @@
-﻿// Copyright 2025 by PeopleWare n.v..
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-// http://www.apache.org/licenses/LICENSE-2.0
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +11,13 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
     where THandler : IExceptionHandler
     where TException : Exception
 {
+    private readonly ProblemDetailsFactory _problemDetailsFactory;
+
+    protected BaseExceptionHandler(ProblemDetailsFactory problemDetailsFactory)
+    {
+        _problemDetailsFactory = problemDetailsFactory;
+    }
+
     protected virtual bool LogException
         => false;
 
@@ -29,15 +26,28 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
     {
         if (CanHandle(context))
         {
-            IActionResult? actionResult = CreateActionResult(context);
-            if (actionResult != null)
+            if (LogException)
             {
-                if (LogException)
-                {
-                    ILogger<THandler> logger = CreateLogger<THandler>(context);
-                    LogContext(logger, context);
-                }
+                ILogger<THandler> logger = CreateLogger<THandler>(context);
+                LogContext(logger, context);
+            }
 
+            int? statusCode = GetStatusCode(context);
+            if (statusCode is not null)
+            {
+                ProblemDetails problemDetail =
+                    _problemDetailsFactory
+                        .CreateProblemDetails(
+                            context.HttpContext,
+                            statusCode: statusCode.Value);
+                EnrichProblemDetails(context, context.Exception as TException, problemDetail);
+                context.Result = new ObjectResult(problemDetail);
+                return true;
+            }
+
+            IActionResult? actionResult = CreateActionResult(context);
+            if (actionResult is not null)
+            {
                 context.Result = actionResult;
                 return true;
             }
@@ -60,5 +70,16 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
     protected virtual void LogContext(ILogger<THandler> logger, ExceptionContext context)
         => logger.LogError(context.Exception, "Handled exception");
 
-    protected abstract IActionResult? CreateActionResult(ExceptionContext context);
+    protected virtual IActionResult? CreateActionResult(ExceptionContext context)
+        => null;
+
+    protected virtual int? GetStatusCode(ExceptionContext context)
+        => null;
+
+    protected virtual void EnrichProblemDetails(
+        ExceptionContext context,
+        TException? contextException,
+        ProblemDetails problemDetail)
+    {
+    }
 }

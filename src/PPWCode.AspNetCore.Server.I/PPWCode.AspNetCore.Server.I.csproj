@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\PPWCode.Vernacular.Exceptions.V\PPWCode.Vernacular.Exceptions.V.csproj" />
+      <ProjectReference Include="..\PPWCode.Vernacular.Persistence.V\PPWCode.Vernacular.Persistence.V.csproj" />
     </ItemGroup>
 
 </Project>

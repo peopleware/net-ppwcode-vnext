@@ -16,7 +16,7 @@ namespace PPWCode.AspNetCore.Server.I;
 public abstract class LinksContext
 {
     public const string VersionRouteParameter = "version";
-    public const string DefaultApiVersionFormat = "VVV";
+    public const string DefaultApiVersionFormat = "V";
 
     protected LinksContext(
         ApiVersion apiVersion,

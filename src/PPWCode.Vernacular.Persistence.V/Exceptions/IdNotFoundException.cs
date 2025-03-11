@@ -18,6 +18,9 @@ namespace PPWCode.Vernacular.Persistence.V.Exceptions
         where T : class, IIdentity<TId>
         where TId : IEquatable<TId>
     {
+        public const string PersistentObjectTypeKey = "IdNotFoundException.PersistentObjectType";
+        public const string PersistenceIdKey = "IdNotFoundException.PersistenceId";
+
         public IdNotFoundException(TId id, Exception? innerException = null)
             : base(null, innerException)
         {
@@ -27,14 +30,14 @@ namespace PPWCode.Vernacular.Persistence.V.Exceptions
 
         public Type PersistentObjectType
         {
-            get => (Type)Data["PersistentObjectType"]!;
-            private init => Data["PersistentObjectType"] = value;
+            get => (Type)Data[PersistentObjectTypeKey]!;
+            private init => Data[PersistentObjectTypeKey] = value;
         }
 
         public TId Id
         {
-            get => (TId)Data["PersistenceId"]!;
-            private init => Data["PersistenceId"] = value;
+            get => (TId)Data[PersistenceIdKey]!;
+            private init => Data[PersistenceIdKey] = value;
         }
 
         public override bool Like(SemanticException? other)

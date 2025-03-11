@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Hosting;
 
 using ProgrammingError = PPWCode.Vernacular.Exceptions.V.ProgrammingError;
 
@@ -12,8 +13,8 @@ namespace PPWCode.AspNetCore.Server.I.Exceptions;
 public sealed class ProgrammingErrorExceptionHandler
     : BaseExceptionHandler<ProgrammingErrorExceptionHandler, ProgrammingError>
 {
-    public ProgrammingErrorExceptionHandler(ProblemDetailsFactory problemDetailsFactory)
-        : base(problemDetailsFactory)
+    public ProgrammingErrorExceptionHandler(ProblemDetailsFactory problemDetailsFactory, IHostEnvironment environment)
+        : base(problemDetailsFactory, environment)
     {
     }
 

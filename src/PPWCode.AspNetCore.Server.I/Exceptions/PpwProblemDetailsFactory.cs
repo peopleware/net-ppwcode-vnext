@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
-namespace PPWCode.AspNetCore.Host.I.Exceptions;
+namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
 public class PpwProblemDetailsFactory : ProblemDetailsFactory
 {
-    private static readonly ISet<string> _environmentsConsideredAsDevelopment =
+    public static readonly ISet<string> EnvironmentsConsideredAsDevelopment =
         new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             Environments.Development,
@@ -111,7 +111,7 @@ public class PpwProblemDetailsFactory : ProblemDetailsFactory
         problemDetails.Title ??= titleFallback;
         problemDetails.Type ??= typeFallback;
 
-        if (_environmentsConsideredAsDevelopment.Contains(_environment.EnvironmentName))
+        if (EnvironmentsConsideredAsDevelopment.Contains(_environment.EnvironmentName))
         {
             if (Activity.Current?.Id is not null)
             {

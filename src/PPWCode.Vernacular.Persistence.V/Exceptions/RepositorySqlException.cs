@@ -16,7 +16,7 @@ namespace PPWCode.Vernacular.Persistence.V.Exceptions
     [Serializable]
     public class RepositorySqlException : SemanticException
     {
-        private const string SqlKey = "RepositorySqlException.Sql";
+        public const string SqlKey = "RepositorySqlException.Sql";
 
         public RepositorySqlException(string sql, string? message = null, Exception? innerException = null)
             : base(message, innerException)

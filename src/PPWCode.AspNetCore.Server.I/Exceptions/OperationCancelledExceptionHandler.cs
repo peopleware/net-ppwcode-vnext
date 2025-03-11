@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Hosting;
 
 namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
@@ -9,8 +10,8 @@ namespace PPWCode.AspNetCore.Server.I.Exceptions;
 public sealed class OperationCancelledExceptionHandler
     : BaseExceptionHandler<OperationCancelledExceptionHandler, OperationCanceledException>
 {
-    public OperationCancelledExceptionHandler(ProblemDetailsFactory problemDetailsFactory)
-        : base(problemDetailsFactory)
+    public OperationCancelledExceptionHandler(ProblemDetailsFactory problemDetailsFactory, IHostEnvironment environment)
+        : base(problemDetailsFactory, environment)
     {
     }
 

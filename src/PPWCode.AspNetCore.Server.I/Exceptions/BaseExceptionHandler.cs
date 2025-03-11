@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace PPWCode.AspNetCore.Server.I.Exceptions;
@@ -12,10 +13,14 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
     where TException : Exception
 {
     private readonly ProblemDetailsFactory _problemDetailsFactory;
+    private readonly IHostEnvironment _environment;
 
-    protected BaseExceptionHandler(ProblemDetailsFactory problemDetailsFactory)
+    protected BaseExceptionHandler(
+        ProblemDetailsFactory problemDetailsFactory,
+        IHostEnvironment environment)
     {
         _problemDetailsFactory = problemDetailsFactory;
+        _environment = environment;
     }
 
     protected virtual bool LogException
@@ -63,6 +68,9 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
         ILoggerFactory factory = httpContext.RequestServices.GetRequiredService<ILoggerFactory>();
         return factory.CreateLogger<T>();
     }
+
+    protected bool IsDevelopment
+        => PpwProblemDetailsFactory.EnvironmentsConsideredAsDevelopment.Contains(_environment.EnvironmentName);
 
     protected virtual bool CanHandle(ExceptionContext context)
         => context.Exception is TException;

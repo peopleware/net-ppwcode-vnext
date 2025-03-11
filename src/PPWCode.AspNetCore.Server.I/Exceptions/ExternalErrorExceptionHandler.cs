@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Hosting;
 
 using PPWCode.Vernacular.Exceptions.V;
 
@@ -12,8 +13,8 @@ namespace PPWCode.AspNetCore.Server.I.Exceptions;
 public sealed class ExternalErrorExceptionHandler
     : BaseExceptionHandler<ExternalErrorExceptionHandler, ExternalError>
 {
-    public ExternalErrorExceptionHandler(ProblemDetailsFactory problemDetailsFactory)
-        : base(problemDetailsFactory)
+    public ExternalErrorExceptionHandler(ProblemDetailsFactory problemDetailsFactory, IHostEnvironment environment)
+        : base(problemDetailsFactory, environment)
     {
     }
 

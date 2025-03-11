@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Hosting;
 
 namespace PPWCode.AspNetCore.Server.I.Exceptions;
 
@@ -10,8 +11,8 @@ namespace PPWCode.AspNetCore.Server.I.Exceptions;
 public sealed class NotImplementedExceptionHandler
     : BaseExceptionHandler<NotImplementedExceptionHandler, NotImplementedException>
 {
-    public NotImplementedExceptionHandler(ProblemDetailsFactory problemDetailsFactory)
-        : base(problemDetailsFactory)
+    public NotImplementedExceptionHandler(ProblemDetailsFactory problemDetailsFactory, IHostEnvironment environment)
+        : base(problemDetailsFactory, environment)
     {
     }
 

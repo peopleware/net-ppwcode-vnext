@@ -18,11 +18,11 @@ namespace PPWCode.Vernacular.Persistence.V.Exceptions
     [Serializable]
     public abstract class DbConstraintException : RepositorySqlException
     {
-        private const string EntityIdKey = "DbConstraintException.EntityId";
-        private const string EntityNameKey = "DbConstraintException.EntityName";
-        private const string ConstraintNameKey = "DbConstraintException.ConstraintName";
-        private const string ConstraintTypeKey = "DbConstraintException.ConstraintType";
-        private const string ConstraintColumnNamesKey = "BaseColumnNameConstraintException.ExtraInfo";
+        public const string EntityIdKey = "DbConstraintException.EntityId";
+        public const string EntityNameKey = "DbConstraintException.EntityName";
+        public const string ConstraintNameKey = "DbConstraintException.ConstraintName";
+        public const string ConstraintTypeKey = "DbConstraintException.ConstraintType";
+        public const string ConstraintColumnNamesKey = "BaseColumnNameConstraintException.ExtraInfo";
 
         protected DbConstraintException(
             object entityId,

@@ -24,7 +24,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     [ExcludeFromCodeCoverage]
-    public class AddDefaultRequiredFields : BaseResponseCodes
+    public class AddDefaultRequiredFields : PpwOperationFilter
     {
         private static readonly IList<DefaultRequiredField> _requiredFieldsWithDefaultValues =
             new List<DefaultRequiredField>();

@@ -21,7 +21,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     /// <inheritdoc />
-    public abstract class BaseResponseCodes : IOperationFilter
+    public abstract class PpwOperationFilter : IOperationFilter
     {
         public abstract void Apply(OpenApiOperation operation, OperationFilterContext context);
 

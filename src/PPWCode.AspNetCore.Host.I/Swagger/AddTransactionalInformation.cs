@@ -27,7 +27,7 @@ namespace PPWCode.AspNetCore.Host.I.Swagger
     ///     Operation filter to add the transaction information for the endpoint.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class AddTransactionalInformation : BaseResponseCodes
+    public class AddTransactionalInformation : PpwOperationFilter
     {
         /// <inheritdoc />
         public override void Apply(OpenApiOperation operation, OperationFilterContext context)

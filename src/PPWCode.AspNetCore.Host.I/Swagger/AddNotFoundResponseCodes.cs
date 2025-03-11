@@ -23,7 +23,7 @@ namespace PPWCode.AspNetCore.Host.I.Swagger
 {
     /// <inheritdoc />
     [ExcludeFromCodeCoverage]
-    public class AddNotFoundResponseCodes : BaseResponseCodes
+    public class AddNotFoundResponseCodes : PpwOperationFilter
     {
         /// <inheritdoc />
         public override void Apply(OpenApiOperation operation, OperationFilterContext context)

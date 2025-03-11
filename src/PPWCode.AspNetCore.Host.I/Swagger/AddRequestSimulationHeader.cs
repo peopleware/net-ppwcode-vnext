@@ -25,7 +25,7 @@ namespace PPWCode.AspNetCore.Host.I.Swagger
     ///     If this header is added, the request executed completely, but the persistent store will not be updated.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public class AddRequestSimulationHeader : BaseResponseCodes
+    public class AddRequestSimulationHeader : PpwOperationFilter
     {
         /// <inheritdoc />
         public override void Apply(OpenApiOperation operation, OperationFilterContext context)

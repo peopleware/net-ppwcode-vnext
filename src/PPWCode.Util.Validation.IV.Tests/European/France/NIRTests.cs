@@ -134,8 +134,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.France
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual!.RawVersion, Is.EqualTo(expected.RawVersion));
-            Assert.That(actual.TwoIsoLetterCountryCode, Is.EqualTo(expected.TwoIsoLetterCountryCode));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]

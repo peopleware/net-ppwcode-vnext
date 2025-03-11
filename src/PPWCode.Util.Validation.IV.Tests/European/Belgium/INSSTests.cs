@@ -110,7 +110,9 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
 
         [Test]
         [TestCaseSource(nameof(ValidIdentifications))]
-        public void check_binairy_serializable(string identification)
+        [TestCase("")]
+        [TestCase(null)]
+        public void check_binairy_serializable(string? identification)
         {
             // Arrange
             INSS expected = new (identification);
@@ -120,7 +122,7 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual!.RawVersion, Is.EqualTo(expected.RawVersion));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]

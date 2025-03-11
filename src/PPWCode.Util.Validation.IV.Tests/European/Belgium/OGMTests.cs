@@ -70,14 +70,14 @@ namespace PPWCode.Util.Validation.IV.Tests.European.Belgium
         public void check_binairy_serializable(string identification)
         {
             // Arrange
-            OGM ogm = new (identification);
+            OGM expected = new (identification);
 
             // Act
-            OGM? actual = DeepClone(ogm);
+            OGM? actual = DeepClone(expected);
 
             // Assert
             Assert.That(actual, Is.Not.Null);
-            Assert.That(actual!.RawVersion, Is.EqualTo(ogm.RawVersion));
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]

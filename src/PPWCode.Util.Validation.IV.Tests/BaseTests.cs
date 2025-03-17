@@ -34,7 +34,6 @@ namespace PPWCode.Util.Validation.IV.Tests
                             NumberHandling = JsonNumberHandling.Strict,
                             ReferenceHandler = ReferenceHandler.IgnoreCycles,
                             AllowTrailingCommas = false,
-                            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
                             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
                             ReadCommentHandling = JsonCommentHandling.Disallow,
                             UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,

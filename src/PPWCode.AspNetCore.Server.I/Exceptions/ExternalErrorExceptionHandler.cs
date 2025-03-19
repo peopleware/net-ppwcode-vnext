@@ -19,7 +19,7 @@ public sealed class ExternalErrorExceptionHandler
     }
 
     /// <inheritdoc />
-    protected override int? GetStatusCode(ExceptionContext context)
+    protected override int? GetStatusCode(ExceptionContext context, ExternalError? exception)
         => StatusCodes.Status500InternalServerError;
 
     /// <inheritdoc />

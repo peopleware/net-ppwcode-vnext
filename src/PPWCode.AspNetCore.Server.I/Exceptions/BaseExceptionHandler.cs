@@ -37,7 +37,8 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
                 LogContext(logger, context);
             }
 
-            int? statusCode = GetStatusCode(context);
+            TException? contextException = context.Exception as TException;
+            int? statusCode = GetStatusCode(context, contextException);
             if (statusCode is not null)
             {
                 ProblemDetails problemDetail =
@@ -45,7 +46,7 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
                         .CreateProblemDetails(
                             context.HttpContext,
                             statusCode: statusCode.Value);
-                EnrichProblemDetails(context, context.Exception as TException, problemDetail);
+                EnrichProblemDetails(context, contextException, problemDetail);
                 context.Result = new ObjectResult(problemDetail);
                 return true;
             }
@@ -81,7 +82,7 @@ public abstract class BaseExceptionHandler<THandler, TException> : IExceptionHan
     protected virtual IActionResult? CreateActionResult(ExceptionContext context)
         => null;
 
-    protected virtual int? GetStatusCode(ExceptionContext context)
+    protected virtual int? GetStatusCode(ExceptionContext context, TException? contextException)
         => null;
 
     protected virtual void EnrichProblemDetails(

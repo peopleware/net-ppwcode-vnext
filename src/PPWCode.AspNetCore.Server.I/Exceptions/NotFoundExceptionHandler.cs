@@ -20,7 +20,7 @@ public sealed class NotFoundExceptionHandler
     }
 
     /// <inheritdoc />
-    protected override int? GetStatusCode(ExceptionContext context)
+    protected override int? GetStatusCode(ExceptionContext context, NotFoundException? exception)
         => StatusCodes.Status404NotFound;
 
     /// <inheritdoc />

@@ -120,7 +120,7 @@ public class PpwProblemDetailsFactory : ProblemDetailsFactory
 
             if (!string.IsNullOrEmpty(httpContext.TraceIdentifier))
             {
-                problemDetails.Extensions["TraceIdentifier"] = httpContext.TraceIdentifier;
+                problemDetails.Extensions["traceIdentifier"] = httpContext.TraceIdentifier;
             }
         }
     }

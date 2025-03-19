@@ -17,6 +17,6 @@ public sealed class ApiUsageErrorExceptionHandler
     }
 
     /// <inheritdoc />
-    protected override int? GetStatusCode(ExceptionContext context)
+    protected override int? GetStatusCode(ExceptionContext context, ApiUsageError? exception)
         => StatusCodes.Status400BadRequest;
 }

@@ -16,6 +16,6 @@ public sealed class OperationCancelledExceptionHandler
     }
 
     /// <inheritdoc />
-    protected override int? GetStatusCode(ExceptionContext context)
+    protected override int? GetStatusCode(ExceptionContext context, OperationCanceledException? exception)
         => 499; // client closed
 }

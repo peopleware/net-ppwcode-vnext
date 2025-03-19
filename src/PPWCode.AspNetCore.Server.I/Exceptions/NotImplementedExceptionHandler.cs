@@ -17,7 +17,7 @@ public sealed class NotImplementedExceptionHandler
     }
 
     /// <inheritdoc />
-    protected override int? GetStatusCode(ExceptionContext context)
+    protected override int? GetStatusCode(ExceptionContext context, NotImplementedException? exception)
         => StatusCodes.Status501NotImplemented;
 
     /// <inheritdoc />

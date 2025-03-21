@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -49,7 +50,7 @@ public class PpwProblemDetailsFactory : ProblemDetailsFactory
                 Title = title,
                 Type = type,
                 Detail = detail,
-                Instance = instance ?? httpContext.Request.Path
+                Instance = instance ?? httpContext.Request.GetEncodedPathAndQuery()
             };
 
         ApplyProblemDetailsDefaults(

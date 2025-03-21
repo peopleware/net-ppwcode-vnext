@@ -28,4 +28,5 @@ public interface IPeriod<T>
     bool Overlaps(IPeriod<T> other);
     bool IsCompletelyContainedWithin(IPeriod<T> other);
     IPeriod<T> OverlappingPeriod(IPeriod<T> other);
+    T[] PointsInTime { get; }
 }

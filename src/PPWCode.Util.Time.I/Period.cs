@@ -130,6 +130,10 @@ public abstract class Period<T>
     }
 
     /// <inheritdoc />
+    public T[] PointsInTime
+        => [CoalesceFrom, CoalesceTo];
+
+    /// <inheritdoc />
     public override CompoundSemanticException WildExceptions()
     {
         if (IsEmpty)

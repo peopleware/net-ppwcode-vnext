@@ -37,11 +37,7 @@ public sealed class GlobalExceptionFilter : IAsyncExceptionFilter
         if (!handled)
         {
             _logger.LogError(context.Exception, "Unhandled exception");
-            context.Result =
-                new ObjectResult(context.Exception)
-                {
-                    StatusCode = StatusCodes.Status500InternalServerError
-                };
+            context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 
         context.ExceptionHandled = true;

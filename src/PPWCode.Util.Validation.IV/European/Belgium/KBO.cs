@@ -47,5 +47,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
 
             return false;
         }
+
+        public static implicit operator KBO(string identification)
+            => new (identification);
     }
 }

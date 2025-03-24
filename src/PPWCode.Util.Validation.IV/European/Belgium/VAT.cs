@@ -20,5 +20,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
 
         protected override string OnPaperVersion
             => $"BE {base.OnPaperVersion}";
+
+        public static implicit operator VAT(string identification)
+            => new (identification);
     }
 }

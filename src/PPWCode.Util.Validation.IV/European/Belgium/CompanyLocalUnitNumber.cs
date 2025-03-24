@@ -59,5 +59,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
 
         protected override bool IsValidFirstChar(char ch)
             => _validFirstChars.Contains(ch);
+
+        public static implicit operator CompanyLocalUnitNumber(string identification)
+            => new (identification);
     }
 }

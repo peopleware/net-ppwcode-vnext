@@ -331,5 +331,8 @@ namespace PPWCode.Util.Validation.IV
 
             return true;
         }
+
+        public static implicit operator BIC(string identification)
+            => new (identification);
     }
 }

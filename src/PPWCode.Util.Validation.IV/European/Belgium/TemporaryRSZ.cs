@@ -20,5 +20,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
 
         protected override bool Validate(string? identification)
             => base.Validate(identification) && (CleanedVersion[0] == '5');
+
+        public static implicit operator TemporaryRSZ(string identification)
+            => new (identification);
     }
 }

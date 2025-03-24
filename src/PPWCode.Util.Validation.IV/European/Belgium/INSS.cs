@@ -164,6 +164,9 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
             return numberAfter2000 % 97 == rest;
         }
 
+        public static implicit operator INSS(string identification)
+            => new (identification);
+
         private class ParseResult
         {
             public ParseResult(DateTime? birthDate, Sex? sex)

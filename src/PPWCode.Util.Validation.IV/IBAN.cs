@@ -410,14 +410,7 @@ namespace PPWCode.Util.Validation.IV
         private string ConvertToRegEx(string pattern)
         {
             StringBuilder sb = new ();
-            string[] items =
-                pattern
-                    .Split(
-                        new[]
-                        {
-                            ','
-                        },
-                        StringSplitOptions.RemoveEmptyEntries);
+            string[] items = pattern.Split([','], StringSplitOptions.RemoveEmptyEntries);
             foreach (string item in items)
             {
                 Match match = IBANFormatRegex.Match(item);
@@ -455,5 +448,8 @@ namespace PPWCode.Util.Validation.IV
 
             public string Pattern { get; }
         }
+
+        public static implicit operator IBAN(string identification)
+            => new (identification);
     }
 }

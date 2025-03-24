@@ -232,6 +232,9 @@ namespace PPWCode.Util.Validation.IV.European.France
             return result;
         }
 
+        public static implicit operator NIR(string identification)
+            => new (identification);
+
         private class ParseResult
         {
             public ParseResult(DateTime? birthDate, Sex? sex)

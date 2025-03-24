@@ -56,5 +56,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
 
         protected override bool OnValidate(string identification)
             => AsNumber != null;
+
+        public static implicit operator DMFA(string identification)
+            => new (identification);
     }
 }

@@ -77,5 +77,8 @@ namespace PPWCode.Util.Validation.IV.European.Netherlands
             long modulo11 = checkSum % 11;
             return modulo11 == 0;
         }
+
+        public static implicit operator BSN(string identification)
+            => new (identification);
     }
 }

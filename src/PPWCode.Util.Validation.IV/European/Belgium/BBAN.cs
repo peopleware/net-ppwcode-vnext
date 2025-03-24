@@ -95,5 +95,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
             long result = baseNum % 97;
             return result == 0 ? 97 : result;
         }
+
+        public static implicit operator BBAN(string identification)
+            => new (identification);
     }
 }

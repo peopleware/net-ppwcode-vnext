@@ -37,5 +37,8 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
 
             return rest == long.Parse(identification.Substring(identification.Length - 2));
         }
+
+        public static implicit operator RSZ(string identification)
+            => new (identification);
     }
 }

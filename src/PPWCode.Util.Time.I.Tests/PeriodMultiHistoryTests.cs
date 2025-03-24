@@ -112,7 +112,7 @@ public abstract class PeriodMultiHistoryTests<TPeriod, T> : BasePeriodTests<TPer
 
     [Test]
     [TestCaseSource(nameof(CoveringPeriodMultiHistoryCases))]
-    public string? test_covering_periods(StringArray stringArray)
+    public string test_covering_periods(StringArray stringArray)
     {
         // Arrange
         T startDate = CreatePoint(2017, 7, 1);

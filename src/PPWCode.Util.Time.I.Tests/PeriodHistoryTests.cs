@@ -668,7 +668,7 @@ public abstract class PeriodHistoryTests<TPeriod, T> : BasePeriodTests<TPeriod, 
 
         // Act
         T? point = periodHistory.OldestFromDate;
-        T? expectedPoint = expected == null ? (T?)null : AddToPoint(startDate, expected.Value);
+        T? expectedPoint = expected == null ? null : AddToPoint(startDate, expected.Value);
 
         // Assert
         Assert.That(point, Is.EqualTo(expectedPoint));

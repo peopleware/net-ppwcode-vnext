@@ -109,16 +109,14 @@ public abstract class HistoryEventStore<TOwner, TEvent, TId, TKnowledgePeriod, T
             Contract.Assert(_ownerEvents.ContainsKey(owner));
             Contract.Assert(
                 _ownerEvents[owner]
-                    .All(e => !e.KnowledgePeriod!.From.Equals(e.KnowledgePeriod.To)
-                              || e.KnowledgePeriod.From.Equals(transactionTime)));
+                    .All(e => !e.KnowledgePeriod!.From.Equals(e.KnowledgePeriod.To) || e.KnowledgePeriod.From.Equals(transactionTime)));
 
             // events-to-process should only contain events from the current transaction-time
             // the previous transaction-time could be the same as the current one,
             // but any events that are not on the current transaction-time must be older and can be ignored
             IEnumerable<TEvent> eventsToIgnore =
                 _ownerEvents[owner]
-                    .Where(e => !e.KnowledgePeriod!.From.Equals(transactionTime)
-                                && !e.KnowledgePeriod.To.Equals(transactionTime));
+                    .Where(e => !e.KnowledgePeriod!.From.Equals(transactionTime) && !e.KnowledgePeriod.To.Equals(transactionTime));
             _ownerEvents[owner].ExceptWith(eventsToIgnore);
             ISet<TEvent> events = _ownerEvents[owner];
 

@@ -64,8 +64,7 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         // * events must be consistent in their KnowledgePeriod with the TransactionTime
         // * TransactionTime must be in the future for every event
         // * events are civilized, so no empty KnowledgePeriod and ExecutionPeriod, therefor we can use the force not null marker: !
-        if (Events.Any(e => (TransactionTime.CompareTo(e.KnowledgePeriod!.CoalesceFrom) < 0)
-                            || (e.KnowledgePeriod.To is not null && (TransactionTime.CompareTo(e.KnowledgePeriod.CoalesceTo) < 0))))
+        if (Events.Any(e => (TransactionTime.CompareTo(e.KnowledgePeriod!.CoalesceFrom) < 0) || (e.KnowledgePeriod.To is not null && (TransactionTime.CompareTo(e.KnowledgePeriod.CoalesceTo) < 0))))
         {
             throw new InternalProgrammingError("Invalid history: event knowledge dates cannot be in the future relative to transaction time!");
         }
@@ -347,8 +346,8 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
         // - X'...X........Y'..Y......
         // - .....X...X'...Y'..Y......
         // that means there will always be 3 intervals to deal with: pre, middle and post
-        PPWCode.Vernacular.Contracts.I.Contract.Assert(historyEvent.ExecutionPeriod != null);
-        PPWCode.Vernacular.Contracts.I.Contract.Assert(newHistoryEvent.ExecutionPeriod != null);
+        Contracts.I.Contract.Assert(historyEvent.ExecutionPeriod != null);
+        Contracts.I.Contract.Assert(newHistoryEvent.ExecutionPeriod != null);
         if (!historyEvent.ExecutionPeriod.Overlaps(newHistoryEvent.ExecutionPeriod))
         {
             throw CreateInvalidExecutionPeriodUpdate();

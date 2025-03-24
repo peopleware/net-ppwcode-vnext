@@ -17,5 +17,5 @@ public interface IExecutionPeriod<TExecutionPeriod, TExecution>
     where TExecutionPeriod : IPeriod<TExecution>
     where TExecution : struct, IComparable<TExecution>, IEquatable<TExecution>
 {
-    TExecutionPeriod? ExecutionPeriod { get; set;  }
+    TExecutionPeriod? ExecutionPeriod { get; set; }
 }

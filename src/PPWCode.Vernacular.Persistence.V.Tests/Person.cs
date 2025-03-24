@@ -15,10 +15,6 @@ namespace PPWCode.Vernacular.Persistence.V.Tests;
 
 public class Person : AuditablePersistentObject<long, DateTimeOffset>
 {
-    public Person()
-    {
-    }
-
     [Required]
     public string? Name { get; set; }
 }

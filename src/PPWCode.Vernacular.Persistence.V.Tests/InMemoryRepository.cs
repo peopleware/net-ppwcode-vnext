@@ -209,6 +209,15 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     protected abstract void SetIdAndCreateAuditProperties(TBase model, TId id);
     protected abstract void SetLastModifiedProperties(TBase model);
 
+    protected virtual Task<TResult?> GetAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
+        => Task.FromResult(lambda(Queryable).SingleOrDefault());
+
+    protected TResult? Get<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
+        => GetAsync(lambda)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
     protected virtual Task<int> CountAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
         => Task.FromResult(lambda(Queryable).Count());
 
@@ -218,14 +227,23 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
             .GetAwaiter()
             .GetResult();
 
-    protected virtual Task<TResult?> GetAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
-        => Task.FromResult(lambda(Queryable).SingleOrDefault());
+    protected virtual Task<TResult?> MaxAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
+        => Task.FromResult(lambda(Queryable).Max());
 
-    protected TResult? Get<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
-        => GetAsync(lambda)
+    protected TResult? Max<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
+        => MaxAsync(lambda)
             .ConfigureAwait(false)
             .GetAwaiter()
             .GetResult();
+
+    protected TResult? Min<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
+        => MinAsync(lambda)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
+    protected virtual Task<TResult?> MinAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
+        => Task.FromResult(lambda(Queryable).Min());
 
     protected virtual Task<List<TResult>> FindAsync<TResult>(
         Func<IQueryable<TModel>, IQueryable<TResult>> lambda,

@@ -25,7 +25,7 @@ namespace PPWCode.Util.Validation.IV.European.Belgium
         private static readonly Regex _dmfaRegex =
             new ("^(DMFA|DPPL)(T|A|P)\\d{9}(\\d|[A-Z])$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        public DMFA(string rawVersion)
+        public DMFA(string? rawVersion)
             : base(rawVersion)
         {
         }

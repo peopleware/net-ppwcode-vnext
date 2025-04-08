@@ -282,7 +282,7 @@ namespace PPWCode.Util.Validation.IV
         private static readonly Regex BICFormatRegex =
             new ("^([A-Za-z]{4})([A-Za-z]{2})([A-Za-z0-9]{2})([A-Za-z0-9]{3})?$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
-        public BIC(string rawVersion)
+        public BIC(string? rawVersion)
             : base(rawVersion)
         {
         }

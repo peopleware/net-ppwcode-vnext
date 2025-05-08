@@ -100,15 +100,14 @@ public class AbstractHistoryTests : ServiceBasedTests
 
         IFactory factory = ServiceProvider.GetRequiredService<IFactory>();
         ServiceA? serviceA = null;
-        factory.ExecuteInNewScopeUsingServiceA(
-            service =>
-            {
-                Assert.That(service, Is.Not.Null);
-                Assert.That(service.DisposeCount, Is.EqualTo(0));
-                Assert.That(service.ServiceB, Is.Not.Null);
-                Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
-                serviceA = service;
-            });
+        factory.ExecuteInNewScopeUsingServiceA(service =>
+        {
+            Assert.That(service, Is.Not.Null);
+            Assert.That(service.DisposeCount, Is.EqualTo(0));
+            Assert.That(service.ServiceB, Is.Not.Null);
+            Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
+            serviceA = service;
+        });
 
         Assert.That(serviceA, Is.Not.Null);
         Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
@@ -125,8 +124,7 @@ public class AbstractHistoryTests : ServiceBasedTests
 
         IFactory factory = ServiceProvider.GetRequiredService<IFactory>();
         ServiceA? serviceA = null;
-        await factory.ExecuteInNewScopeUsingServiceAAsync(
-            (service, _) =>
+        await factory.ExecuteInNewScopeUsingServiceAAsync((service, _) =>
             {
                 Assert.That(service, Is.Not.Null);
                 Assert.That(service.DisposeCount, Is.EqualTo(0));
@@ -134,7 +132,8 @@ public class AbstractHistoryTests : ServiceBasedTests
                 Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
                 serviceA = service;
                 return Task.CompletedTask;
-            }).ConfigureAwait(false);
+            })
+            .ConfigureAwait(false);
 
         Assert.That(serviceA, Is.Not.Null);
         Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
@@ -209,18 +208,15 @@ public class AbstractHistoryTests : ServiceBasedTests
         IFactory factory = ServiceProvider.GetRequiredService<IFactory>();
         ServiceA? serviceA = null;
         int result =
-            factory
-                .ExecuteInNewScopeUsingServiceA(
-                    service =>
-                    {
-                        Assert.That(service, Is.Not.Null);
-                        Assert.That(service.DisposeCount, Is.EqualTo(0));
-                        Assert.That(service.ServiceB, Is.Not.Null);
-                        Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
-                        serviceA = service;
-                        return 1;
-                    });
-
+            factory.ExecuteInNewScopeUsingServiceA(service =>
+            {
+                Assert.That(service, Is.Not.Null);
+                Assert.That(service.DisposeCount, Is.EqualTo(0));
+                Assert.That(service.ServiceB, Is.Not.Null);
+                Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
+                serviceA = service;
+                return 1;
+            });
         Assert.That(result, Is.EqualTo(1));
         Assert.That(serviceA, Is.Not.Null);
         Assert.That(serviceA.DisposeCount, Is.EqualTo(1));
@@ -239,16 +235,15 @@ public class AbstractHistoryTests : ServiceBasedTests
         ServiceA? serviceA = null;
         int result =
             await factory
-                .ExecuteInNewScopeUsingServiceAAsync(
-                    (service, _) =>
-                    {
-                        Assert.That(service, Is.Not.Null);
-                        Assert.That(service.DisposeCount, Is.EqualTo(0));
-                        Assert.That(service.ServiceB, Is.Not.Null);
-                        Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
-                        serviceA = service;
-                        return Task.FromResult(1);
-                    });
+                .ExecuteInNewScopeUsingServiceAAsync((service, _) =>
+                {
+                    Assert.That(service, Is.Not.Null);
+                    Assert.That(service.DisposeCount, Is.EqualTo(0));
+                    Assert.That(service.ServiceB, Is.Not.Null);
+                    Assert.That(service.ServiceB.DisposeCount, Is.EqualTo(0));
+                    serviceA = service;
+                    return Task.FromResult(1);
+                });
 
         Assert.That(result, Is.EqualTo(1));
         Assert.That(serviceA, Is.Not.Null);

@@ -560,14 +560,13 @@ public abstract class HistoryEventWithExecutionPeriodProcessor<TOwner, TSubEvent
 
         // create intervals
         List<TExecutionPeriod> intervals = new ();
-        dates.Aggregate(
-            (x, y) =>
-            {
-                TExecution? xx = !x.Equals(_infinitiveExecutionPeriod.CoalesceFrom) ? x : null;
-                TExecution? yy = !y.Equals(_infinitiveExecutionPeriod.CoalesceTo) ? y : null;
-                intervals.Add(new TExecutionPeriod { From = xx, To = yy });
-                return y;
-            });
+        dates.Aggregate((x, y) =>
+        {
+            TExecution? xx = !x.Equals(_infinitiveExecutionPeriod.CoalesceFrom) ? x : null;
+            TExecution? yy = !y.Equals(_infinitiveExecutionPeriod.CoalesceTo) ? y : null;
+            intervals.Add(new TExecutionPeriod { From = xx, To = yy });
+            return y;
+        });
 
         return intervals;
     }

@@ -24,26 +24,25 @@ namespace PPWCode.Util.Validation.IV.Tests
         }
 
         private static readonly Lazy<JsonSerializerOptions> _jsonSerializerOptions =
-            new (
-                () =>
-                {
-                    JsonSerializerOptions options =
-                        new ()
-                        {
-                            IncludeFields = false,
-                            NumberHandling = JsonNumberHandling.Strict,
-                            ReferenceHandler = ReferenceHandler.IgnoreCycles,
-                            AllowTrailingCommas = false,
-                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                            ReadCommentHandling = JsonCommentHandling.Disallow,
-                            UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,
-                            PropertyNameCaseInsensitive = false,
-                            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-                        };
-                    options.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
-                    options.Converters.Add(new INSSConverter());
-                    return options;
-                });
+            new (() =>
+            {
+                JsonSerializerOptions options =
+                    new ()
+                    {
+                        IncludeFields = false,
+                        NumberHandling = JsonNumberHandling.Strict,
+                        ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                        AllowTrailingCommas = false,
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        ReadCommentHandling = JsonCommentHandling.Disallow,
+                        UnknownTypeHandling = JsonUnknownTypeHandling.JsonNode,
+                        PropertyNameCaseInsensitive = false,
+                        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                    };
+                options.Converters.Add(new JsonStringEnumConverter(allowIntegerValues: false));
+                options.Converters.Add(new INSSConverter());
+                return options;
+            });
 
         public static JsonSerializerOptions JsonSerializerOptions
             => _jsonSerializerOptions.Value;

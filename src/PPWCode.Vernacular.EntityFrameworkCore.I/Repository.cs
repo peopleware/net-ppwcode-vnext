@@ -56,7 +56,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
         if (!IsTransient(model))
         {
             TModel? foundEntity = GetById(model.Id!);
-            if (foundEntity is not null)
+            if (foundEntity is null)
             {
                 throw new IdNotFoundException<TModel, TId>(model.Id!);
             }
@@ -71,7 +71,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
         if (!IsTransient(model))
         {
             TModel? foundEntity = await GetByIdAsync(model.Id!, cancellationToken).ConfigureAwait(false);
-            if (foundEntity is not null)
+            if (foundEntity is null)
             {
                 throw new IdNotFoundException<TModel, TId>(model.Id!);
             }

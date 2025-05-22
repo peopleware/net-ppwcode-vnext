@@ -134,7 +134,7 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     {
         // Is the entity civilized? If not, we do not perform an 'update'.
         model.ThrowIfNotCivilized();
-        if (IsTransient(model))
+        if (model.IdIsTransient)
         {
             throw new ProgrammingError("model cannot be transient.");
         }
@@ -165,7 +165,7 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     {
         // Is the entity civilized? If not, we do not perform an 'update'.
         model.ThrowIfNotCivilized();
-        if (!IsTransient(model))
+        if (!model.IdIsTransient)
         {
             throw new ProgrammingError("model should be transient.");
         }

@@ -53,7 +53,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.Update" />
     public virtual void Update(TModel model)
     {
-        if (!IsTransient(model))
+        if (!model.IdIsTransient)
         {
             TModel? foundEntity = GetById(model.Id!);
             if (foundEntity is null)
@@ -68,7 +68,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.Update" />
     public virtual async Task UpdateAsync(TModel model, CancellationToken cancellationToken = default)
     {
-        if (!IsTransient(model))
+        if (!model.IdIsTransient)
         {
             TModel? foundEntity = await GetByIdAsync(model.Id!, cancellationToken).ConfigureAwait(false);
             if (foundEntity is null)
@@ -83,7 +83,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.Add" />
     public virtual void Insert(TModel model)
     {
-        if (!IsTransient(model))
+        if (!model.IdIsTransient)
         {
             throw new ProgrammingError("Adding a non-transient entity is not allowed.");
         }
@@ -94,7 +94,7 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     /// <inheritdoc cref="DbSet{TModel}.AddRange(TModel[])" />
     public virtual async Task InsertAsync(TModel model, CancellationToken cancellationToken = default)
     {
-        if (!IsTransient(model))
+        if (!model.IdIsTransient)
         {
             throw new ProgrammingError("Adding a non-transient entity is not allowed.");
         }

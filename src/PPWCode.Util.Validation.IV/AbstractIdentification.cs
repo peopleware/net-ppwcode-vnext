@@ -174,10 +174,10 @@ namespace PPWCode.Util.Validation.IV
         public override string? ToString()
             => IsValid ? PaperVersion : RawVersion;
 
-        public static bool operator ==(AbstractIdentification left, AbstractIdentification right)
+        public static bool operator ==(AbstractIdentification? left, AbstractIdentification? right)
             => Equals(left, right);
 
-        public static bool operator !=(AbstractIdentification left, AbstractIdentification right)
+        public static bool operator !=(AbstractIdentification? left, AbstractIdentification? right)
             => !Equals(left, right);
     }
 }

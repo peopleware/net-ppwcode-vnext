@@ -69,7 +69,7 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     ///     Returns the raw storage based on type <typeparamref name="TBase" /> and is meant for manipulation:
     ///     adding or removing instances.
     /// </summary>
-    public List<TBase> BaseModels { get; }
+    protected List<TBase> BaseModels { get; }
 
     /// <summary>
     ///     Returns all instances that can be "seen" by this repository and is based on type
@@ -97,7 +97,7 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
                 throw new ProgrammingError("model should be civilized", cse);
             }
 
-            if (IdIsTransient(model))
+            if (model.IdIsTransient)
             {
                 SetIdAndCreateAuditProperties(model, GetNextIdFor(model));
             }
@@ -192,7 +192,7 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     }
 
     /// <inheritdoc />
-    public virtual void Delete(TModel model)
+    public void Delete(TModel model)
         => DeleteAsync(model)
             .ConfigureAwait(false)
             .GetAwaiter()
@@ -202,8 +202,228 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     public virtual bool IsTransient(TModel model)
         => model.IdIsTransient;
 
-    protected bool IdIsTransient(TBase model)
-        => model.IdIsTransient;
+    /// <summary>
+    ///     <para>
+    ///         Find a number of tuples and count them.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    public virtual Task<int> CountAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
+        => Task.FromResult(lambda(Queryable).Count());
+
+    /// <summary>
+    ///     <para>
+    ///         Find a number of tuples and count them.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <returns>
+    ///     The count of tuples
+    /// </returns>
+    public int Count<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
+        => CountAsync(lambda)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
+    /// <summary>
+    ///     <para>
+    ///         Find a tuple at <paramref name="index" />.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <param name="index">The index of the tuple to be returned</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    /// <remarks>
+    ///     Remember to specify an order, otherwise the result isn't deterministic.
+    /// </remarks>
+    protected virtual Task<TResult?> GetAtIndexAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, int index, CancellationToken cancellationToken = default)
+        => Task.FromResult(
+            lambda(Queryable)
+                .Skip(index)
+                .Take(1)
+                .SingleOrDefault());
+
+    /// <summary>
+    ///     <para>
+    ///         Find a tuple at <paramref name="index" />.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <param name="index">The index of the tuple to be returned</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <returns>
+    ///     The tuple at <paramref name="index" /> of the tuples that satisfied the <paramref name="lambda" />.
+    /// </returns>
+    /// <remarks>
+    ///     Remember to specify an order, otherwise the result isn't deterministic.
+    /// </remarks>
+    protected TResult? GetAtIndex<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, int index)
+        => GetAtIndexAsync(lambda, index)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
+    /// <summary>
+    ///     <para>
+    ///         Find a specified range of contiguous tuples, defined by <paramref name="take" />, after skipping
+    ///         a number of tuples, defined by <paramref name="skip" />.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <param name="skip">The number of tuples to skip before returning the remaining tuples</param>
+    /// <param name="take">Returns a specified range of contiguous tuples from a sequence</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// <remarks>
+    ///     Remember to specify an order, otherwise the result isn't deterministic.
+    /// </remarks>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    protected virtual Task<List<TResult>> FindAsync<TResult>(
+        Func<IQueryable<TModel>, IQueryable<TResult>> lambda,
+        int? skip = null,
+        int? take = null,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<TResult> result = lambda(Queryable);
+        if (skip != null)
+        {
+            result = result.Skip(skip.Value);
+        }
+
+        if (take != null)
+        {
+            result = result.Take(take.Value);
+        }
+
+        return Task.FromResult(result.ToList());
+    }
+
+    /// <summary>
+    ///     <para>
+    ///         Find a specified range of contiguous tuples, defined by <paramref name="take" />, after skipping
+    ///         a number of tuples, defined by <paramref name="skip" />.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <param name="skip">The number of tuples to skip before returning the remaining tuples</param>
+    /// <param name="take">Returns a specified range of contiguous tuples from a sequence</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <returns>
+    ///     A list of tuples of type <typeparamref name="TResult" />
+    /// </returns>
+    /// <remarks>
+    ///     Remember to specify an order, otherwise the result isn't deterministic.
+    /// </remarks>
+    protected List<TResult> Find<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, int? skip = null, int? take = null)
+        => FindAsync(lambda, skip, take)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
+    /// <summary>
+    ///     <para>
+    ///         Find a specified range of contiguous tuples, called a page defined by <paramref name="pageSize" />, after
+    ///         skipping
+    ///         a number of pages defined by <paramref name="pageIndex" />.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <param name="pageIndex">The number of pages to skip before returning the remaining tuples</param>
+    /// <param name="pageSize">Returns a specified range of contiguous tuples from a sequence, called a page</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// <remarks>
+    ///     Remember to specify an order, otherwise the result isn't deterministic.
+    /// </remarks>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    public virtual Task<IPagedList<TResult>> FindPagedAsync<TResult>(
+        Func<IQueryable<TModel>, IQueryable<TResult>> lambda,
+        int pageIndex,
+        int pageSize,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<TResult> query = lambda(Queryable).Skip((pageIndex - 1) * pageSize).Take(pageSize);
+        int count = lambda(Queryable).Count();
+
+        return Task.FromResult<IPagedList<TResult>>(new PagedList<TResult>(query, pageIndex, pageSize, count));
+    }
+
+    /// <summary>
+    ///     <para>
+    ///         Find a specified range of contiguous tuples, called a page defined by <paramref name="pageSize" />, after
+    ///         skipping
+    ///         a number of pages defined by <paramref name="pageIndex" />.
+    ///     </para>
+    ///     <para>The <paramref name="lambda" /> describes the predicate to be used.</para>
+    /// </summary>
+    /// <param name="lambda">The predicate to be used to query our store</param>
+    /// <param name="pageIndex">The number of pages to skip before returning the remaining tuples</param>
+    /// <param name="pageSize">Returns a specified range of contiguous tuples from a sequence, called a page</param>
+    /// <typeparam name="TResult">
+    ///     The <see cref="Type" /> of the result. It doesn't need to be of type
+    ///     <typeparamref name="TModel" />.
+    /// </typeparam>
+    /// <returns>
+    ///     A page is returned, a page is defined using <see cref="IPagedList{T}" />
+    /// </returns>
+    /// <remarks>
+    ///     Remember to specify an order, otherwise the result isn't deterministic.
+    /// </remarks>
+    protected IPagedList<TResult> FindPaged<TResult>(
+        Func<IQueryable<TModel>, IQueryable<TResult>> lambda,
+        int pageIndex,
+        int pageSize)
+        => FindPagedAsync(lambda, pageIndex, pageSize)
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
 
     protected abstract TId GetNextIdFor(TBase model);
     protected abstract void SetIdAndCreateAuditProperties(TBase model, TId id);
@@ -214,15 +434,6 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
 
     protected TResult? Get<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
         => GetAsync(lambda)
-            .ConfigureAwait(false)
-            .GetAwaiter()
-            .GetResult();
-
-    protected virtual Task<int> CountAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
-        => Task.FromResult(lambda(Queryable).Count());
-
-    protected int Count<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
-        => CountAsync(lambda)
             .ConfigureAwait(false)
             .GetAwaiter()
             .GetResult();
@@ -242,55 +453,6 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
             .GetAwaiter()
             .GetResult();
 
-    protected virtual Task<TResult?> MinAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
+    protected Task<TResult?> MinAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
         => Task.FromResult(lambda(Queryable).Min());
-
-    protected virtual Task<List<TResult>> FindAsync<TResult>(
-        Func<IQueryable<TModel>, IQueryable<TResult>> lambda,
-        int? skip,
-        int? take,
-        CancellationToken cancellationToken = default)
-    {
-        IQueryable<TResult> result = lambda(Queryable);
-        if (skip != null)
-        {
-            result = result.Skip(skip.Value);
-        }
-
-        if (take != null)
-        {
-            result = result.Take(take.Value);
-        }
-
-        return Task.FromResult(result.ToList());
-    }
-
-    protected List<TResult> Find<TResult>(
-        Func<IQueryable<TModel>, IQueryable<TResult>> lambda,
-        int? skip,
-        int? take)
-        => FindAsync(lambda, skip, take)
-            .ConfigureAwait(false)
-            .GetAwaiter()
-            .GetResult();
-
-    protected virtual Task<List<TResult>> FindAsync<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda, CancellationToken cancellationToken = default)
-        => FindAsync(lambda, null, null, cancellationToken);
-
-    protected List<TResult> Find<TResult>(Func<IQueryable<TModel>, IQueryable<TResult>> lambda)
-        => FindAsync(lambda)
-            .ConfigureAwait(false)
-            .GetAwaiter()
-            .GetResult();
-
-    protected virtual IPagedList<TResult> FindPaged<TResult>(
-        Func<IQueryable<TModel>, IQueryable<TResult>> lambda,
-        int pageIndex,
-        int pageSize)
-    {
-        IQueryable<TResult> query = lambda(Models.AsQueryable()).Skip((pageIndex - 1) * pageSize).Take(pageSize);
-        int count = lambda(Queryable).Count();
-
-        return new PagedList<TResult>(query, pageIndex, pageSize, count);
-    }
 }

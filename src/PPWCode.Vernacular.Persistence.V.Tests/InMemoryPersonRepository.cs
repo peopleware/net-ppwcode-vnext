@@ -48,5 +48,5 @@ public class InMemoryPersonRepository
 
     /// <inheritdoc />
     public Task<List<Person>> FindByNameAsync(string name, CancellationToken cancellationToken = default)
-        => FindAsync(_personQueryManager.FindByName(name), cancellationToken);
+        => FindAsync(_personQueryManager.FindByName(name), cancellationToken: cancellationToken);
 }

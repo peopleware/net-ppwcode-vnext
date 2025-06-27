@@ -2,13 +2,13 @@
   "version": 1,
   "dependencies": {
     "net8.0": {
-      "Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer": {
+      "Asp.Versioning.Mvc.ApiExplorer": {
         "type": "Direct",
-        "requested": "[5.*, )",
-        "resolved": "5.1.0",
-        "contentHash": "p45pSXCJPbx+p9gFNNQPUC547KpqP5cRJke6aygq/M7UzCrJNmJNqD+65pIpY4muYbINqlgrC47h1oc0WbuP1g==",
+        "requested": "[8.*, )",
+        "resolved": "8.1.0",
+        "contentHash": "a90gW/4TF/14Bjiwg9LqNtdKGC4G3gu02+uynq3bCISfQm48km5chny4Yg5J4hixQPJUwwJJ9Do1G+jM8L9h3g==",
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Versioning": "5.1.0"
+          "Asp.Versioning.Mvc": "8.1.0"
         }
       },
       "Microsoft.EntityFrameworkCore": {
@@ -71,10 +71,29 @@
           "Swashbuckle.AspNetCore.SwaggerGen": "7.3.2"
         }
       },
-      "Microsoft.AspNetCore.Mvc.Versioning": {
+      "Asp.Versioning.Abstractions": {
         "type": "Transitive",
-        "resolved": "5.1.0",
-        "contentHash": "UX8w9BlCiZpr6Ox4YAve1w0CkI1CAovukGNzKd7v0+5pZc8lzuG5tRovucr1RWIKHs0E/Yx8563CN7KzaB3bpw=="
+        "resolved": "8.1.0",
+        "contentHash": "mpeNZyMdvrHztJwR1sXIUQ+3iioEU97YMBnFA9WLbsPOYhGwDJnqJMmEd8ny7kcmS9OjTHoEuX/bSXXY3brIFA==",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        }
+      },
+      "Asp.Versioning.Http": {
+        "type": "Transitive",
+        "resolved": "8.1.0",
+        "contentHash": "Xu4xF62Cu9JqYi/CTa2TiK5kyHoa4EluPynj/bPFWDmlTIPzuJQbBI5RgFYVRFHjFVvWMoA77acRaFu7i7Wzqg==",
+        "dependencies": {
+          "Asp.Versioning.Abstractions": "8.1.0"
+        }
+      },
+      "Asp.Versioning.Mvc": {
+        "type": "Transitive",
+        "resolved": "8.1.0",
+        "contentHash": "BMAJM2sGsTUw5FQ9upKQt6GFoldWksePgGpYjl56WSRvIuE3UxKZh0gAL+wDTIfLshUZm97VCVxlOGyrcjWz9Q==",
+        "dependencies": {
+          "Asp.Versioning.Http": "8.1.0"
+        }
       },
       "Microsoft.EntityFrameworkCore.Abstractions": {
         "type": "Transitive",
@@ -204,7 +223,7 @@
       "ppwcode.aspnetcore.server.i": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Versioning": "[5.1.0, )",
+          "Asp.Versioning.Mvc": "[8.*, )",
           "PPWCode.Vernacular.Contracts.I": "[1.*, )",
           "PPWCode.Vernacular.Exceptions.V": "[0.0.9, )",
           "PPWCode.Vernacular.Persistence.V": "[0.0.9, )"

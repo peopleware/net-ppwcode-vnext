@@ -12,7 +12,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
-using Microsoft.AspNetCore.Mvc;
+using Asp.Versioning;
+
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.OpenApi.Models;

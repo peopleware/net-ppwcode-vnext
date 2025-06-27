@@ -9,7 +9,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.AspNetCore.Mvc;
+using Asp.Versioning;
 
 namespace PPWCode.AspNetCore.Server.I;
 
@@ -29,12 +29,4 @@ public abstract class LinksContext
     public ApiVersion ApiVersion { get; }
 
     public string ApiVersionFormat { get; }
-
-    public void AddVersionToRouteParameters(IDictionary<string, object> routeValues)
-    {
-        if (!routeValues.ContainsKey(VersionRouteParameter))
-        {
-            routeValues.Add(VersionRouteParameter, ApiVersion.ToString(ApiVersionFormat));
-        }
-    }
 }

@@ -22,4 +22,15 @@ public static class CivilizedObjectExtensions
             cse.AddElement(civilizedObject.WildExceptions());
         }
     }
+
+    public static void CheckForWildExceptions(this IEnumerable<ICivilizedObject?>? civilizedObjects, CompoundSemanticException cse)
+    {
+        if (civilizedObjects is not null)
+        {
+            foreach (ICivilizedObject? civilizedObject in civilizedObjects)
+            {
+                civilizedObject.CheckForWildExceptions(cse);
+            }
+        }
+    }
 }

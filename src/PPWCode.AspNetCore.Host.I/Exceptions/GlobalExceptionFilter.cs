@@ -12,8 +12,8 @@ namespace PPWCode.AspNetCore.Host.I.Exceptions;
 [ExcludeFromCodeCoverage]
 public sealed class GlobalExceptionFilter : IAsyncExceptionFilter
 {
-    private readonly ILogger<GlobalExceptionFilter> _logger;
     private readonly IExceptionHandler[] _handlers;
+    private readonly ILogger<GlobalExceptionFilter> _logger;
 
     public GlobalExceptionFilter(ILogger<GlobalExceptionFilter> logger, IEnumerable<IExceptionHandler> handlers)
     {
@@ -36,7 +36,26 @@ public sealed class GlobalExceptionFilter : IAsyncExceptionFilter
 
         if (!handled)
         {
-            _logger.LogError(context.Exception, "Unhandled exception");
+            HttpContext httpContext = context.HttpContext;
+            HttpRequest request = httpContext.Request;
+
+            // Basic info
+            string method = request.Method;
+            PathString path = request.Path;
+            string? queryString = request.QueryString.Value;
+
+            // Headers
+            Dictionary<string, string> headers = request.Headers
+                .ToDictionary(h => h.Key, h => h.Value.ToString());
+
+            _logger.LogError(
+                context.Exception,
+                "Unhandled exception: {Method} {Path}{Query}\nHeaders: {@Headers}",
+                method,
+                path,
+                queryString,
+                headers);
+
             context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
 

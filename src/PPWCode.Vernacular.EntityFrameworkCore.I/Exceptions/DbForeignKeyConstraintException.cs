@@ -1,4 +1,4 @@
-﻿// Copyright 2018 by PeopleWare n.v..
+﻿// Copyright 2025 by PeopleWare n.v..
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -9,19 +9,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace PPWCode.Vernacular.Persistence.V.Exceptions
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions
 {
-    public class DbCheckConstraintException : DbConstraintException
+    [Serializable]
+    public class DbForeignKeyConstraintException : DbConstraintException
     {
-        public DbCheckConstraintException(
-            object entityId,
-            string entityName,
-            string sql,
-            string constraintName,
-            string? extraInfo = null,
-            string? message = null,
-            Exception? innerException = null)
-            : base(entityId, entityName, sql, DbConstraintTypeEnum.CHECK, constraintName, extraInfo, message, innerException)
+        public DbForeignKeyConstraintException(
+            string message,
+            Exception? innerException,
+            DbConstraintExceptionData constraintExceptionData)
+            : base(message, innerException, constraintExceptionData)
         {
         }
     }

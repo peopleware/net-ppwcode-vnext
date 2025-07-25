@@ -1,4 +1,4 @@
-﻿// Copyright 2018 by PeopleWare n.v..
+// Copyright 2025 by PeopleWare n.v..
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -9,32 +9,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.Serialization;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions;
 
-namespace PPWCode.Vernacular.Persistence.V.Exceptions
+[Serializable]
+public class DbDataTruncatedConstraintException : DbConstraintException
 {
-    [Serializable]
-    public enum DbConstraintTypeEnum
+    public DbDataTruncatedConstraintException(
+        string message,
+        Exception? innerException,
+        DbConstraintExceptionData constraintExceptionData)
+        : base(message, innerException, constraintExceptionData)
     {
-        [EnumMember]
-        UNKNOWN = 0,
-
-        [EnumMember]
-        PRIMARY_KEY,
-
-        [EnumMember]
-        UNIQUE,
-
-        [EnumMember]
-        FOREIGN_KEY,
-
-        [EnumMember]
-        CHECK,
-
-        [EnumMember]
-        NOT_NULL,
-
-        [EnumMember]
-        DEFAULT
     }
 }

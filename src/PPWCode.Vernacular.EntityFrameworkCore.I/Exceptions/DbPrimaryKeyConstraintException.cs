@@ -9,19 +9,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace PPWCode.Vernacular.Persistence.V.Exceptions
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions
 {
-    public class DbUniqueConstraintException : DbConstraintException
+    [Serializable]
+    public class DbPrimaryKeyConstraintException : DbConstraintException
     {
-        public DbUniqueConstraintException(
-            object entityId,
-            string entityName,
-            string sql,
-            string constraintName,
-            string? extraInfo = null,
-            string? message = null,
-            Exception? innerException = null)
-            : base(entityId, entityName, sql, DbConstraintTypeEnum.UNIQUE, constraintName, extraInfo, message, innerException)
+        public DbPrimaryKeyConstraintException(
+            string message,
+            Exception? innerException,
+            DbConstraintExceptionData constraintExceptionData)
+            : base(message, innerException, constraintExceptionData)
         {
         }
     }

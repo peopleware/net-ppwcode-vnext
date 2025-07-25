@@ -9,20 +9,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-namespace PPWCode.Vernacular.Persistence.V.Exceptions
+using System.Runtime.Serialization;
+
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions
 {
-    public class DbNotNullConstraintException : DbConstraintException
+    [Serializable]
+    public enum DbConstraintTypeEnum
     {
-        public DbNotNullConstraintException(
-            object entityId,
-            string entityName,
-            string sql,
-            string constraintName,
-            string? extraInfo = null,
-            string? message = null,
-            Exception? innerException = null)
-            : base(entityId, entityName, sql, DbConstraintTypeEnum.NOT_NULL, constraintName, extraInfo, message, innerException)
-        {
-        }
+        [EnumMember]
+        UNKNOWN = 0,
+
+        [EnumMember]
+        PRIMARY_KEY,
+
+        [EnumMember]
+        UNIQUE,
+
+        [EnumMember]
+        FOREIGN_KEY,
+
+        [EnumMember]
+        CHECK,
+
+        [EnumMember]
+        NOT_NULL,
+
+        [EnumMember]
+        DATA_TRUNCATED
     }
 }

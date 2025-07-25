@@ -15,7 +15,6 @@ using PPWCode.Vernacular.Exceptions.V;
 
 namespace PPWCode.Vernacular.Persistence.V.Exceptions
 {
-    [Serializable]
     public abstract class DbConstraintException : RepositorySqlException
     {
         public const string EntityIdKey = "DbConstraintException.EntityId";

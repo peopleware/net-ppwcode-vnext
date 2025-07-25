@@ -13,7 +13,6 @@ using PPWCode.Vernacular.Exceptions.V;
 
 namespace PPWCode.Vernacular.Persistence.V.Exceptions
 {
-    [Serializable]
     public class NotFoundException : SemanticException
     {
         public NotFoundException(string? message = null, Exception? innerException = null)

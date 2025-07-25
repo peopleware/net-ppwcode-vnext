@@ -13,7 +13,6 @@ using PPWCode.Vernacular.Exceptions.V;
 
 namespace PPWCode.Vernacular.Persistence.V.Exceptions
 {
-    [Serializable]
     public class ObjectAlreadyChangedException : SemanticException
     {
         public ObjectAlreadyChangedException(

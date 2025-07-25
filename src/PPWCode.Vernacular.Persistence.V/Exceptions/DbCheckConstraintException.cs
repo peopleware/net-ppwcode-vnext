@@ -11,7 +11,6 @@
 
 namespace PPWCode.Vernacular.Persistence.V.Exceptions
 {
-    [Serializable]
     public class DbCheckConstraintException : DbConstraintException
     {
         public DbCheckConstraintException(

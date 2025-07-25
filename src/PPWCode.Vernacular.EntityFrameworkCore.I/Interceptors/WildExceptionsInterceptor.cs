@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using PPWCode.Vernacular.Exceptions.V;
 using PPWCode.Vernacular.Semantics.V;
 
-namespace PPWCode.Vernacular.EntityFrameworkCore.I;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.Interceptors;
 
 public class WildExceptionsInterceptor : SaveChangesInterceptor
 {

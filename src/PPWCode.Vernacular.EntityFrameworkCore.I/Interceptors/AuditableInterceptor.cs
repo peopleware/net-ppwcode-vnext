@@ -17,7 +17,7 @@ using PPWCode.Vernacular.Exceptions.IV;
 using PPWCode.Vernacular.Persistence.V;
 using PPWCode.Vernacular.RequestContext.I;
 
-namespace PPWCode.Vernacular.EntityFrameworkCore.I;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.Interceptors;
 
 public abstract class AuditableInterceptor<TTimestamp> : SaveChangesInterceptor
     where TTimestamp : struct, IComparable<TTimestamp>, IEquatable<TTimestamp>

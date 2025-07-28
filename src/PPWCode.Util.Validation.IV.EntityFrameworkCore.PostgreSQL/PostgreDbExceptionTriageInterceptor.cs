@@ -9,17 +9,69 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Microsoft.EntityFrameworkCore;
+
 using Npgsql;
 
 using PPWCode.Vernacular.EntityFrameworkCore.I.DbConstraint;
+using PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions;
 using PPWCode.Vernacular.EntityFrameworkCore.I.Interceptors;
 
 namespace PPWCode.Util.Validation.IV.EntityFrameworkCore.PostgreSQL;
 
 public class PostgreDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<PostgresException>
 {
+    private readonly IDbConstraints _dbConstraints;
+
     public PostgreDbExceptionTriageInterceptor(IDbConstraints dbConstraints)
-        : base(dbConstraints)
     {
+        _dbConstraints = dbConstraints;
+    }
+
+    /// <inheritdoc />
+    protected override void OnGatherExceptionData(
+        Exception exception,
+        PostgresException providerException,
+        DbConstraintExceptionDataBuilder dbConstraintExceptionDataBuilder,
+        DbContext? eventContext)
+    {
+        if (providerException.SqlState == PostgresErrorCodes.NotNullViolation)
+        {
+            dbConstraintExceptionDataBuilder.ConstraintType(DbConstraintTypeEnum.NOT_NULL);
+        }
+        else if (providerException.SqlState == PostgresErrorCodes.StringDataRightTruncation)
+        {
+            dbConstraintExceptionDataBuilder.ConstraintType(DbConstraintTypeEnum.DATA_TRUNCATED);
+        }
+        else
+        {
+            DbConstraintMetadata? metadata = null;
+            List<DbConstraintMetadata> metadatas =
+                _dbConstraints
+                    .Constraints
+                    .Where(c => providerException.Message.Contains(c.ConstraintName))
+                    .ToList();
+            if (metadatas.Count > 1)
+            {
+                metadatas =
+                    metadatas
+                        .Where(c => providerException.Message.Contains(c.FullQualifiedName))
+                        .ToList();
+            }
+
+            if (metadatas.Count == 1)
+            {
+                metadata = metadatas.Single();
+            }
+
+            if (metadata is not null)
+            {
+                dbConstraintExceptionDataBuilder
+                    .ConstraintType(metadata.ConstraintType)
+                    .ConstraintName(metadata.ConstraintName)
+                    .SchemaName(metadata.SchemaName)
+                    .TableName(metadata.TableName);
+            }
+        }
     }
 }

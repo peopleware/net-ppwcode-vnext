@@ -18,7 +18,7 @@ using Npgsql;
 
 using PPWCode.Vernacular.EntityFrameworkCore.I.DbConstraint;
 
-namespace PPWCode.Util.Validation.IV.EntityFrameworkCore.PostgreSQL;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.PostgreSQL;
 
 /// <inheritdoc cref="SchemaBasedDbConstraints" />
 public class PostgreDbConstraints : SchemaBasedDbConstraints

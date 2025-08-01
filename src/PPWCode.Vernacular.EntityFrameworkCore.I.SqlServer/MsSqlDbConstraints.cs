@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 
 using PPWCode.Vernacular.EntityFrameworkCore.I.DbConstraint;
 
-namespace PPWCode.Util.Validation.IV.EntityFrameworkCore.SqlServer;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.SqlServer;
 
 public class MsSqlDbConstraints : SchemaBasedDbConstraints
 {

@@ -9,20 +9,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+
+using Npgsql;
 
 using PPWCode.Vernacular.EntityFrameworkCore.I.DbConstraint;
 using PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions;
 using PPWCode.Vernacular.EntityFrameworkCore.I.Interceptors;
 
-namespace PPWCode.Util.Validation.IV.EntityFrameworkCore.SqlServer;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.PostgreSQL;
 
-public class MsSqlDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<SqlException>
+public class PostgreDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<PostgresException>
 {
     private readonly IDbConstraints _dbConstraints;
 
-    public MsSqlDbExceptionTriageInterceptor(IDbConstraints dbConstraints)
+    public PostgreDbExceptionTriageInterceptor(IDbConstraints dbConstraints)
     {
         _dbConstraints = dbConstraints;
     }
@@ -30,15 +31,15 @@ public class MsSqlDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<Sq
     /// <inheritdoc />
     protected override void OnGatherExceptionData(
         Exception exception,
-        SqlException providerException,
+        PostgresException providerException,
         DbConstraintExceptionDataBuilder dbConstraintExceptionDataBuilder,
         DbContext? eventContext)
     {
-        if (providerException.Number == 515)
+        if (providerException.SqlState == PostgresErrorCodes.NotNullViolation)
         {
             dbConstraintExceptionDataBuilder.ConstraintType(DbConstraintTypeEnum.NOT_NULL);
         }
-        else if (providerException.Number is 8152 or 2628)
+        else if (providerException.SqlState == PostgresErrorCodes.StringDataRightTruncation)
         {
             dbConstraintExceptionDataBuilder.ConstraintType(DbConstraintTypeEnum.DATA_TRUNCATED);
         }
@@ -48,13 +49,13 @@ public class MsSqlDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<Sq
             List<DbConstraintMetadata> metadatas =
                 _dbConstraints
                     .Constraints
-                    .Where(c => providerException.Message.Contains(c.ConstraintName))
+                    .Where(c => providerException.ConstraintName == c.ConstraintName)
                     .ToList();
             if (metadatas.Count > 1)
             {
                 metadatas =
                     metadatas
-                        .Where(c => providerException.Message.Contains(c.FullQualifiedName))
+                        .Where(c => providerException.ConstraintName == c.FullQualifiedName)
                         .ToList();
             }
 

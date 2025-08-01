@@ -69,9 +69,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.AspNetCore.Host.I",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.Validation.IV.EntityFrameworkCore", "src\PPWCode.Util.Validation.IV.EntityFrameworkCore\PPWCode.Util.Validation.IV.EntityFrameworkCore.csproj", "{27F6E559-AA36-4F11-92E0-7B21DC43933C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.Validation.IV.EntityFrameworkCore.SqlServer", "src\PPWCode.Util.Validation.IV.EntityFrameworkCore.SqlServer\PPWCode.Util.Validation.IV.EntityFrameworkCore.SqlServer.csproj", "{15DAEF18-A876-4703-B924-23276491F7F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.EntityFrameworkCore.I.SqlServer", "src\PPWCode.Vernacular.EntityFrameworkCore.I.SqlServer\PPWCode.Vernacular.EntityFrameworkCore.I.SqlServer.csproj", "{15DAEF18-A876-4703-B924-23276491F7F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Util.Validation.IV.EntityFrameworkCore.PostgreSQL", "src\PPWCode.Util.Validation.IV.EntityFrameworkCore.PostgreSQL\PPWCode.Util.Validation.IV.EntityFrameworkCore.PostgreSQL.csproj", "{78C62F76-DF86-4B65-BD9F-94EA50E38CA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PPWCode.Vernacular.EntityFrameworkCore.I.PostgreSQL", "src\PPWCode.Vernacular.EntityFrameworkCore.I.PostgreSQL\PPWCode.Vernacular.EntityFrameworkCore.I.PostgreSQL.csproj", "{78C62F76-DF86-4B65-BD9F-94EA50E38CA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

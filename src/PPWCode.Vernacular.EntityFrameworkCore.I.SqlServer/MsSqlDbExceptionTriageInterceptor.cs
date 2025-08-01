@@ -9,21 +9,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
-using Npgsql;
 
 using PPWCode.Vernacular.EntityFrameworkCore.I.DbConstraint;
 using PPWCode.Vernacular.EntityFrameworkCore.I.Exceptions;
 using PPWCode.Vernacular.EntityFrameworkCore.I.Interceptors;
 
-namespace PPWCode.Util.Validation.IV.EntityFrameworkCore.PostgreSQL;
+namespace PPWCode.Vernacular.EntityFrameworkCore.I.SqlServer;
 
-public class PostgreDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<PostgresException>
+public class MsSqlDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<SqlException>
 {
     private readonly IDbConstraints _dbConstraints;
 
-    public PostgreDbExceptionTriageInterceptor(IDbConstraints dbConstraints)
+    public MsSqlDbExceptionTriageInterceptor(IDbConstraints dbConstraints)
     {
         _dbConstraints = dbConstraints;
     }
@@ -31,15 +30,15 @@ public class PostgreDbExceptionTriageInterceptor : DbExceptionTriageInterceptor<
     /// <inheritdoc />
     protected override void OnGatherExceptionData(
         Exception exception,
-        PostgresException providerException,
+        SqlException providerException,
         DbConstraintExceptionDataBuilder dbConstraintExceptionDataBuilder,
         DbContext? eventContext)
     {
-        if (providerException.SqlState == PostgresErrorCodes.NotNullViolation)
+        if (providerException.Number == 515)
         {
             dbConstraintExceptionDataBuilder.ConstraintType(DbConstraintTypeEnum.NOT_NULL);
         }
-        else if (providerException.SqlState == PostgresErrorCodes.StringDataRightTruncation)
+        else if (providerException.Number is 8152 or 2628)
         {
             dbConstraintExceptionDataBuilder.ConstraintType(DbConstraintTypeEnum.DATA_TRUNCATED);
         }

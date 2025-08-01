@@ -54,7 +54,8 @@ public abstract class DbExceptionTriageInterceptor<TProviderException>
     [StackTraceHidden]
     protected virtual void ProcessException(Exception eventException, DbContext? eventContext)
     {
-        if (ExtractProviderException(eventException) is TProviderException providerException)
+        TProviderException? providerException = ExtractProviderException(eventException);
+        if (providerException is not null)
         {
             DbConstraintExceptionDataBuilder builder = new ();
 
@@ -131,14 +132,14 @@ public abstract class DbExceptionTriageInterceptor<TProviderException>
         DbConstraintExceptionDataBuilder dbConstraintExceptionDataBuilder,
         DbContext? eventContext);
 
-    protected virtual DbException? ExtractProviderException(Exception sqlException)
+    protected virtual TProviderException? ExtractProviderException(Exception sqlException)
     {
         Exception? baseException = sqlException;
-        DbException? result = sqlException as DbException;
+        TProviderException? result = sqlException as TProviderException;
         while ((result == null) && (baseException != null))
         {
             baseException = baseException.InnerException;
-            result = baseException as DbException;
+            result = baseException as TProviderException;
         }
 
         return result;

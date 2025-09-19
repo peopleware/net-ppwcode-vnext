@@ -104,7 +104,10 @@ namespace PPWCode.AspNetCore.Host.I.Swagger
 
         protected virtual void ConditionalAddResponse(OpenApiOperation operation, string key, OpenApiResponse response)
         {
-            AddResponse(operation, ResponseExists(operation, key) ? string.Concat('*', key) : key, response);
+            if (!ResponseExists(operation, key))
+            {
+                AddResponse(operation, key, response);
+            }
         }
     }
 }

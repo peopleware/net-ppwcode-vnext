@@ -55,4 +55,32 @@ public static class EnumHelpers
     public static IEnumerable<T> GetValues<T>()
         where T : struct
         => Enum.GetValues(typeof(T)).Cast<T>();
+
+    public static IEnumerable<T> GetIndividualFlags<T>(this T value)
+        where T : Enum
+    {
+        long longValue = Convert.ToInt64(value);
+
+        foreach (T flag in Enum.GetValues(typeof(T)))
+        {
+            long flagValue = Convert.ToInt64(flag);
+
+            // Skip 0 (None)
+            if (flagValue == 0)
+            {
+                continue;
+            }
+
+            // Skip non-powers of two (i.e. combined flags)
+            if ((flagValue & (flagValue - 1)) != 0)
+            {
+                continue;
+            }
+
+            if ((longValue & flagValue) == flagValue)
+            {
+                yield return flag;
+            }
+        }
+    }
 }

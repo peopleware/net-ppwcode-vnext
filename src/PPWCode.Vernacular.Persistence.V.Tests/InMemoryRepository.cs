@@ -87,6 +87,17 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     protected IQueryable<TModel> Queryable
         => Models.AsQueryable();
 
+    /// <inheritdoc />
+    public Task FlushAsync(CancellationToken cancellationToken = default)
+        => Task.CompletedTask;
+
+    /// <inheritdoc />
+    public void Flush()
+        => FlushAsync()
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
     public virtual void Initialize(IEnumerable<TBase> models)
     {
         foreach (TBase model in models)

@@ -155,4 +155,23 @@ public interface IRepository<TModel, in TId>
     /// <param name="model">The entity to be checked.</param>
     /// <returns><c>true</c> if transient.</returns>
     bool IsTransient(TModel model);
+
+    /// <summary>
+    ///     Flushes all pending modifications. Depending on the ORM in use, it may be possible to flush only entities of
+    ///     <typeparamref name="TModel" />, but some ORMs do not support this functionality and instead flush <c>all</c>
+    ///     pending modifications.
+    /// </summary>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
+    /// <returns>
+    ///     an awaitable <see cref="Task" />
+    /// </returns>
+    /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
+    Task FlushAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    ///     Flushes all pending modifications. Depending on the ORM in use, it may be possible to flush only entities of
+    ///     <typeparamref name="TModel" />, but some ORMs do not support this functionality and instead flush <c>all</c>
+    ///     pending modifications.
+    /// </summary>
+    void Flush();
 }

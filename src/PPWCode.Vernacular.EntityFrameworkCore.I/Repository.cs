@@ -128,6 +128,17 @@ public abstract class Repository<TModel, TId, TTimestamp> : IRepository<TModel, 
     public virtual bool IsTransient(TModel model)
         => (_context.Entry(model).State == EntityState.Detached) && model.IdIsTransient;
 
+    /// <inheritdoc cref="IRepository{TModel,TId}.FlushAsync"/>
+    public virtual async Task FlushAsync(CancellationToken cancellationToken = default)
+        => await _context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
+    /// <inheritdoc cref="IRepository{TModel,TId}.Flush"/>
+    public virtual void Flush()
+        => FlushAsync()
+            .ConfigureAwait(false)
+            .GetAwaiter()
+            .GetResult();
+
     /// <summary>
     ///     <para>
     ///         Find a specified range of contiguous tuples, defined by <paramref name="take" />, after skipping

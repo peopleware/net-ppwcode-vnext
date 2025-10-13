@@ -65,7 +65,7 @@ public abstract class AbstractFactory
         object[] parameters,
         CancellationToken cancellationToken = default)
     {
-        using IServiceScope scope = serviceProvider.CreateScope();
+        await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
         TService service = Create<TService>(scope.ServiceProvider, parameters);
         await action(service, context, cancellationToken).ConfigureAwait(false);
     }
@@ -77,7 +77,7 @@ public abstract class AbstractFactory
         object[] parameters,
         CancellationToken cancellationToken = default)
     {
-        using IServiceScope scope = serviceProvider.CreateScope();
+        await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
         TService service = Create<TService>(scope.ServiceProvider, parameters);
         return await action(service, context, cancellationToken);
     }

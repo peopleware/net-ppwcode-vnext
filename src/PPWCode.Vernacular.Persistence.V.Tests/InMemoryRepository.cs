@@ -78,6 +78,7 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     public List<TModel> Models
         => BaseModels
             .OfType<TModel>()
+            .Where(m => !m.IdIsTransient)
             .ToList();
 
     /// <summary>
@@ -197,6 +198,13 @@ public abstract class InMemoryRepository<TBase, TModel, TId> : IRepository<TMode
     /// <inheritdoc />
     public virtual Task DeleteAsync(TModel model, CancellationToken cancellationToken = default)
     {
+        // Is the entity civilized? If not, we do not perform an 'update'.
+        model.ThrowIfNotCivilized();
+        if (model.IdIsTransient)
+        {
+            throw new ProgrammingError("model should not be transient.");
+        }
+
         BaseModels.Remove(model);
 
         return Task.CompletedTask;

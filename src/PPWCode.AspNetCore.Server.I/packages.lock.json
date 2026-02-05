@@ -5,20 +5,17 @@
       "Asp.Versioning.Mvc": {
         "type": "Direct",
         "requested": "[8.*, )",
-        "resolved": "8.1.0",
-        "contentHash": "BMAJM2sGsTUw5FQ9upKQt6GFoldWksePgGpYjl56WSRvIuE3UxKZh0gAL+wDTIfLshUZm97VCVxlOGyrcjWz9Q==",
+        "resolved": "8.1.1",
+        "contentHash": "mkJv6eAdlbHbqTdrUcfEYFoZuGL6HoR7O+Lfsvivixp7N5BNhfCFPPOwsBzdIiH1qzdJXyJf+C+DZ08j27PMPg==",
         "dependencies": {
-          "Asp.Versioning.Http": "8.1.0"
+          "Asp.Versioning.Http": "8.1.1"
         }
       },
       "PPWCode.Vernacular.Contracts.I": {
         "type": "Direct",
         "requested": "[1.*, )",
-        "resolved": "1.2.0",
-        "contentHash": "lSc82pJXbsXuqPt/5YsHdS6gdHtcnhryWKvFC+2YIs+6ILH5lkuavrBLVWGDYVALmaDTba96T3YlylZaYhnzIw==",
-        "dependencies": {
-          "PPWCode.Vernacular.Exceptions.IV": "1.2.0"
-        }
+        "resolved": "1.5.0",
+        "contentHash": "Hv7hjZ+RXEnVkAZEdwlAW5QbT0Hvh+pCusaiQT5bRD93Z58OuMHH6Q48TizzufF6+DRm9rJdnufIcOWWvKLKaw=="
       },
       "StyleCop.Analyzers": {
         "type": "Direct",
@@ -36,8 +33,8 @@
       },
       "Asp.Versioning.Http": {
         "type": "Transitive",
-        "resolved": "8.1.0",
-        "contentHash": "Xu4xF62Cu9JqYi/CTa2TiK5kyHoa4EluPynj/bPFWDmlTIPzuJQbBI5RgFYVRFHjFVvWMoA77acRaFu7i7Wzqg==",
+        "resolved": "8.1.1",
+        "contentHash": "1D/Mzq1MSUSQe1eCY6GeEsu+tIlpzoWZxZkhlcw/uvtVoTrwO+BMl0fSj/XX8oZN1DutWTZqHDHgyDRq+IeSdQ==",
         "dependencies": {
           "Asp.Versioning.Abstractions": "8.1.0"
         }
@@ -46,11 +43,6 @@
         "type": "Transitive",
         "resolved": "8.0.0",
         "contentHash": "bXJEZrW9ny8vjMF1JV253WeLhpEVzFo1lyaZu1vQ4ZxWUlVvknZ/+ftFgVheLubb4eZPSwwxBeqS1JkCOjxd8g=="
-      },
-      "PPWCode.Vernacular.Exceptions.IV": {
-        "type": "Transitive",
-        "resolved": "1.2.0",
-        "contentHash": "hWD5pr+4qtnAJHjTqxBPX2wT6WO8e9wMqudXYPlDGveDk9Mk2+DyZaz+DDs810hV3Fhfz7pXhS5H7WTcMI6zrg=="
       },
       "ppwcode.vernacular.exceptions.v": {
         "type": "Project",
